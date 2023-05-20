@@ -11,11 +11,11 @@ namespace RadVolontera.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    public class AccountController : BaseApiController
+    public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
 
-        public AccountController(IAccountService accountService, IServiceProvider provider) : base(provider)
+        public AccountController(IAccountService accountService, IServiceProvider provider) 
         {
             _accountService = accountService;
         }
