@@ -13,6 +13,8 @@ namespace RadVolontera.Services.Configuration
             builder.Property(u => u.Username).IsRequired().HasMaxLength(254);
             builder.Property(u => u.Email).IsRequired().HasMaxLength(254);
             builder.Property(u => u.PasswordHash).IsRequired();
+            builder.HasOne(u => u.School).WithMany(u => u.Students).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(u => u.City).WithMany(u => u.Users).OnDelete(DeleteBehavior.NoAction);
             builder.HasQueryFilter(u => u.DeletedAt == null);
         }
     }

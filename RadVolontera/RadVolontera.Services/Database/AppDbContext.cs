@@ -13,6 +13,14 @@ namespace RadVolontera.Services.Database
     {
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<School> Schools { get; set; }
+        public virtual DbSet<SchoolType> SchoolTypes { get; set; }
+        public virtual DbSet<VolunteeringAnnouncement> VolunteeringAnnouncements { get; set; }
+        public virtual DbSet<City> Cities { get; set; }
+        public virtual DbSet<Report> Reports { get; set; }
+        public virtual DbSet<Section> Sections { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
+        public virtual DbSet<UsefulLinks> UsefulLinks { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 
@@ -23,6 +31,12 @@ namespace RadVolontera.Services.Database
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new RolesConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new SchoolConfiguration());
+            builder.ApplyConfiguration(new ReportConfiguration());
+            builder.ApplyConfiguration(new SchoolConfiguration());
+            builder.ApplyConfiguration(new NotificationConfiguration());
+            builder.ApplyConfiguration(new UsefulLinksConfiguration());
+            builder.ApplyConfiguration(new PaymentConfiguration());
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

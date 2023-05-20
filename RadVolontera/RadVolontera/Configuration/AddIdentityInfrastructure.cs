@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using RadVolontera.Identity.Stores;
 using RadVolontera.Models.Token;
 using RadVolontera.Services.Database;
+using RadVolontera.Services.Interfaces;
 using RadVolontera.Services.Services;
 using System.Text;
 
@@ -28,13 +29,13 @@ namespace RadVolontera.Configuration
 
             services.Configure<DataProtectionTokenProviderOptions>(options =>
             {
-                options.TokenLifespan = TimeSpan.FromMinutes(3);
+                options.TokenLifespan = TimeSpan.FromMinutes(60);
             });
 
             services.AddTransient<IRoleStore<Role>, RoleStore>();
             services.AddTransient<IUserStore<User>, UserStore>();
             services.AddTransient(ts => new TokenService(ts.GetRequiredService<AppDbContext>(), configuration["JWTSettings:Key"], configuration["JWTSettings:Issuer"], int.Parse(configuration["JWTSettings:DurationInMinutes"])));
-            services.AddTransient<AccountService>();
+            services.AddTransient<IAccountService, AccountService>();
 
             services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
             services.AddAuthentication(options =>
@@ -53,7 +54,7 @@ namespace RadVolontera.Configuration
 
         internal static TokenValidationParameters GetTokenValidationParameters(IConfiguration configuration)
         {
-            return new TokenValidationParameters
+            var param= new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 ValidateIssuer = true,
@@ -64,6 +65,7 @@ namespace RadVolontera.Configuration
                 ValidAudience = configuration["JWTSettings:Audience"],
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTSettings:Key"]))
             };
+            return param;
 
         }
     }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RadVolontera.Services.Database;
 
@@ -11,9 +12,11 @@ using RadVolontera.Services.Database;
 namespace RadVolontera.Services.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230520130058_PaymentTable")]
+    partial class PaymentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -397,6 +400,7 @@ namespace RadVolontera.Services.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("CityId")
+                        .IsRequired()
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAt")
@@ -447,6 +451,7 @@ namespace RadVolontera.Services.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("SchoolId")
+                        .IsRequired()
                         .HasColumnType("bigint");
 
                     b.Property<string>("SecurityStamp")
@@ -651,7 +656,8 @@ namespace RadVolontera.Services.Migrations
                     b.HasOne("RadVolontera.Services.Database.City", "City")
                         .WithMany("Users")
                         .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("RadVolontera.Services.Database.User", "Mentor")
                         .WithMany()
@@ -660,7 +666,8 @@ namespace RadVolontera.Services.Migrations
                     b.HasOne("RadVolontera.Services.Database.School", "School")
                         .WithMany("Students")
                         .HasForeignKey("SchoolId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("City");
 

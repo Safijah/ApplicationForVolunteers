@@ -3,6 +3,7 @@ using RadVolontera.Models.Account;
 using RadVolontera.Models.Enums;
 using RadVolontera.Models.Shared;
 using RadVolontera.Services.Database;
+using RadVolontera.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace RadVolontera.Services.Services
 {
-    public class AccountService
+    public class AccountService : IAccountService
     {
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         private readonly UserManager<User> _userManager;

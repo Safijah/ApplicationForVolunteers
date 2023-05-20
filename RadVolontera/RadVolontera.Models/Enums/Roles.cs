@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,7 @@ namespace RadVolontera.Models.Enums
         public const string Admin = "Admin";
         public const string Mentor = "Mentor";
         public const string Student = "Student";
+
+        public const string AdminsMentors = Admin + "," + Mentor;
     }
 }

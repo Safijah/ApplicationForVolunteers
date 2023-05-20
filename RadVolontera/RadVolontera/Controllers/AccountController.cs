@@ -1,9 +1,10 @@
-﻿using AutoMapper.Features;
+﻿
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RadVolontera.Models.Account;
-using RadVolontera.Services.Services;
+using RadVolontera.Models.Enums;
+using RadVolontera.Services.Interfaces;
+
 
 namespace RadVolontera.Controllers
 {
@@ -12,9 +13,9 @@ namespace RadVolontera.Controllers
     [Produces("application/json")]
     public class AccountController : BaseApiController
     {
-        private readonly AccountService _accountService;
+        private readonly IAccountService _accountService;
 
-        public AccountController(AccountService accountService, IServiceProvider provider) : base(provider)
+        public AccountController(IAccountService accountService, IServiceProvider provider) : base(provider)
         {
             _accountService = accountService;
         }
@@ -23,8 +24,7 @@ namespace RadVolontera.Controllers
         [HttpPost("register")]
         [Consumes("application/json")]
         public async Task<ActionResult<UserResponse>> Register(RegisterRequest request)
-        {
-            
+        { 
             var userResponse = await _accountService.Register(new RegisterRequest
             {
                 UserName = request.UserName,
@@ -41,7 +41,6 @@ namespace RadVolontera.Controllers
 
             return Ok(userResponse);
         }
-
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
