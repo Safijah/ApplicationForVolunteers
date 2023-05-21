@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace RadVolontera.Services.Interfaces
 {
-    public interface IService<T, TSearch> where TSearch : class
+    public interface IService<T, TSearch, TId> where TSearch : class
     {
         Task<PagedResult<T>> Get(TSearch search = null);
-        Task<T> GetById(int id);
+        Task<T> GetById(TId id);
     }
 }

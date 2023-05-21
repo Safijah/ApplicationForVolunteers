@@ -5,12 +5,12 @@ using RadVolontera.Services.Interfaces;
 namespace RadVolontera.Controllers
 {
     [Route("api/[controller]")]
-    public class BaseCRUDController<T, TSearch, TInsert, TUpdate> : BaseController<T, TSearch> where T : class where TSearch : class
+    public class BaseCRUDController<T, TSearch, TInsert, TUpdate, TId> : BaseController<T, TSearch, TId> where T : class where TSearch : class
     {
-        protected new readonly ICRUDService<T, TSearch, TInsert, TUpdate> _service;
-        protected readonly ILogger<BaseController<T, TSearch>> _logger;
+        protected new readonly ICRUDService<T, TSearch, TInsert, TUpdate, TId> _service;
+        protected readonly ILogger<BaseController<T, TSearch, TId>> _logger;
 
-        public BaseCRUDController(ILogger<BaseController<T, TSearch>> logger, ICRUDService<T, TSearch, TInsert, TUpdate> service)
+        public BaseCRUDController(ILogger<BaseController<T, TSearch, TId>> logger, ICRUDService<T, TSearch, TInsert, TUpdate, TId> service)
             : base(logger, service)
         {
             _logger = logger;
@@ -24,7 +24,7 @@ namespace RadVolontera.Controllers
         }
 
         [HttpPut("{id}")]
-        public virtual async Task<T> Update(int id, [FromBody] TUpdate update)
+        public virtual async Task<T> Update(TId id, [FromBody] TUpdate update)
         {
             return await _service.Update(id, update);
         }

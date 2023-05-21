@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace RadVolontera.Models.Filters
 {
-    public class PaymentSearchObject :BaseSearchObject
+    public  class UsefulLinksSearchObject :BaseSearchObject
     {
-        public bool IncludeStudent { get; set; }
+        public string? Name { get; set; }
     }
 }

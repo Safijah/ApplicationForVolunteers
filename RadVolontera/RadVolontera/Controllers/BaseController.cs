@@ -9,12 +9,12 @@ namespace RadVolontera.Controllers
 {
     [Route("[controller]")]
     [Authorize]
-    public class BaseController<T, TSearch> : ControllerBase where T : class where TSearch : class
+    public class BaseController<T, TSearch, TId> : ControllerBase where T : class where TSearch : class
     {
-        protected readonly IService<T, TSearch> _service;
-        protected readonly ILogger<BaseController<T, TSearch>> _logger;
+        protected readonly IService<T, TSearch, TId> _service;
+        protected readonly ILogger<BaseController<T, TSearch, TId>> _logger;
 
-        public BaseController(ILogger<BaseController<T, TSearch>> logger, IService<T, TSearch> service)
+        public BaseController(ILogger<BaseController<T, TSearch, TId>> logger, IService<T, TSearch, TId> service)
         {
             _logger = logger;
             _service = service;
@@ -27,7 +27,7 @@ namespace RadVolontera.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<T> GetById(int id)
+        public async Task<T> GetById(TId id)
         {
             return await _service.GetById(id);
         }

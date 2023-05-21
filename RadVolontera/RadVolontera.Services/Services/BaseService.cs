@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace RadVolontera.Services.Services
 {
-    public class BaseService<T, TDb, TSearch> : IService<T, TSearch> where TDb : class where T : class where TSearch : BaseSearchObject
+    public class BaseService<T, TDb, TSearch, TId> : IService<T, TSearch, TId> where TDb : class where T : class where TSearch : BaseSearchObject
     {
         protected AppDbContext _context;
         protected IMapper _mapper { get; set; }
@@ -58,7 +58,7 @@ namespace RadVolontera.Services.Services
             return query;
         }
 
-        public virtual async Task<T> GetById(int id)
+        public virtual async Task<T> GetById(TId id)
         {
             var entity = await _context.Set<TDb>().FindAsync(id);
 

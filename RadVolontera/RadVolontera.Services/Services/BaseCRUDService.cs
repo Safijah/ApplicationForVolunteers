@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RadVolontera.Services.Services
 {
-    public class BaseCRUDService<T, TDb, TSearch, TInsert, TUpdate> : BaseService<T, TDb, TSearch> where TDb : class where T : class where TSearch : BaseSearchObject
+    public class BaseCRUDService<T, TDb, TSearch, TInsert, TUpdate, TId> : BaseService<T, TDb, TSearch, TId> where TDb : class where T : class where TSearch : BaseSearchObject
     {
         public BaseCRUDService(AppDbContext context, IMapper mapper) : base(context, mapper)
         {
@@ -35,7 +35,7 @@ namespace RadVolontera.Services.Services
         }
 
 
-        public virtual async Task<T> Update(int id, TUpdate update)
+        public virtual async Task<T> Update(TId id, TUpdate update)
         {
             var set = _context.Set<TDb>();
 

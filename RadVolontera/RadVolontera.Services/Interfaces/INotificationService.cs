@@ -1,4 +1,5 @@
 ﻿using RadVolontera.Models.Filters;
+using RadVolontera.Models.Notification;
 using RadVolontera.Models.Payment;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RadVolontera.Services.Interfaces
 {
-    public  interface IPaymentService : ICRUDService<Models.Payment.Payment, PaymentSearchObject, PaymentRequest, PaymentRequest,long>
+    public  interface INotificationService : ICRUDService<Models.Notification.Notification, NotificationSearchObject, NotificationRequest, NotificationRequest, long>
     {
     }
 }

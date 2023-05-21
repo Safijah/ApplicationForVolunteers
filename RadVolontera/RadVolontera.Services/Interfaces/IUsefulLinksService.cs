@@ -1,5 +1,6 @@
 ﻿using RadVolontera.Models.Filters;
 using RadVolontera.Models.Payment;
+using RadVolontera.Models.UsefulLinks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RadVolontera.Services.Interfaces
 {
-    public  interface IPaymentService : ICRUDService<Models.Payment.Payment, PaymentSearchObject, PaymentRequest, PaymentRequest,long>
+    public  interface IUsefulLinksService : ICRUDService<Models.UsefulLinks.UsefulLinks, UsefulLinksSearchObject, UsefulLinksRequest, UsefulLinksRequest, long>
     {
     }
 }
