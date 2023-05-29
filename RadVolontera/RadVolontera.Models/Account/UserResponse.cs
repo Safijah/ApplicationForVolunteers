@@ -10,7 +10,7 @@ namespace RadVolontera.Models.Account
 {
     public  class UserResponse
     {
-        public string UserId { get; set; }
+        public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime? BirthDate { get; set; }

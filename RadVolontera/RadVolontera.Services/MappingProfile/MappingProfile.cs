@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
+using RadVolontera.Models.City;
 using RadVolontera.Models.Notification;
 using RadVolontera.Models.Payment;
+using RadVolontera.Models.Report;
 using RadVolontera.Models.Section;
+using RadVolontera.Models.Status;
 using RadVolontera.Models.UsefulLinks;
+using RadVolontera.Models.VolunteeringAnnouncement;
 
 namespace RadVolontera.Services.MappingProfile
 {
@@ -19,6 +23,12 @@ namespace RadVolontera.Services.MappingProfile
             CreateMap<Database.Notification, Notification>();
             CreateMap<NotificationRequest, Database.Notification>();
             CreateMap<Database.Section, Section>();
+            CreateMap<Database.Status, Status>();
+            CreateMap<Database.City, City>();
+            CreateMap<Database.VolunteeringAnnouncement, VolunteeringAnnouncement>();
+            CreateMap<VolunteeringAnnouncementRequest, Database.VolunteeringAnnouncement>();
+            CreateMap<Database.Report, Report>();
+            CreateMap<ReportRequest, Database.Report>();
         }
     }
 }

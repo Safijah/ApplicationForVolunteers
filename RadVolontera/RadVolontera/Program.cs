@@ -14,6 +14,8 @@ builder.Services.AddControllers();
 builder.Services.AddTransient<IPaymentService, PaymentService>();
 builder.Services.AddTransient<IUsefulLinksService, UsefulLinksService>();
 builder.Services.AddTransient<INotificationService, NotificationService>();
+builder.Services.AddTransient<IVolunteeringAnnouncementService, VolunteeringAnnouncementService>();
+builder.Services.AddTransient<IReportService, ReportService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
