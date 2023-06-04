@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RadVolontera.Models.Report;
 using RadVolontera.Services.Interfaces;
 
 namespace RadVolontera.Controllers
@@ -11,6 +13,13 @@ namespace RadVolontera.Controllers
         public ReportController(ILogger<BaseController<Models.Report.Report, Models.Filters.ReportSearchObject, long>> logger, IReportService service) : base(logger, service)
         {
 
+        }
+
+        [HttpPut("change-status")]
+        public virtual async Task<RadVolontera.Models.Report.Report> ChangeStatus([FromBody] ChangeReportStatusRequest request)
+        {
+            var result = await (_service as IReportService).ChangeReportStatus(request);
+            return result;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace RadVolontera.Services.Database
         public virtual DbSet<Section> Sections { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<UsefulLinks> UsefulLinks { get; set; }
+        public virtual DbSet<Status> Statuses { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 

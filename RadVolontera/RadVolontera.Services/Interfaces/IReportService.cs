@@ -10,5 +10,6 @@ namespace RadVolontera.Services.Interfaces
 {
     public  interface IReportService: ICRUDService<Models.Report.Report, ReportSearchObject, ReportRequest, ReportRequest, long>
     {
+        Task<Report> ChangeReportStatus(ChangeReportStatusRequest request);
     }
 }
