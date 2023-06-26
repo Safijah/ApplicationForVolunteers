@@ -12,11 +12,16 @@ class AccountProvider with ChangeNotifier{
     _baseUrl = const String.fromEnvironment("baseUrl", defaultValue: "https://localhost:7264/api/");
   }
 
-  Future<dynamic> get() async {
-    var url = "$_baseUrl$endpoint";
-    var uri = Uri.parse(url);
+  Future<dynamic> login(dynamic body) async {
+    var url = "$_baseUrl$endpoint/authenticate";
+     var uri = Uri.parse(url);
+    var jsonRequest = jsonEncode(body);
     var headers = createHeaders();
-   var response = await  http.get(uri, headers: headers);
+   var response = await http.post(
+   uri,
+   headers: headers,
+    body: jsonRequest
+  );
     if(isValidResponse(response)) {
       var data = jsonDecode(response.body);
 
@@ -32,16 +37,14 @@ class AccountProvider with ChangeNotifier{
     } else if (response.statusCode == 401) {
         throw new Exception("Unauthorized");
     } else {
-      throw new Exception("Something bad happened please try again");
+      throw new Exception("Login incorrect");
     }
   }
   
   Map<String, String> createHeaders(){
-    String token="Bearer ${Authorization.token}";
-    print(token);
      var headers= {
       "Content-Type":"application/json",
-      "Authorization": token
+      "accept":" application/json"
      };
      return headers;
   }

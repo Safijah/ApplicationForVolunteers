@@ -20,6 +20,18 @@ namespace RadVolontera.Services.Services
 
         }
 
+        public override IQueryable<Database.Notification> AddFilter(IQueryable<Database.Notification> query, NotificationSearchObject? search = null)
+        {
+            var filteredQuery = base.AddFilter(query, search);
+
+            if (!string.IsNullOrWhiteSpace(search?.Heading))
+            {
+                filteredQuery = filteredQuery.Where(x => x.Heading.Contains(search.Heading));
+            }
+
+            return filteredQuery;
+        }
+
         public override IQueryable<Database.Notification> AddInclude(IQueryable<Database.Notification> query, NotificationSearchObject? search = null)
         {
             query = query.Include("Section").Include("Admin");

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:radvolontera_admin/providers/account_provider.dart';
 import 'package:radvolontera_admin/providers/notification_provider.dart';
 import 'package:radvolontera_admin/screens/notification/notification_list_screen.dart';
 import 'package:radvolontera_admin/utils/util.dart';
@@ -8,6 +9,7 @@ void main() {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => NotificationProvider()),
+      ChangeNotifierProvider(create: (_) => AccountProvider()),
     ],
     child: const MyMaterialApp(),
   ));
@@ -90,81 +92,117 @@ class MyMaterialApp extends StatelessWidget {
 }
 
 class LoginPage extends StatelessWidget {
-   LoginPage({Key? key}) : super(key: key);
- TextEditingController _usernameController = new TextEditingController();
+  LoginPage({Key? key}) : super(key: key);
+  TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  late AccountProvider _accountProvider;
+
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
-  appBar: AppBar(
-    title: Text("Login"),
-  ),
-  body: Center(
-    child: Container(
-      constraints: BoxConstraints(maxWidth: 400, maxHeight: 400),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(children: [
-              Image.asset("assets/images/logo.jpg", height: 100, width: 100,),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: "Username",
-                  prefixIcon: Icon(Icons.email),
-                ),
-                controller: _usernameController,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  if (!RegExp(r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$').hasMatch(value)) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
+    _accountProvider = context.read<AccountProvider>();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Login"),
+      ),
+      body: Center(
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 400, maxHeight: 400),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(children: [
+                  Image.asset(
+                    "assets/images/logo.jpg",
+                    height: 100,
+                    width: 100,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: "Username",
+                      prefixIcon: Icon(Icons.email),
+                    ),
+                    controller: _usernameController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      if (!RegExp(
+                              r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$')
+                          .hasMatch(value)) {
+                        return 'Please enter a valid email';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: "Password",
+                      prefixIcon: Icon(Icons.password),
+                    ),
+                    controller: _passwordController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      if (value.length < 6) {
+                        return 'Password must be at least 6 characters long';
+                      }
+                      if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$')
+                          .hasMatch(value)) {
+                        return 'Password must contain at least one uppercase letter, one lowercase letter, and one number';
+                      }
+                      return null;
+                    },
+                    obscureText: true,
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        var username = _usernameController.text;
+                        var password = _passwordController.text;
+                        try {
+                          var body = {
+                            'username': username,
+                            'password': password,
+                          };
+                          var result = await _accountProvider.login(body);
+                          Authorization.token = result['accessToken'].toString();
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  const NotificationListScreen()));
+                        } on Exception catch (e) {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text(e.toString()),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: Text("OK"))
+                                    ],
+                                  ));
+                        }
+                      }
+                    },
+                    child: Text("Login"),
+                  )
+                ]),
               ),
-              SizedBox(height: 8,),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  prefixIcon: Icon(Icons.password),
-                ),
-                controller: _passwordController,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  if (value.length < 6) {
-                    return 'Password must be at least 6 characters long';
-                  }
-                  if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$').hasMatch(value)) {
-                    return 'Password must contain at least one uppercase letter, one lowercase letter, and one number';
-                  }
-                  return null;
-                },
-                obscureText: true,
-              ),
-              SizedBox(height: 8,),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    var username = _usernameController.text;
-                    var password = _passwordController.text;
-                    Authorization.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4iLCJ1bmlxdWVfbmFtZSI6InNhZmlqYS5odWJsamFyQGVkdS5maXQuYmEiLCJlbWFpbCI6InNhZmlqYS5odWJsamFyQGVkdS5maXQuYmEiLCJuYW1laWQiOiJhYzQ3NzA3Zi1hMjEyLTQ2ZGItODFlYS02ZDE0ZDIyYTU4MTIiLCJuYmYiOjE2ODcxMDc1NjEsImV4cCI6MTY5NDg4MzU2MSwiaWF0IjoxNjg3MTA3NTYxLCJpc3MiOiJSYWRWb2xvbnRlcmEifQ.9yhNaX8f_3vnDN47aWghI39gNpc0TMievqR_1b73LdY";
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NotificationListScreen()));
-                  }
-                },
-                child: Text("Login"),
-              )
-            ]),
+            ),
           ),
         ),
       ),
-    ),
-  ),
-  );
+    );
   }
 }

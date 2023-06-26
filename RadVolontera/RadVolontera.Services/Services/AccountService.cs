@@ -97,9 +97,6 @@ namespace RadVolontera.Services.Services
             if (user == null)
                 throw new ApiException("Login incorrect", System.Net.HttpStatusCode.Unauthorized);
 
-            if (!user.EmailConfirmed)
-                throw new ApiException("Email is not confirmed", System.Net.HttpStatusCode.BadRequest);
-
             var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
 
             if (result.Succeeded)

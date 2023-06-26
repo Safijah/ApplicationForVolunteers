@@ -37,7 +37,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             ListTile(
               title: Text("Notification details"),
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const NotificationDetailsWidget(),));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>  NotificationDetailsWidget(),));
               },
             )
           ],

@@ -8,6 +8,6 @@ namespace RadVolontera.Models.Filters
 {
     public class NotificationSearchObject : BaseSearchObject
     {
-        public string ? Name { get; set; }
+        public string ? Heading { get; set; }
     }
 }

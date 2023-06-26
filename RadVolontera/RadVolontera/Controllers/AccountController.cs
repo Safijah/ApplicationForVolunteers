@@ -23,7 +23,7 @@ namespace RadVolontera.Controllers
 
         [HttpPost("register")]
         [Consumes("application/json")]
-        public async Task<ActionResult<UserResponse>> Register(RegisterRequest request)
+        public async Task<ActionResult<UserResponse>> Register([FromBody]RegisterRequest request)
         { 
             var userResponse = await _accountService.Register(new RegisterRequest
             {
@@ -45,7 +45,7 @@ namespace RadVolontera.Controllers
         [AllowAnonymous]
         [HttpPost("authenticate")]
         [Consumes("application/json")]
-        public async Task<ActionResult<AuthenticationResponse>> Authenticate(AuthenticationRequest request)
+        public async Task<ActionResult<AuthenticationResponse>> Authenticate([FromBody] AuthenticationRequest request)
         {
             return Ok(await _accountService.Authenticate(request.Username, request.Password, string.Empty));
         }

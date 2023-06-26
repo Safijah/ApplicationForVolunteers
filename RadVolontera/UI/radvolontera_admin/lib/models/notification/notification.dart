@@ -1,23 +1,25 @@
 import 'dart:ffi';
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:radvolontera_admin/models/section/section.dart';
 part 'notification.g.dart';
 
 @JsonSerializable()
-class Notification {
+class NotificationModel {
   int? id;
   String? heading;
   int? sectionId;
   String? adminId;
+  SectionModel? section;
 
-Notification(this.id, this.heading, this.sectionId, this.adminId);
+NotificationModel(this.id, this.heading, this.sectionId, this.adminId,this.section);
       /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
   /// The constructor is named after the source class, in this case, User.
-  factory Notification.fromJson(Map<String, dynamic> json) => _$NotificationFromJson(json);
+  factory NotificationModel.fromJson(Map<String, dynamic> json) => _$NotificationModelFromJson(json);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated
   /// helper method `_$UserToJson`.
-  Map<String, dynamic> toJson() => _$NotificationToJson(this);
+  Map<String, dynamic> toJson() => _$NotificationModelToJson(this);
 }
