@@ -27,5 +27,22 @@ namespace RadVolontera.Services.Services
             }
             return base.AddInclude(query, search);
         }
+
+        public override IQueryable<Database.Payment> AddFilter(IQueryable<Database.Payment> query, PaymentSearchObject? search = null)
+        {
+            var filteredQuery = base.AddFilter(query, search);
+
+            if (!string.IsNullOrWhiteSpace(search?.StudentId))
+            {
+                filteredQuery = filteredQuery.Where(x => x.StudentId == search.StudentId);
+            }
+
+            if (search.Month.HasValue && search.Month.Value != Models.Enums.Month.All)
+            {
+                filteredQuery = filteredQuery.Where(x => x.Month == search.Month);
+            }
+
+            return filteredQuery;
+        }
     }
 }

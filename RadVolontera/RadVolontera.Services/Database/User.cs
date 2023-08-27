@@ -34,6 +34,7 @@ namespace RadVolontera.Services.Database
         public User Mentor { get; set; }
         public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
         public virtual ICollection<VolunteeringAnnouncement> AnnouncementMentors { get; set; } = new List<VolunteeringAnnouncement>();
+        public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
         public virtual ICollection<Report> VolunteersPresent { get; set; } = new List<Report>();
         public virtual ICollection<Report> AbsentForVolunteering { get; set; } = new List<Report>();
         public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();

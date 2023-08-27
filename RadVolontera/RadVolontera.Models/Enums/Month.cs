@@ -8,6 +8,7 @@ namespace RadVolontera.Models.Enums
 {
     public enum Month
     {
+        All =0,
         January=1,
         February,
         March,

@@ -15,12 +15,14 @@ NotificationModel _$NotificationModelFromJson(Map<String, dynamic> json) =>
       json['section'] == null
           ? null
           : SectionModel.fromJson(json['section'] as Map<String, dynamic>),
+      json['content'] as String,
     );
 
 Map<String, dynamic> _$NotificationModelToJson(NotificationModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'heading': instance.heading,
+      'content': instance.content,
       'sectionId': instance.sectionId,
       'adminId': instance.adminId,
       'section': instance.section,

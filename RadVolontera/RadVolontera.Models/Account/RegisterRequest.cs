@@ -25,11 +25,11 @@ namespace RadVolontera.Models.Account
         public string PhoneNumber { get; set; }
         [Required]
         [MinLength(5), MaxLength(100)]
-        public string UserName { get; set; }
-        public string Password { get; set; }
+        public string? UserName { get; set; }
+        public string? Password { get; set; }
         [Compare("Password")]
-        public string ConfirmPassword { get; set; }
-        public List<string> Roles { get; set; }
+        public string? ConfirmPassword { get; set; }
+        public List<string>? Roles { get; set; }
         public UserTypes UserType { get; set; }
     }
 }

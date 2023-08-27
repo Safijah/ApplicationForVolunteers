@@ -8,11 +8,12 @@ part 'notification.g.dart';
 class NotificationModel {
   int? id;
   String? heading;
+  String content;
   int? sectionId;
   String? adminId;
   SectionModel? section;
 
-NotificationModel(this.id, this.heading, this.sectionId, this.adminId,this.section);
+NotificationModel(this.id, this.heading, this.sectionId, this.adminId,this.section, this.content);
       /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
   /// The constructor is named after the source class, in this case, User.

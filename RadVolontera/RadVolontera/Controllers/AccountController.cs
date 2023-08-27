@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RadVolontera.Models.Account;
 using RadVolontera.Models.Enums;
+using RadVolontera.Models.Filters;
 using RadVolontera.Services.Interfaces;
 
 
@@ -22,7 +23,6 @@ namespace RadVolontera.Controllers
 
 
         [HttpPost("register")]
-        [Consumes("application/json")]
         public async Task<ActionResult<UserResponse>> Register([FromBody]RegisterRequest request)
         { 
             var userResponse = await _accountService.Register(new RegisterRequest
@@ -48,6 +48,22 @@ namespace RadVolontera.Controllers
         public async Task<ActionResult<AuthenticationResponse>> Authenticate([FromBody] AuthenticationRequest request)
         {
             return Ok(await _accountService.Authenticate(request.Username, request.Password, string.Empty));
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpPut("{userId}")]
+        [Consumes("application/json")]
+        public async Task<ActionResult<UserResponse>> Update([FromRoute] string userId,[FromBody] RegisterRequest request)
+        {
+            return Ok(await _accountService.Update(userId,request));
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpGet]
+        [Consumes("application/json")]
+        public async Task<ActionResult<PagedResult<UserResponse>>> GetAll( [FromQuery] UserSearchObject filter)
+        {
+            return Ok(await _accountService.GetAll(filter));
         }
     }
 }

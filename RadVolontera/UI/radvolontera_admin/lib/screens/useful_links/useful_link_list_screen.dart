@@ -1,34 +1,52 @@
+
+
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:radvolontera_admin/models/notification/notification.dart';
-import 'package:radvolontera_admin/models/search_result.dart';
-import 'package:radvolontera_admin/providers/notification_provider.dart';
-import 'package:radvolontera_admin/screens/notification/notification_details_screen.dart';
-import 'package:radvolontera_admin/widgets/master_screen.dart';
+import 'package:radvolontera_admin/models/useful_link/useful_link.dart';
+import 'package:radvolontera_admin/providers/useful_link_provider.dart';
+import 'package:radvolontera_admin/screens/useful_links/useful_link_details_screen.dart';
 
-class NotificationListScreen extends StatefulWidget {
-  const NotificationListScreen({super.key});
+import '../../models/search_result.dart';
+import '../../widgets/master_screen.dart';
+
+class UsefulLinkListScreen extends StatefulWidget {
+  const UsefulLinkListScreen({super.key});
 
   @override
-  State<NotificationListScreen> createState() => _NotificationListScreenState();
+  State<UsefulLinkListScreen> createState() => _UsefulLinkListScreenState();
 }
 
-class _NotificationListScreenState extends State<NotificationListScreen> {
-  late NotificationProvider _notificationProvider;
-  SearchResult<NotificationModel> ? result;
+class _UsefulLinkListScreenState extends State<UsefulLinkListScreen> {
+  late UsefulLinkProvider _usefulLinkProvider;
+  SearchResult<UsefulLinkModel> ? result;
     TextEditingController _headingController = new TextEditingController();
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    _notificationProvider = context.read<NotificationProvider>();
+  }
+
+ @override
+  void initState() {
+    super.initState();
+     _usefulLinkProvider = context.read<UsefulLinkProvider>();
+    // Call your method here
+    _loadData();
+  }
+
+  _loadData() async {
+     var data = await _usefulLinkProvider.get();
+      setState(() {
+                  result = data;
+                });
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Product list"),
+      title_widget: Text("Useful links list"),
       child: Container(
         child: Column(children: [_buildSearch(), _buildDataListView()]),
       ),
@@ -45,21 +63,35 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
           ),
           Expanded(
             child: TextField(
-              decoration: InputDecoration(labelText: "Heading"),
+              decoration: InputDecoration(labelText: "Name"),
               controller: _headingController,
             ),
           ),
           ElevatedButton(
               onPressed: () async {
-                var data = await _notificationProvider.get(filter: {
-                  'heading': _headingController.text,
+                var data = await _usefulLinkProvider.get(filter: {
+                  'name': _headingController.text,
                 });
 
                 setState(() {
                   result = data;
                 });
               },
-              child: Text("Search"))
+              child: Text("Search")),
+              SizedBox(
+            width: 8,
+          ),
+          ElevatedButton(
+              onPressed: () async {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => UsefulLinkDetailsScreen(
+                      usefulLink: null,
+                    ),
+                  ),
+                );
+              },
+              child: Text("Add new"))
         ],
       ),
     );
@@ -82,7 +114,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
             const DataColumn(
               label: Expanded(
                 child: Text(
-                  'Heading',
+                  'Name',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -90,26 +122,26 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
             const DataColumn(
               label: Expanded(
                 child: Text(
-                  'Section',
+                  'Url',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
             ),
           ],
           rows: result?.result
-                  .map((NotificationModel e) => DataRow(onSelectChanged: (selected) => {
+                  .map((UsefulLinkModel e) => DataRow(onSelectChanged: (selected) => {
                     if(selected == true) {
                         
                        Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => NotificationDetailsWidget(notificationModel: e,),
+                            builder: (context) => UsefulLinkDetailsScreen(usefulLink: e,),
                           ),
                         )
                     }
                   },cells: [
                         DataCell(Text(e.id?.toString() ?? "")),
-                        DataCell(Text(e.heading ?? "")),
-                        DataCell(Text(e.section?.name.toString() ?? "")),
+                        DataCell(Text(e.name ?? "")),
+                        DataCell(Text(e.urlLink ?? "")),
                       ]))
                   .toList() ??
               []),

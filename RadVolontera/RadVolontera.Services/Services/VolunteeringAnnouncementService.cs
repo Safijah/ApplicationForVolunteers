@@ -27,6 +27,23 @@ namespace RadVolontera.Services.Services
             return base.AddInclude(query, search);
         }
 
+        public override IQueryable<Database.VolunteeringAnnouncement> AddFilter(IQueryable<Database.VolunteeringAnnouncement> query, VolunteeringAnnouncementSearchObject? search = null)
+        {
+            var filteredQuery = base.AddFilter(query, search);
+
+            if (!string.IsNullOrWhiteSpace(search?.MentorId))
+            {
+                filteredQuery = filteredQuery.Where(x => x.MentorId == search.MentorId);
+            }
+
+            if (search?.StatusId != null)
+            {
+                filteredQuery = filteredQuery.Where(x => x.AnnouncementStatusId == search.StatusId);
+            }
+
+            return filteredQuery;
+        }
+
         public override async Task BeforeInsert(Database.VolunteeringAnnouncement entity, Models.VolunteeringAnnouncement.VolunteeringAnnouncementRequest insert)
         {
             var status = await _context.Statuses.FirstOrDefaultAsync(s => s.Name == "On hold");
@@ -45,12 +62,12 @@ namespace RadVolontera.Services.Services
             if (value == null)
                 throw new ApiException("Not found", System.Net.HttpStatusCode.BadRequest);
 
-            var status = _context.Statuses.FirstOrDefault(s => s.Id == request.StausId);
+            var status = _context.Statuses.FirstOrDefault(s => s.Name == request.Status);
 
             if (status == null)
                 throw new ApiException("Status not found", System.Net.HttpStatusCode.BadRequest);
 
-            value.AnnouncementStatusId = request.StausId;
+            value.AnnouncementStatusId = status.Id;
 
             if (status.Name == "Approved")
             {

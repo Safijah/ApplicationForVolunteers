@@ -8,6 +8,7 @@ namespace RadVolontera.Models.Enums
 {
     public enum UserTypes
     {
+        All,
         Admin,
         Mentor,
         Student

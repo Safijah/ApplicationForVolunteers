@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace RadVolontera.Models.Shared
 {
-    public class ApiException : Exception
+    public class ApiException : CustomException
     {
-        public HttpStatusCode? StatusCode { get; set; }
-        public string ErrorMessage { get; set; }
-        public ApiException(string message, HttpStatusCode statusCode)
+        public ApiException(string message, HttpStatusCode code)
+            :base(message, code) 
         {
-            StatusCode = statusCode;
-            ErrorMessage = message;
+            
         }
     }
 }

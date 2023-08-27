@@ -26,8 +26,26 @@ namespace RadVolontera.Services.Services
             query = query.Include("Status")
                 .Include("VolunteeringAnnouncement")
                 .Include("PresentStudents")
-                .Include("AbsentStudents");
+                .Include("AbsentStudents")
+                .Include("Mentor");
             return base.AddInclude(query, search);
+        }
+
+        public override IQueryable<Database.Report> AddFilter(IQueryable<Database.Report> query, ReportSearchObject? search = null)
+        {
+            var filteredQuery = base.AddFilter(query, search);
+
+            if (!string.IsNullOrWhiteSpace(search?.MentorId))
+            {
+                filteredQuery = filteredQuery.Where(x => x.MentorId == search.MentorId);
+            }
+
+            if (search?.StatusId != null)
+            {
+                filteredQuery = filteredQuery.Where(x => x.StatusId == search.StatusId);
+            }
+
+            return filteredQuery;
         }
 
         public override async Task BeforeInsert(Database.Report entity, Models.Report.ReportRequest insert)
@@ -62,7 +80,7 @@ namespace RadVolontera.Services.Services
             if (value == null)
                 throw new ApiException("Not found", System.Net.HttpStatusCode.BadRequest);
 
-            var status =await _context.Statuses.FirstOrDefaultAsync(s => s.Id == request.StausId);
+            var status =await _context.Statuses.FirstOrDefaultAsync(s => s.Name == request.Status);
 
             if (status == null)
                 throw new ApiException("Status not found", System.Net.HttpStatusCode.BadRequest);
@@ -78,7 +96,7 @@ namespace RadVolontera.Services.Services
                $"<p>Poštovani/a, vaš izvještaj je vraćen. Molimo Vas da ga ispravite u što kraćem roku</p></br><p>{request.Notes}</p>");
             }
 
-            value.StatusId = request.StausId;
+            value.StatusId = status.Id;
 
             await _context.SaveChangesAsync();
             return _mapper.Map<RadVolontera.Models.Report.Report>(value);

@@ -10,5 +10,6 @@ namespace RadVolontera.Models.Filters
     {
         public string ? Name { get; set; }
         public long? StatusId { get; set; }
+        public string ? MentorId { get; set; }
     }
 }

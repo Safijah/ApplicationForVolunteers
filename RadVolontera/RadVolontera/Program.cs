@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using RadVolontera.Configuration;
 using RadVolontera.Services.Interfaces;
 using RadVolontera.Services.Services;
+using RadVolontera.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,9 @@ builder.Services.AddTransient<INotificationService, NotificationService>();
 builder.Services.AddTransient<IVolunteeringAnnouncementService, VolunteeringAnnouncementService>();
 builder.Services.AddTransient<IReportService, ReportService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddTransient<ISectionService, SectionService>();
+builder.Services.AddTransient<IStatusService, StatusService>();
+builder.Services.AddTransient<ExceptionMiddleware>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
@@ -52,5 +56,7 @@ using (var scope = app.Services.CreateScope())
     var conn = dataContext.Database.GetConnectionString();
     dataContext.Database.Migrate();
 }
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();

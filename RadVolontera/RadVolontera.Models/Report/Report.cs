@@ -20,5 +20,6 @@ namespace RadVolontera.Models.Report
         public Models.VolunteeringAnnouncement.VolunteeringAnnouncement VolunteeringAnnouncement { get; set; }
         public List<UserResponse> PresentStudents { get; set; }
         public List<UserResponse> AbsentStudents { get; set; }
+        public Models.Account.UserResponse Mentor { get; set; }
     }
 }

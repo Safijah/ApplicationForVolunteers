@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using RadVolontera.Models.City;
+using RadVolontera.Models.Enums;
 using RadVolontera.Models.Notification;
 using RadVolontera.Models.Payment;
 using RadVolontera.Models.Report;
@@ -14,9 +15,11 @@ namespace RadVolontera.Services.MappingProfile
     {
         public MappingProfile()
         {
-            CreateMap<Database.Payment, PaymentResponse>();
+            CreateMap<Database.Payment, PaymentResponse>()
+                .ForMember(dest => dest.MonthName, opt => opt.MapFrom(src => Enum.GetName(typeof(Month), src.Month)));
             CreateMap<PaymentRequest, Database.Payment>();
-            CreateMap<Database.Payment, Models.Payment.Payment>();
+            CreateMap<Database.Payment, Models.Payment.Payment>()
+              .ForMember(dest => dest.MonthName, opt => opt.MapFrom(src => Enum.GetName(typeof(Month), src.Month)));
             CreateMap<Database.User, Models.Account.UserResponse>();
             CreateMap<Database.UsefulLinks, UsefulLinks>();
             CreateMap<UsefulLinksRequest, Database.UsefulLinks>();

@@ -21,6 +21,18 @@ namespace RadVolontera.Services.Services
 
         }
 
+        public override IQueryable<Database.UsefulLinks> AddFilter(IQueryable<Database.UsefulLinks> query, UsefulLinksSearchObject? search = null)
+        {
+            var filteredQuery = base.AddFilter(query, search);
+
+            if (!string.IsNullOrWhiteSpace(search?.Name))
+            {
+                filteredQuery = filteredQuery.Where(x => x.Name.Contains(search.Name));
+            }
+
+            return filteredQuery;
+        }
+
         public override IQueryable<Database.UsefulLinks> AddInclude(IQueryable<Database.UsefulLinks> query, UsefulLinksSearchObject? search = null)
         {
             query = query.Include("Admin");

@@ -18,6 +18,8 @@ namespace RadVolontera.Services.Database
         public  Status Status { get; set; }
         public long VolunteeringAnnouncementId { get; set; }
         public  VolunteeringAnnouncement VolunteeringAnnouncement { get; set; }
+        public string MentorId { get; set; }
+        public User Mentor { get; set; }
         public ICollection<User> PresentStudents{ get; set; }
         public ICollection<User> AbsentStudents{ get; set; }
     }

@@ -10,6 +10,7 @@ namespace RadVolontera.Models.VolunteeringAnnouncement
     {
         public long VolunteeringAnnouncementId { get; set; }
         public long StausId { get; set; }
+        public string? Status { get; set; }
         public string? Notes { get; set; }
     }
 }

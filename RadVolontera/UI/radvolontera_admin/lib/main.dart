@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:radvolontera_admin/providers/account_provider.dart';
 import 'package:radvolontera_admin/providers/notification_provider.dart';
-import 'package:radvolontera_admin/screens/notification/notification_list_screen.dart';
+import 'package:radvolontera_admin/providers/payment_provider.dart';
+import 'package:radvolontera_admin/providers/report_provider.dart';
+import 'package:radvolontera_admin/providers/section_provider.dart';
+import 'package:radvolontera_admin/providers/status_provider.dart';
+import 'package:radvolontera_admin/providers/useful_link_provider.dart';
+import 'package:radvolontera_admin/providers/volunteering_announcement_provider.dart';
+import 'package:radvolontera_admin/screens/notifications/notification_list_screen.dart';
 import 'package:radvolontera_admin/utils/util.dart';
 
 void main() {
@@ -10,6 +16,12 @@ void main() {
     providers: [
       ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ChangeNotifierProvider(create: (_) => AccountProvider()),
+      ChangeNotifierProvider(create: (_) => SectionProvider()),
+      ChangeNotifierProvider(create: (_) => UsefulLinkProvider()),
+      ChangeNotifierProvider(create: (_) => PaymentProvider()),
+      ChangeNotifierProvider(create: (_) => VolunteeringAnnouncementProvider()),
+      ChangeNotifierProvider(create: (_) => StatusProvider()),
+      ChangeNotifierProvider(create: (_) => ReportProvider()),
     ],
     child: const MyMaterialApp(),
   ));
@@ -85,7 +97,7 @@ class MyMaterialApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'RS II Material app',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(primarySwatch: Colors.indigo),
       home: LoginPage(),
     );
   }
@@ -97,10 +109,12 @@ class LoginPage extends StatelessWidget {
   TextEditingController _passwordController = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   late AccountProvider _accountProvider;
+  late NotificationProvider _notificationProvider;
 
   @override
   Widget build(BuildContext context) {
     _accountProvider = context.read<AccountProvider>();
+    _notificationProvider= context.read<NotificationProvider>();
     return Scaffold(
       appBar: AppBar(
         title: Text("Login"),

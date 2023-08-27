@@ -20,6 +20,7 @@ namespace RadVolontera.Services.Configuration
             builder.HasMany(r=>r.PresentStudents).WithMany(r=>r.VolunteersPresent) ;
             builder.HasMany(r=>r.AbsentStudents).WithMany(r=>r.AbsentForVolunteering); 
             builder.HasOne(r=>r.VolunteeringAnnouncement).WithOne(r=>r.Report).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(r=>r.Mentor).WithMany(r=>r.Reports).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

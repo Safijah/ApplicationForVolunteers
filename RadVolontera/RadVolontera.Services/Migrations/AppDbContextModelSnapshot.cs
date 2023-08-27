@@ -175,6 +175,10 @@ namespace RadVolontera.Services.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("MentorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -194,6 +198,8 @@ namespace RadVolontera.Services.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MentorId");
 
                     b.HasIndex("StatusId");
 
@@ -607,6 +613,12 @@ namespace RadVolontera.Services.Migrations
 
             modelBuilder.Entity("RadVolontera.Services.Database.Report", b =>
                 {
+                    b.HasOne("RadVolontera.Services.Database.User", "Mentor")
+                        .WithMany("Reports")
+                        .HasForeignKey("MentorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("RadVolontera.Services.Database.Status", "Status")
                         .WithMany("Reports")
                         .HasForeignKey("StatusId")
@@ -618,6 +630,8 @@ namespace RadVolontera.Services.Migrations
                         .HasForeignKey("RadVolontera.Services.Database.Report", "VolunteeringAnnouncementId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Mentor");
 
                     b.Navigation("Status");
 
@@ -777,6 +791,8 @@ namespace RadVolontera.Services.Migrations
                     b.Navigation("Notifications");
 
                     b.Navigation("Payments");
+
+                    b.Navigation("Reports");
 
                     b.Navigation("UsefulLinks");
                 });

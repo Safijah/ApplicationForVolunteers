@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using RadVolontera.Models.Account;
 using RadVolontera.Models.Enums;
+using RadVolontera.Models.Filters;
 using RadVolontera.Models.Shared;
 using RadVolontera.Services.Database;
 using RadVolontera.Services.Interfaces;
@@ -95,7 +97,7 @@ namespace RadVolontera.Services.Services
             var user = await _userManager.FindByNameAsync(username);
 
             if (user == null)
-                throw new ApiException("Login incorrect", System.Net.HttpStatusCode.Unauthorized);
+                throw new ApiException("Login incorrect", System.Net.HttpStatusCode.BadRequest);
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
 
@@ -112,7 +114,88 @@ namespace RadVolontera.Services.Services
                 };
             }
             else
-                throw new ApiException("Login incorrect", System.Net.HttpStatusCode.Unauthorized);
+                throw new ApiException("Login incorrect", System.Net.HttpStatusCode.BadRequest);
+        }
+
+        public async Task<UserResponse> Update(string userId, RegisterRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                throw new ApiException("User not found", System.Net.HttpStatusCode.NotFound);
+
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Gender = request.Gender;
+            user.BirthDate = request.BirthDate;
+            user.PhoneNumber = request.PhoneNumber;
+
+            var role = request.UserType;
+
+            if (role != null)
+            {
+                request.Roles = new List<string>();
+                request.Roles.Add(role.ToString());
+            }
+
+            if(user.Roles.Any())
+               user.Roles.Remove(user.Roles.FirstOrDefault());
+
+            if (request.Roles?.Count > 0)
+                foreach (var userRole in request.Roles)
+                    await _userManager.AddToRoleAsync(user, userRole);
+
+            await _appDbContext.SaveChangesAsync();
+            return new UserResponse() { };
+        }
+
+        public async Task<PagedResult<UserResponse>> GetAll(UserSearchObject filter)
+        {
+            var users = await _appDbContext.Users
+                .Include(u=>u.Roles).ToListAsync();
+
+            if (!string.IsNullOrWhiteSpace(filter?.FullName))
+                users = users.Where(u=>u.FirstName.Contains(filter.FullName) || u.LastName.Contains(filter.FullName)).ToList();
+
+            if (filter?.UserTypes != null && filter.UserTypes != UserTypes.All)
+                users = users.Where(u => u.Roles.Any(r=>r.Name == filter?.UserTypes.Value.ToString())).ToList();
+
+            var result= users.Select(u => new UserResponse() {
+            FirstName = u.FirstName,
+            LastName = u.LastName,
+            BirthDate = u.BirthDate,
+            PhoneNumber = u.PhoneNumber,
+            Email = u.Email,
+            Gender=u.Gender,
+            UserType= this.GetUserTypes(u),
+            Id = u.Id,
+            Role = u.Roles.FirstOrDefault()?.Name
+            }).ToList();
+
+            return new PagedResult<UserResponse>()
+            {
+                Result = result,
+                Count = users.Count()
+            };
+        }
+
+        private UserTypes GetUserTypes(User user)
+        {
+            var role = user.Roles.FirstOrDefault();
+            
+            if (role.Name == "Admin")
+            {
+                return UserTypes.Admin;
+            } else if (role.Name == "Mentor")
+            {
+                return UserTypes.Mentor;
+            }
+            else if (role.Name == "Student")
+            {
+                return UserTypes.Student;
+            }
+
+            return UserTypes.Admin;
         }
     }
 }
