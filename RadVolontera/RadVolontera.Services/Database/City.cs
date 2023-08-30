@@ -13,5 +13,6 @@ namespace RadVolontera.Services.Database
         public string Name { get; set; }
         public ICollection<VolunteeringAnnouncement> VolunteeringAnnouncements { get; set; }
         public ICollection<User> Users { get; set; }
+        public ICollection<Company> Companies { get; set; }
     }
 }

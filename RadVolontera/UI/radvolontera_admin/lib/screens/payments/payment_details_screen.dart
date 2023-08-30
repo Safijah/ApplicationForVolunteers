@@ -5,7 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:radvolontera_admin/models/account/account.dart';
 import 'package:radvolontera_admin/providers/payment_provider.dart';
-import 'package:radvolontera_admin/screens/payments/payment_list.dart';
+import 'package:radvolontera_admin/screens/payments/payment_list_screen.dart';
 
 import '../../models/payment/payment.dart';
 import '../../models/search_result.dart';

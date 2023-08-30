@@ -38,6 +38,8 @@ namespace RadVolontera.Services.Database
             builder.ApplyConfiguration(new NotificationConfiguration());
             builder.ApplyConfiguration(new UsefulLinksConfiguration());
             builder.ApplyConfiguration(new PaymentConfiguration());
+            builder.ApplyConfiguration(new CompanyConfiguration());
+            builder.ApplyConfiguration(new CompanyEventConfiguration());
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

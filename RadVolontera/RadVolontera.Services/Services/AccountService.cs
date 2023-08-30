@@ -197,5 +197,15 @@ namespace RadVolontera.Services.Services
 
             return UserTypes.Admin;
         }
+
+        public DashboardData GetDashboardData()
+        {
+            return new DashboardData()
+            {
+                StudentCount = _appDbContext.Users.Where(u => u.Roles.Any(r => r.Name == Roles.Student)).Count(),
+                MentorCount = _appDbContext.Users.Where(u => u.Roles.Any(r => r.Name == Roles.Mentor)).Count(),
+                AdminCount = _appDbContext.Users.Where(u => u.Roles.Any(r => r.Name == Roles.Admin)).Count()
+            };
+        }
     }
 }

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:radvolontera_admin/main.dart';
-import 'package:radvolontera_admin/screens/payments/payment_list.dart';
+import 'package:radvolontera_admin/screens/companies/company_list_screen.dart';
+import 'package:radvolontera_admin/screens/payments/payment_list_screen.dart';
 import 'package:radvolontera_admin/screens/reports/report_list_screen.dart';
 import 'package:radvolontera_admin/screens/users/user_list_screen.dart';
 import 'package:radvolontera_admin/utils/util.dart';
 
+import '../screens/company_categories/company_category_list_screen.dart';
+import '../screens/company_events/company_events_list_screen.dart';
+import '../screens/dashboard/dashboard.dart';
 import '../screens/notifications/notification_list_screen.dart';
+import '../screens/payment_reports/payment_reports_screen.dart';
 import '../screens/useful_links/useful_link_list_screen.dart';
 import '../screens/volunteering_announcements/volunteering_announcement_list_screen.dart';
 
@@ -36,6 +41,17 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                     color: Colors.white), // Add an icon to the ListTile
                 onTap: () {
                   Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.home,
+                    color: Colors.white), // Add an icon to the ListTile
+                title: Text("Dashboard", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) =>  DashboardPage()),
+                  );
                 },
               ),
               ListTile(
@@ -97,7 +113,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   );
                 },
               ),
-                 ListTile(
+               ListTile(
                 leading: Icon(Icons.report_gmailerrorred,
                     color: Colors.white), // Add an icon to the ListTile
                 title:
@@ -106,6 +122,54 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => const ReportListScreen()),
+                  );
+                },
+              ),
+               ListTile(
+                leading: Icon(Icons.payments_rounded,
+                    color: Colors.white), // Add an icon to the ListTile
+                title:
+                    Text("Payments report", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const PaymentReportListScreen()),
+                  );
+                },
+              ),
+                ListTile(
+                leading: Icon(Icons.category_rounded,
+                    color: Colors.white), // Add an icon to the ListTile
+                title:
+                    Text("Company categories", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const CompanyCategoryListScreen()),
+                  );
+                },
+              ),
+               ListTile(
+                leading: Icon(Icons.apartment_rounded,
+                    color: Colors.white), // Add an icon to the ListTile
+                title:
+                    Text("Companies", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const CompanyListScreen()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.event,
+                    color: Colors.white), // Add an icon to the ListTile
+                title:
+                    Text("Company events", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const CompanyEventListScreen()),
                   );
                 },
               ),

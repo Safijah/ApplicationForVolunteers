@@ -4,7 +4,7 @@ import 'package:radvolontera_admin/models/account/account.dart';
 import 'package:radvolontera_admin/models/payment/payment.dart';
 import 'package:radvolontera_admin/providers/account_provider.dart';
 import 'package:radvolontera_admin/providers/payment_provider.dart';
-import 'package:radvolontera_admin/screens/payments/payment_details.dart';
+import 'package:radvolontera_admin/screens/payments/payment_details_screen.dart';
 import 'package:radvolontera_admin/screens/users/user_details_screen.dart';
 
 import '../../models/search_result.dart';
@@ -191,74 +191,72 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
   }
 
   Widget _buildDataListView() {
-    return Expanded(
-        child: SingleChildScrollView(
-      child: DataTable(
+  return Expanded(
+    child: SingleChildScrollView(
+      child: Container(
+        color: Colors.white, // Background color for the table
+        child: DataTable(
+          columnSpacing: 24.0, // Adjust column spacing as needed
+          headingRowColor: MaterialStateColor.resolveWith((states) => Colors.indigo), // Header row color
+          dataRowColor: MaterialStateColor.resolveWith((states) => Colors.white), // Row color
           columns: [
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Notes',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'Notes',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Amount',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'Amount',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Month',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'Month',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Year',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'Year',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'User',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'User',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
           ],
           rows: result?.result
-                  .map((PaymentModel e) => DataRow(
-                          onSelectChanged: (selected) => {
-                                if (selected == true)
-                                  {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => PaymentDetailsScreen(
-                                          payment: e,
-                                        ),
-                                      ),
-                                    )
-                                  }
-                              },
-                          cells: [
-                            DataCell(Text(e.notes ?? "")),
-                            DataCell(Text(e.amount.toString() )),
-                            DataCell(Text(e.monthName ?? "")),
-                            DataCell(Text(e.year !=null? e.year.toString() : "")),
-                           DataCell(Text(e.student != null ? '${e.student!.firstName} ${e.student!.lastName}' : '')),
-                          ]))
-                  .toList() ??
-              []),
-    ));
-  }
+              .map((PaymentModel e) => DataRow(
+                    onSelectChanged: (selected) => {
+                      if (selected == true) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => PaymentDetailsScreen(
+                              payment: e,
+                            ),
+                          ),
+                        )
+                      }
+                    },
+                    cells: [
+                      DataCell(Text(e.notes ?? "")),
+                      DataCell(Text(e.amount.toString())),
+                      DataCell(Text(e.monthName ?? "")),
+                      DataCell(Text(e.year != null ? e.year.toString() : "")),
+                      DataCell(Text(e.student != null ? '${e.student!.firstName} ${e.student!.lastName}' : '')),
+                    ],
+                  ))
+              .toList() ??
+              [],
+        ),
+      ),
+    ),
+  );
+}
 }

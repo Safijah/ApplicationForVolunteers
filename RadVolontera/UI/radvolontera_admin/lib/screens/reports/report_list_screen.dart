@@ -13,7 +13,7 @@ import '../../models/status/status.dart';
 import '../../providers/account_provider.dart';
 import '../../providers/status_provider.dart';
 import '../../widgets/master_screen.dart';
-import '../payments/payment_details.dart';
+import '../payments/payment_details_screen.dart';
 import '../users/user_details_screen.dart';
 
 class ReportListScreen extends StatefulWidget {

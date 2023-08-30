@@ -51,6 +51,128 @@ namespace RadVolontera.Services.Migrations
                     b.ToTable("Cities");
                 });
 
+            modelBuilder.Entity("RadVolontera.Services.Database.Company", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("CityId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CompanyCategoryId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("CompanyCategoryId");
+
+                    b.ToTable("Company");
+                });
+
+            modelBuilder.Entity("RadVolontera.Services.Database.CompanyCategory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CompanyCategory");
+                });
+
+            modelBuilder.Entity("RadVolontera.Services.Database.CompanyEvent", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CompanyId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EventDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EventName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Time")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("CompanyEvent");
+                });
+
             modelBuilder.Entity("RadVolontera.Services.Database.Notification", b =>
                 {
                     b.Property<long>("Id")
@@ -581,6 +703,36 @@ namespace RadVolontera.Services.Migrations
                     b.ToTable("RoleUser");
                 });
 
+            modelBuilder.Entity("RadVolontera.Services.Database.Company", b =>
+                {
+                    b.HasOne("RadVolontera.Services.Database.City", "City")
+                        .WithMany("Companies")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("RadVolontera.Services.Database.CompanyCategory", "CompanyCategory")
+                        .WithMany("Companies")
+                        .HasForeignKey("CompanyCategoryId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("City");
+
+                    b.Navigation("CompanyCategory");
+                });
+
+            modelBuilder.Entity("RadVolontera.Services.Database.CompanyEvent", b =>
+                {
+                    b.HasOne("RadVolontera.Services.Database.Company", "Company")
+                        .WithMany("Events")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("RadVolontera.Services.Database.Notification", b =>
                 {
                     b.HasOne("RadVolontera.Services.Database.User", "Admin")
@@ -757,9 +909,21 @@ namespace RadVolontera.Services.Migrations
 
             modelBuilder.Entity("RadVolontera.Services.Database.City", b =>
                 {
+                    b.Navigation("Companies");
+
                     b.Navigation("Users");
 
                     b.Navigation("VolunteeringAnnouncements");
+                });
+
+            modelBuilder.Entity("RadVolontera.Services.Database.Company", b =>
+                {
+                    b.Navigation("Events");
+                });
+
+            modelBuilder.Entity("RadVolontera.Services.Database.CompanyCategory", b =>
+                {
+                    b.Navigation("Companies");
                 });
 
             modelBuilder.Entity("RadVolontera.Services.Database.School", b =>

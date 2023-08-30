@@ -98,55 +98,58 @@ class _UsefulLinkListScreenState extends State<UsefulLinkListScreen> {
   }
 
   Widget _buildDataListView() {
-    return Expanded(
-        child: SingleChildScrollView(
-      child: DataTable(
-          
+  return Expanded(
+    child: SingleChildScrollView(
+      child: Container(
+        color: Colors.white, // Background color for the table
+        child: DataTable(
+          columnSpacing: 24.0, // Adjust column spacing as needed
+          headingRowColor: MaterialStateColor.resolveWith((states) => Colors.indigo), // Header row color
           columns: [
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'ID',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'ID',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'Name',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Url',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'Url',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
           ],
           rows: result?.result
-                  .map((UsefulLinkModel e) => DataRow(onSelectChanged: (selected) => {
-                    if(selected == true) {
-                        
-                       Navigator.of(context).push(
+              .map((UsefulLinkModel e) => DataRow(
+                    onSelectChanged: (selected) => {
+                      if (selected == true) {
+                        Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => UsefulLinkDetailsScreen(usefulLink: e,),
                           ),
                         )
-                    }
-                  },cells: [
-                        DataCell(Text(e.id?.toString() ?? "")),
-                        DataCell(Text(e.name ?? "")),
-                        DataCell(Text(e.urlLink ?? "")),
-                      ]))
-                  .toList() ??
-              []),
-    ));
-  }
+                      }
+                    },
+                    cells: [
+                      DataCell(Text(e.id?.toString() ?? "")),
+                      DataCell(Text(e.name ?? "")),
+                      DataCell(Text(e.urlLink ?? "")),
+                    ],
+                  ))
+              .toList() ??
+              [],
+        ),
+      ),
+    ),
+  );
+}
+
 }
 
 

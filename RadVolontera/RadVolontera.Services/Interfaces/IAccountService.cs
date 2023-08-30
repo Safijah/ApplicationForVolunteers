@@ -14,5 +14,6 @@ namespace RadVolontera.Services.Interfaces
         public Task<UserResponse> Update(string userId,RegisterRequest request);
         public Task<PagedResult<UserResponse>> GetAll(UserSearchObject filter);
         public Task<AuthenticationResponse> Authenticate(string username, string password, string ipAddress);
+        public DashboardData GetDashboardData();
     }
 }

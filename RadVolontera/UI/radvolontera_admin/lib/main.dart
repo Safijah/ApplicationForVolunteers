@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:radvolontera_admin/providers/account_provider.dart';
+import 'package:radvolontera_admin/providers/city_provider.dart';
+import 'package:radvolontera_admin/providers/company_category_provider.dart';
+import 'package:radvolontera_admin/providers/company_event_provider.dart';
+import 'package:radvolontera_admin/providers/company_provider.dart';
 import 'package:radvolontera_admin/providers/notification_provider.dart';
 import 'package:radvolontera_admin/providers/payment_provider.dart';
 import 'package:radvolontera_admin/providers/report_provider.dart';
@@ -8,6 +12,7 @@ import 'package:radvolontera_admin/providers/section_provider.dart';
 import 'package:radvolontera_admin/providers/status_provider.dart';
 import 'package:radvolontera_admin/providers/useful_link_provider.dart';
 import 'package:radvolontera_admin/providers/volunteering_announcement_provider.dart';
+import 'package:radvolontera_admin/screens/dashboard/dashboard.dart';
 import 'package:radvolontera_admin/screens/notifications/notification_list_screen.dart';
 import 'package:radvolontera_admin/utils/util.dart';
 
@@ -22,6 +27,10 @@ void main() {
       ChangeNotifierProvider(create: (_) => VolunteeringAnnouncementProvider()),
       ChangeNotifierProvider(create: (_) => StatusProvider()),
       ChangeNotifierProvider(create: (_) => ReportProvider()),
+      ChangeNotifierProvider(create: (_) => CompanyProvider()),
+      ChangeNotifierProvider(create: (_) => CompanyEventProvider()),
+      ChangeNotifierProvider(create: (_) => CompanyCategoryProvider()),
+      ChangeNotifierProvider(create: (_) => CityProvider()),
     ],
     child: const MyMaterialApp(),
   ));
@@ -192,7 +201,7 @@ class LoginPage extends StatelessWidget {
                           Authorization.token = result['accessToken'].toString();
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) =>
-                                  const NotificationListScreen()));
+                                  DashboardPage()));
                         } on Exception catch (e) {
                           showDialog(
                               context: context,

@@ -65,5 +65,13 @@ namespace RadVolontera.Controllers
         {
             return Ok(await _accountService.GetAll(filter));
         }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpGet("dashboard-data")]
+        [Consumes("application/json")]
+        public ActionResult<PagedResult<UserResponse>> GetDashboardData()
+        {
+            return Ok( _accountService.GetDashboardData());
+        }
     }
 }

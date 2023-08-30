@@ -93,65 +93,66 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
     );
   }
 
-  Widget _buildDataListView() {
-    return Expanded(
-        child: SingleChildScrollView(
-      child: DataTable(
-          
+ Widget _buildDataListView() {
+  return Expanded(
+    child: SingleChildScrollView(
+      child: Container(
+        color: Colors.white, // Background color for the table
+        child: DataTable(
+          columnSpacing: 24.0, // Adjust column spacing as needed
+          headingRowColor: MaterialStateColor.resolveWith((states) => Colors.indigo), // Header row color
+          dataRowColor: MaterialStateColor.resolveWith((states) => Colors.white), // Row color
           columns: [
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'ID',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'ID',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Heading',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'Heading',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Section',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'Section',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
-              const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Content',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'Content',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
           ],
           rows: result?.result
-                  .map((NotificationModel e) => DataRow(onSelectChanged: (selected) => {
-                    if(selected == true) {
-                        
-                       Navigator.of(context).push(
+              .map((NotificationModel e) => DataRow(
+                    onSelectChanged: (selected) => {
+                      if (selected == true) {
+                        Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => NotificationDetailScreen(notification: e,),
                           ),
                         )
-                    }
-                  },cells: [
-                        DataCell(Text(e.id?.toString() ?? "")),
-                        DataCell(Text(e.heading ?? "")),
-                        DataCell(Text(e.section?.name.toString() ?? "")),
-                        DataCell(Text(e.content ?? "")),
-                      ]))
-                  .toList() ??
-              []),
-    ));
-  }
+                      }
+                    },
+                    cells: [
+                      DataCell(Text(e.id?.toString() ?? "")),
+                      DataCell(Text(e.heading ?? "")),
+                      DataCell(Text(e.section?.name.toString() ?? "")),
+                      DataCell(Text(e.content ?? "")),
+                    ],
+                  ))
+              .toList() ??
+              [],
+        ),
+      ),
+    ),
+  );
+}
 }
 
 

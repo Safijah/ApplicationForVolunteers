@@ -7,11 +7,13 @@ import 'package:radvolontera_admin/models/account/account.dart';
 import 'package:radvolontera_admin/models/account/token_info.dart';
 import 'package:radvolontera_admin/models/exception_result.dart';
 
+import '../models/account/dashboard_data.dart';
 import '../models/search_result.dart';
 import '../utils/util.dart';
 
 class AccountProvider with ChangeNotifier{
   static String ? _baseUrl;
+   int pageSize = 1;
   String endpoint = "Account";
   AccountProvider(){
     _baseUrl = const String.fromEnvironment("baseUrl", defaultValue: "https://localhost:7264/api/");
@@ -91,6 +93,23 @@ class AccountProvider with ChangeNotifier{
         result.result.add(AccountModel.fromJson(item));
       }
 
+      return result;
+    } else {
+      throw new Exception("Unknown error");
+    }
+  }
+
+
+  Future<DashboardModel> getDashboardData() async {
+    var url = "$_baseUrl$endpoint/dashboard-data";
+
+    var uri = Uri.parse(url);
+    var headers = createAuthorizationHeaders();
+    var response = await http.get(uri, headers: headers);
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      var result = DashboardModel.fromJson(data);
       return result;
     } else {
       throw new Exception("Unknown error");

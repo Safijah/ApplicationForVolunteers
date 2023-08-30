@@ -136,49 +136,43 @@ class _UserListScreenState extends State<UserListScreen> {
     );
   }
 
-  Widget _buildDataListView() {
-    return Expanded(
-        child: SingleChildScrollView(
-      child: DataTable(
+Widget _buildDataListView() {
+  return Expanded(
+    child: SingleChildScrollView(
+      child: Container(
+        color: Colors.white, // Background color for the table
+        child: DataTable(
+          columnSpacing: 24.0, // Adjust column spacing as needed
+          headingRowColor: MaterialStateColor.resolveWith((states) => Colors.indigo), // Header row color
           columns: [
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'First name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'First name',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Last name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'Last name',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Email',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'Email',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Phone number',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'Phone number',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'User type',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataColumn(
+              label: Text(
+                'User type',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
             ),
           ],
@@ -187,11 +181,11 @@ class _UserListScreenState extends State<UserListScreen> {
                           onSelectChanged: (selected) => {
                                 if (selected == true)
                                   {
-                                     Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => UserDetailsScreen(user: e,),
-                                        ),
-                                      )
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => UserDetailsScreen(user: e),
+                                      ),
+                                    ),
                                   }
                               },
                           cells: [
@@ -200,9 +194,13 @@ class _UserListScreenState extends State<UserListScreen> {
                             DataCell(Text(e.email ?? "")),
                             DataCell(Text(e.phoneNumber ?? "")),
                             DataCell(Text(e.role ?? "")),
-                          ]))
+                          ],
+                        ))
                   .toList() ??
-              []),
-    ));
-  }
+              [],
+        ),
+      ),
+    ),
+  );
+}
 }

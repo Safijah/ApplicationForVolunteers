@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using RadVolontera.Models.City;
+using RadVolontera.Models.Company;
+using RadVolontera.Models.CompanyCategory;
+using RadVolontera.Models.CompanyEvent;
 using RadVolontera.Models.Enums;
 using RadVolontera.Models.Notification;
 using RadVolontera.Models.Payment;
@@ -32,6 +35,12 @@ namespace RadVolontera.Services.MappingProfile
             CreateMap<VolunteeringAnnouncementRequest, Database.VolunteeringAnnouncement>();
             CreateMap<Database.Report, Report>();
             CreateMap<ReportRequest, Database.Report>();
+            CreateMap<Database.Company, Company>();
+            CreateMap<CompanyRequest, Database.Company>();
+            CreateMap<Database.CompanyCategory, CompanyCategory>();
+            CreateMap<CompanyCategoryRequest, Database.CompanyCategory>();
+            CreateMap<Database.CompanyEvent, CompanyEvent>();
+            CreateMap<CompanyEventRequest, Database.CompanyEvent>();
         }
     }
 }

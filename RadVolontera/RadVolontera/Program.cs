@@ -20,6 +20,10 @@ builder.Services.AddTransient<IReportService, ReportService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<ISectionService, SectionService>();
 builder.Services.AddTransient<IStatusService, StatusService>();
+builder.Services.AddTransient<ICompanyCategoryService, CompanyCategoryService>();
+builder.Services.AddTransient<ICompanyService, CompanyService>();
+builder.Services.AddTransient<ICompanyEventService, CompanyEventService>();
+builder.Services.AddTransient<ICityService, CityService>();
 builder.Services.AddTransient<ExceptionMiddleware>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddSwaggerGen();

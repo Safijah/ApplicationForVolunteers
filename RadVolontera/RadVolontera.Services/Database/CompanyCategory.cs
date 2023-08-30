@@ -10,5 +10,6 @@ namespace RadVolontera.Services.Database
     {
         public long Id { get; set; }
         public string Name { get; set; }
+        public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
     }
 }

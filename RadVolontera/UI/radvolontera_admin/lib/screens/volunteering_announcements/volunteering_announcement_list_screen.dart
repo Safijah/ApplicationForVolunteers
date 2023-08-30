@@ -10,8 +10,6 @@ import '../../models/account/account.dart';
 import '../../models/search_result.dart';
 import '../../providers/account_provider.dart';
 import '../../widgets/master_screen.dart';
-import '../payments/payment_details.dart';
-import '../users/user_details_screen.dart';
 
 class VolunteeringAnnouncementListcreen extends StatefulWidget {
   const VolunteeringAnnouncementListcreen({super.key});
