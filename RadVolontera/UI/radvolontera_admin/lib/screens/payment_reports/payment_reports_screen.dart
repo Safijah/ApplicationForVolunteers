@@ -12,6 +12,7 @@ import 'package:radvolontera_admin/screens/payments/payment_details_screen.dart'
 import '../../models/search_result.dart';
 import '../../widgets/master_screen.dart';
 
+
 class PaymentReportListScreen extends StatefulWidget {
   const PaymentReportListScreen({super.key});
   List<Color> get availableColors => const <Color>[
@@ -169,7 +170,6 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
           )),
           ElevatedButton(
               onPressed: () async {
-              
               },
               child: Text("Download pdf")),
           SizedBox(
@@ -230,3 +230,4 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
     );
   }
 }
+
