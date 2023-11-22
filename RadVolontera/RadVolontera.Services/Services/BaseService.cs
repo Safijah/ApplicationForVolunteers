@@ -64,5 +64,13 @@ namespace RadVolontera.Services.Services
 
             return _mapper.Map<T>(entity);
         }
+
+        public virtual async Task Delete(TId id)
+        {
+            var entity = await _context.Set<TDb>().FindAsync(id);
+
+           _context.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
     }
 }

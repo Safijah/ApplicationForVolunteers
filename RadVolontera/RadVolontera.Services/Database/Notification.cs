@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RadVolontera.Services.Database
 {
-    public class Notification : BaseEntity
+    public class Notification : BaseSoftDeleteEntity
     {
         public long Id { get; set; }
         public string Heading { get; set; }

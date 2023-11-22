@@ -14,6 +14,7 @@ namespace RadVolontera.Services.Configuration
         public void Configure(EntityTypeBuilder<Payment> builder)
         {
             builder.Property(u => u.Id).ValueGeneratedOnAdd();
+            builder.HasQueryFilter(u => u.DeletedAt == null);
             builder.Property(w => w.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
             builder.HasOne(n => n.Student).WithMany(n => n.Payments).OnDelete(DeleteBehavior.NoAction);
         }

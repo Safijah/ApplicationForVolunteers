@@ -11,5 +11,6 @@ namespace RadVolontera.Services.Interfaces
     {
         Task<PagedResult<T>> Get(TSearch search = null);
         Task<T> GetById(TId id);
+        Task  Delete(TId id);
     }
 }

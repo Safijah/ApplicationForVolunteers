@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RadVolontera.Services.Database
 {
-    public  class UsefulLinks : BaseEntity
+    public  class UsefulLinks : BaseSoftDeleteEntity
     {
         public long Id { get; set; }
         public string UrlLink { get; set; }

@@ -3,6 +3,7 @@ import 'package:radvolontera_admin/main.dart';
 import 'package:radvolontera_admin/screens/companies/company_list_screen.dart';
 import 'package:radvolontera_admin/screens/payments/payment_list_screen.dart';
 import 'package:radvolontera_admin/screens/reports/report_list_screen.dart';
+import 'package:radvolontera_admin/screens/users/user_details_screen.dart';
 import 'package:radvolontera_admin/screens/users/user_list_screen.dart';
 import 'package:radvolontera_admin/utils/util.dart';
 
@@ -30,6 +31,20 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     return Scaffold(
       appBar: AppBar(
         title: widget.title_widget ?? Text(widget.title ?? ""),
+         actions: [
+          // Profile icon in the AppBar
+          IconButton(
+              padding: EdgeInsets.only(right: 50.0),
+            icon: Icon(Icons.account_circle),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => UserDetailsScreen(user: null,),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       drawer: Drawer(
         child: Container(
@@ -101,6 +116,18 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   );
                 },
               ),
+                ListTile(
+                leading: Icon(Icons.payments_rounded,
+                    color: Colors.white), // Add an icon to the ListTile
+                title:
+                    Text("Payments report", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const PaymentReportListScreen()),
+                  );
+                },
+              ),
               ListTile(
                 leading: Icon(Icons.volunteer_activism_sharp,
                     color: Colors.white), // Add an icon to the ListTile
@@ -122,18 +149,6 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => const ReportListScreen()),
-                  );
-                },
-              ),
-               ListTile(
-                leading: Icon(Icons.payments_rounded,
-                    color: Colors.white), // Add an icon to the ListTile
-                title:
-                    Text("Payments report", style: TextStyle(color: Colors.white)),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => const PaymentReportListScreen()),
                   );
                 },
               ),

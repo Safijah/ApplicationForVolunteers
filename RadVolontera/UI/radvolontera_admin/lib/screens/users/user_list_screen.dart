@@ -29,7 +29,7 @@ class _UserListScreenState extends State<UserListScreen> {
   String? selectedValue; // variable to store the selected value
 
   List<DropdownItem> dropdownItems = [
-     DropdownItem(0, 'All'),
+     DropdownItem(0, 'All users'),
     DropdownItem(1, 'Admins'),
     DropdownItem(2, 'Mentors'),
     DropdownItem(3, 'Students'),
@@ -80,8 +80,10 @@ class _UserListScreenState extends State<UserListScreen> {
             ),
           ),
           Expanded(
+            
               child: // list of dropdown items
                   DropdownButton<String>(
+           padding: EdgeInsets.only(top: 20.0,left: 5.0),
             value: selectedValue,
             hint: Text('Select user type'), // optional hint text
             onChanged: (newValue) async {

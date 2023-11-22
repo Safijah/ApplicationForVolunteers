@@ -14,6 +14,7 @@ namespace RadVolontera.Services.Configuration
         public void Configure(EntityTypeBuilder<Notification> builder)
         {
             builder.Property(u => u.Id).ValueGeneratedOnAdd();
+            builder.HasQueryFilter(u => u.DeletedAt == null);
             builder.Property(w => w.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
            builder.HasOne(n=>n.Admin).WithMany(n => n.Notifications).OnDelete(DeleteBehavior.NoAction) ;
         }

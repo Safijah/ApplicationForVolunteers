@@ -102,7 +102,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> {
     items: [
       DropdownMenuItem<String>(
         value: null, // Use null value for "All" option
-        child: Text('All'),
+        child: Text('All cities'),
       ),
       ...?cityResult?.result.map((item) {
         return DropdownMenuItem<String>(
@@ -144,7 +144,7 @@ class _CompanyListScreenState extends State<CompanyListScreen> {
     items: [
       DropdownMenuItem<String>(
         value: null, // Use null value for "All" option
-        child: Text('All'),
+        child: Text('All company categories'),
       ),
       ...?companyCategoriesResult?.result.map((item) {
         return DropdownMenuItem<String>(

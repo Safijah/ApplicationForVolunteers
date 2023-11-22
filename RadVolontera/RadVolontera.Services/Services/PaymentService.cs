@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RadVolontera.Models.Filters;
 using RadVolontera.Models.Payment;
@@ -44,5 +45,36 @@ namespace RadVolontera.Services.Services
 
             return filteredQuery;
         }
+
+       public  List<RadVolontera.Models.Payment.PaymentReportResponse> GetPaymentReport([FromQuery] PaymentReportSearchObject request)
+       {
+            var result = new List<RadVolontera.Models.Payment.PaymentReportResponse>();
+            for (int i = 1; i <= 12; i++)
+            {
+                var payments = _context.Payments.Where(p => p.Month == (Models.Enums.Month)i);
+
+                if (request != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(request?.StudentId)){
+                        payments = payments.Where(p=> p.StudentId== request.StudentId);
+                    }
+
+                    if (request?.Year != null)
+                    {
+                        payments = payments.Where(p => p.Year == request.Year);
+                    }
+                }
+                var report = new RadVolontera.Models.Payment.PaymentReportResponse()
+                {
+                    Month = (Models.Enums.Month)i,
+                    MonthName = ((Models.Enums.Month)i).ToString(),
+                    Amount = payments.Sum(p => p.Amount)
+                };
+
+                result.Add(report);
+            }
+
+            return result.ToList();
+       }
     }
 }

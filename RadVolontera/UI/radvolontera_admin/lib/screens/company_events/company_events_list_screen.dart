@@ -101,7 +101,7 @@ class _UserListScreenState extends State<CompanyEventListScreen> {
     items: [
       DropdownMenuItem<String>(
         value: null, // Use null value for "All" option
-        child: Text('All'),
+        child: Text('All companies'),
       ),
       ...?companyResult?.result.map((item) {
         return DropdownMenuItem<String>(

@@ -11,6 +11,10 @@ class NotificationListScreen extends StatefulWidget {
 
   @override
   State<NotificationListScreen> createState() => _NotificationListScreenState();
+  void functionThatSetsTheState(){
+}
+
+
 }
 
 class _NotificationListScreenState extends State<NotificationListScreen> {

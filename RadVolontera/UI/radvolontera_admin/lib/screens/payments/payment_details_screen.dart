@@ -14,7 +14,7 @@ import '../../widgets/master_screen.dart';
 
 class PaymentDetailsScreen extends StatefulWidget {
   PaymentModel? payment;
-  PaymentDetailsScreen({Key? key,  this.payment}) : super(key: key);
+  PaymentDetailsScreen({Key? key, this.payment}) : super(key: key);
 
   @override
   State<PaymentDetailsScreen> createState() =>
@@ -22,7 +22,7 @@ class PaymentDetailsScreen extends StatefulWidget {
 }
 
 class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
-    List<DropdownItem> dropdownItems = [
+  List<DropdownItem> dropdownItems = [
     DropdownItem(1, 'January'),
     DropdownItem(2, 'February'),
     DropdownItem(3, 'March'),
@@ -45,7 +45,6 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
   dynamic currentUser = null;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialValue = {
       'notes': widget.payment?.notes,
@@ -62,14 +61,13 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 
   Future initForm() async {
     studentsResult = await _accountProvider.get(filter: {
-                  'userTypes': 3 
-                });
+      'userTypes': 3,
+    });
     currentUser = await _accountProvider.getCurrentUser();
     setState(() {
       isLoading = false;
@@ -79,7 +77,6 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      // ignore: sort_child_properties_last
       child: Column(
         children: [
           isLoading ? Container() : _buildForm(),
@@ -89,48 +86,106 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
               Padding(
                 padding: EdgeInsets.all(20),
                 child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        try {
-                          _formKey.currentState?.saveAndValidate();
-                          var formValue = _formKey.currentState?.value;
-                          var request = {
-                            'notes': formValue!['notes'],
-                            'amount': formValue['amount'],
-                            'studentId': formValue['studentId'],
-                            'month': int.tryParse(formValue['month']),
-                            'year': formValue['year']
-                          };
-                          if (widget.payment == null) {
-                            await _paymentProvider
-                                .insert(request);
-                          } else {
-                            await _paymentProvider.update(widget.payment!.id!,
-                               request);
-                          }
-
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const PaymentListScreen()));
-                        } on Exception catch (e) {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text(e.toString()),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text("OK"))
-                                    ],
-                                  ));
+                  onPressed: () async {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      try {
+                        _formKey.currentState?.saveAndValidate();
+                        var formValue = _formKey.currentState?.value;
+                        var request = {
+                          'notes': formValue!['notes'],
+                          'amount': formValue['amount'],
+                          'studentId': formValue['studentId'],
+                          'month': int.tryParse(formValue['month']),
+                          'year': formValue['year']
+                        };
+                        if (widget.payment == null) {
+                          await _paymentProvider.insert(request);
+                        } else {
+                          await _paymentProvider.update(widget.payment!.id!, request);
                         }
+
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const PaymentListScreen()));
+                      } on Exception catch (e) {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: Text("Error"),
+                                  content: Text(e.toString()),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text("OK"))
+                                  ],
+                                ));
                       }
-                    },
-                    child: Text("Save")),
-              )
+                    }
+                  },
+                  child: Text("Save"),
+                ),
+              ),
+           ElevatedButton(
+              onPressed: () {
+                // Show delete confirmation dialog here
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Confirm Delete"),
+                      content: Text("Are you sure you want to delete this payment?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                          child: Text("Cancel"),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            // Add delete logic here
+                            try {
+                              if (widget.payment != null) {
+                                await _paymentProvider.delete(widget.payment!.id!);
+                               Navigator.of(context).pop(); // Close the dialog
+                                Navigator.of(context).pop();
+                   await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PaymentListScreen(),
+                      ),
+                    );
+                  }
+                            } on Exception catch (e) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: Text("Error"),
+                                  content: Text(e.toString()),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text("OK"),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                          child: Text("Delete"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red, // Set button color to red
+              ),
+              child: Text("Delete"),
+            ),
             ],
-          )
+          ),
         ],
       ),
       title: "Payment details",
@@ -139,7 +194,7 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
 
   Padding _buildForm() {
     return Padding(
-      padding: EdgeInsets.only(top: 50.0), // Adjust the top margin as needed
+      padding: EdgeInsets.only(top: 50.0),
       child: FormBuilder(
         key: _formKey,
         initialValue: _initialValue,
@@ -177,81 +232,75 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
                       SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: InputDecoration(
-                            labelText: "Amount",
-                            hintText: "Enter numbers only"),
+                            labelText: "Amount", hintText: "Enter numbers only"),
                         name: "amount",
                         validator: FormBuilderValidators.required(
                           errorText: 'Amount is required',
                         ),
-                        keyboardType: TextInputType.numberWithOptions(decimal: true), // Set the keyboard type to numeric
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'[0-9]')), // Only allow numbers
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                         ],
                       ),
                       SizedBox(height: 10),
-                     FormBuilderDropdown<String>(
-                                name: 'studentId',
-                                decoration: InputDecoration(
-                                  labelText: 'Student',
-                                  suffix: IconButton(
-                                    icon: const Icon(Icons.close),
-                                    onPressed: () {
-                                      _formKey.currentState!.fields['studentId']
-                                          ?.reset();
-                                    },
+                      FormBuilderDropdown<String>(
+                        name: 'studentId',
+                        decoration: InputDecoration(
+                          labelText: 'Student',
+                          suffix: IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              _formKey.currentState!.fields['studentId']?.reset();
+                            },
+                          ),
+                          hintText: 'Select student',
+                        ),
+                        items: studentsResult?.result
+                                ?.map(
+                                  (item) => DropdownMenuItem(
+                                    alignment: AlignmentDirectional.center,
+                                    value: item.id.toString(),
+                                    child: Text('${item.firstName} ${item.lastName}'),
                                   ),
-                                  hintText: 'Select student',
-                                ),
-                                items: studentsResult
-                                        ?.result.map(
-                                          (item) => DropdownMenuItem(
-                                            alignment:
-                                                AlignmentDirectional.center,
-                                            value: item.id.toString(),
-                                            child: Text('${item.firstName} ${item.lastName}'),
-                                          ),
-                                        )
-                                        .toList() ??
-                                    [],
-                                validator: FormBuilderValidators.required(
-                                  errorText: 'Student is required',
-                                ),
-                              ),
+                                )
+                                .toList() ??
+                            [],
+                        validator: FormBuilderValidators.required(
+                          errorText: 'Student is required',
+                        ),
+                      ),
                       SizedBox(height: 10),
                       FormBuilderDropdown<String>(
-                                name: 'month',
-                                decoration: InputDecoration(
-                                  labelText: 'Month',
-                                  suffix: IconButton(
-                                    icon: const Icon(Icons.close),
-                                    onPressed: () {
-                                      _formKey.currentState!.fields['month']
-                                          ?.reset();
-                                    },
+                        name: 'month',
+                        decoration: InputDecoration(
+                          labelText: 'Month',
+                          suffix: IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              _formKey.currentState!.fields['month']?.reset();
+                            },
+                          ),
+                          hintText: 'Select month',
+                        ),
+                        items: dropdownItems
+                                .map(
+                                  (item) => DropdownMenuItem(
+                                    alignment: AlignmentDirectional.center,
+                                    value: item.value.toString(),
+                                    child: Text(item.displayText ?? ""),
                                   ),
-                                  hintText: 'Select month',
-                                ),
-                                items: dropdownItems
-                                        .map(
-                                          (item) => DropdownMenuItem(
-                                            alignment:
-                                                AlignmentDirectional.center,
-                                            value: item.value.toString(),
-                                            child: Text(item.displayText ?? ""),
-                                          ),
-                                        )
-                                        .toList() ??
-                                    [],
-                                validator: FormBuilderValidators.required(
-                                  errorText: 'Month is required',
-                                ),
-                              ),
-                              SizedBox(height: 10),
+                                )
+                                .toList() ??
+                            [],
+                        validator: FormBuilderValidators.required(
+                          errorText: 'Month is required',
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: InputDecoration(
                           labelText: "Year",
-                          hintText: "1234", // Optional placeholder text
+                          hintText: "1234",
                         ),
                         name: "year",
                         validator: FormBuilderValidators.compose([
@@ -265,14 +314,13 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
                                 value.length != 4) {
                               return 'Enter year';
                             }
-                            return null; // Return null to indicate valid input
+                            return null;
                           },
                         ]),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                          LengthLimitingTextInputFormatter(
-                              4), // Limit input to 4 characters
+                          LengthLimitingTextInputFormatter(4),
                         ],
                       )
                     ],

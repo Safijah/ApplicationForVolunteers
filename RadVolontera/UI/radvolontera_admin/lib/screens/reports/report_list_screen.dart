@@ -151,7 +151,7 @@ class _ReportListScreenState
               items: [
                 DropdownMenuItem<String>(
                   value: null, // Use null value for "All" option
-                  child: Text('All'),
+                  child: Text('All statuses'),
                 ),
                 ...?statusResult?.result.map((item) {
                   return DropdownMenuItem<String>(

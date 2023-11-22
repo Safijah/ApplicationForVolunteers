@@ -62,62 +62,125 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MasterScreenWidget(
-      // ignore: sort_child_properties_last
-      child: Column(
-        children: [
-          isLoading ? Container() : _buildForm(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        try {
-                          _formKey.currentState?.patchValue(
-                              {'adminId': this.currentUser.nameid});
-                          _formKey.currentState?.saveAndValidate();
+Widget build(BuildContext context) {
+  return MasterScreenWidget(
+    // ignore: sort_child_properties_last
+    child: Column(
+      children: [
+        isLoading ? Container() : _buildForm(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    try {
+                      _formKey.currentState?.patchValue(
+                          {'adminId': this.currentUser.nameid});
+                      _formKey.currentState?.saveAndValidate();
 
-                          if (widget.notification == null) {
-                            await _notificationProvider
-                                .insert(_formKey.currentState?.value);
-                          } else {
-                            await _notificationProvider.update(
-                                widget.notification!.id!,
-                                _formKey.currentState?.value);
-                          }
-
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  const NotificationListScreen()));
-                        } on Exception catch (e) {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text(e.toString()),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text("OK"))
-                                    ],
-                                  ));
-                        }
+                      if (widget.notification == null) {
+                        await _notificationProvider
+                            .insert(_formKey.currentState?.value);
+                      } else {
+                        await _notificationProvider.update(
+                            widget.notification!.id!,
+                            _formKey.currentState?.value);
                       }
-                    },
-                    child: Text("Save")),
-              )
-            ],
-          )
-        ],
-      ),
-      title: this.widget.notification?.heading ?? "Notification details",
-    );
-  }
+
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              const NotificationListScreen()));
+                    } on Exception catch (e) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: Text("Error"),
+                          content: Text(e.toString()),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("OK"),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  }
+                },
+                child: Text("Save"),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Show delete confirmation dialog here
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Confirm Delete"),
+                      content: Text("Are you sure you want to delete this notification?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                          child: Text("Cancel"),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            // Add delete logic here
+                            try {
+                              if (widget.notification != null) {
+                                await _notificationProvider.delete(widget.notification!.id!);
+                               Navigator.of(context).pop(); // Close the dialog
+                                Navigator.of(context).pop();
+                   await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationListScreen(),
+                      ),
+                    );
+                  }
+                            } on Exception catch (e) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: Text("Error"),
+                                  content: Text(e.toString()),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text("OK"),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                          child: Text("Delete"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red, // Set button color to red
+              ),
+              child: Text("Delete"),
+            ),
+          ],
+        ),
+      ],
+    ),
+    title: this.widget.notification?.heading ?? "Notification details",
+  );
+}
+
 
 Padding _buildForm() {
   return Padding(

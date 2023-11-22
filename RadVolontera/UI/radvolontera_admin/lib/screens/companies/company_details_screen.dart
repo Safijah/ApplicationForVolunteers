@@ -112,7 +112,67 @@ class _CompanyDetailsScreenState extends State<CompanyDetailsScreen> {
                       }
                     },
                     child: Text("Save")),
-              )
+              ),
+              ElevatedButton(
+              onPressed: () {
+                // Show delete confirmation dialog here
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Confirm Delete"),
+                      content: Text("Are you sure you want to delete this company?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                          child: Text("Cancel"),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            // Add delete logic here
+                            try {
+                              if (widget.company != null) {
+                                await _companyProvider.delete(widget.company!.id!);
+                               Navigator.of(context).pop(); // Close the dialog
+                                Navigator.of(context).pop();
+                   await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CompanyListScreen(),
+                      ),
+                    );
+                  }
+                            } on Exception catch (e) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: Text("Error"),
+                                  content: Text(e.toString()),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text("OK"),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                          child: Text("Delete"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red, // Set button color to red
+              ),
+              child: Text("Delete"),
+            ),
             ],
           )
         ],
