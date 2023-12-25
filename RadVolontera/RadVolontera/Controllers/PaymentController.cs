@@ -21,5 +21,17 @@ namespace RadVolontera.Controllers
             var result =  (_service as IPaymentService).GetPaymentReport(request);
             return result.ToList();
         }
+
+
+        [HttpGet("pdf-report")]
+        public virtual async Task<IActionResult> GeneratePdf()
+        {
+            var result = await (_service as IPaymentService).GeneratePaymentReportPdf();
+            var fileContentResult = new FileContentResult(result, "application/pdf")
+            {
+                FileDownloadName = "example.pdf"
+            };
+            return fileContentResult;
+        }
     }
 }

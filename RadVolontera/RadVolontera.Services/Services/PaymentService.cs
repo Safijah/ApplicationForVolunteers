@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OpenHtmlToPdf;
 using RadVolontera.Models.Filters;
 using RadVolontera.Models.Payment;
 using RadVolontera.Services.Database;
@@ -13,11 +14,12 @@ using System.Threading.Tasks;
 
 namespace RadVolontera.Services.Services
 {
-    public  class PaymentService : BaseCRUDService<Models.Payment.Payment, Database.Payment, PaymentSearchObject, PaymentRequest, PaymentRequest, long>, IPaymentService
+    public class PaymentService : BaseCRUDService<Models.Payment.Payment, Database.Payment, PaymentSearchObject, PaymentRequest, PaymentRequest, long>, IPaymentService
     {
-        public PaymentService(AppDbContext context, IMapper mapper) : base(context, mapper)
+        public readonly IPdfGeneratorService _pdfGeneratorService;
+        public PaymentService(AppDbContext context, IMapper mapper,IPdfGeneratorService pdfGeneratorService) : base(context, mapper)
         {
-            
+            _pdfGeneratorService = pdfGeneratorService;
         }
 
         public override IQueryable<Database.Payment> AddInclude(IQueryable<Database.Payment> query, PaymentSearchObject? search = null)
@@ -46,8 +48,8 @@ namespace RadVolontera.Services.Services
             return filteredQuery;
         }
 
-       public  List<RadVolontera.Models.Payment.PaymentReportResponse> GetPaymentReport([FromQuery] PaymentReportSearchObject request)
-       {
+        public List<RadVolontera.Models.Payment.PaymentReportResponse> GetPaymentReport( PaymentReportSearchObject request)
+        {
             var result = new List<RadVolontera.Models.Payment.PaymentReportResponse>();
             for (int i = 1; i <= 12; i++)
             {
@@ -55,8 +57,8 @@ namespace RadVolontera.Services.Services
 
                 if (request != null)
                 {
-                    if (!string.IsNullOrWhiteSpace(request?.StudentId)){
-                        payments = payments.Where(p=> p.StudentId== request.StudentId);
+                    if (!string.IsNullOrWhiteSpace(request?.StudentId)) {
+                        payments = payments.Where(p => p.StudentId == request.StudentId);
                     }
 
                     if (request?.Year != null)
@@ -75,6 +77,19 @@ namespace RadVolontera.Services.Services
             }
 
             return result.ToList();
-       }
+        }
+
+        public async  Task<byte[]> GeneratePaymentReportPdf(){
+            var html =await _pdfGeneratorService.GeneratePaymentReportPdf();
+            var pdf = Pdf
+               .From(html)
+               .WithMargins(PaperMargins.All(Length.Centimeters(2)))
+               .WithTitle("Kontrakt")
+               .OfSize(OpenHtmlToPdf.PaperSize.A4)
+               .Portrait()
+               .Content();
+
+            return pdf ;
+        }
     }
 }

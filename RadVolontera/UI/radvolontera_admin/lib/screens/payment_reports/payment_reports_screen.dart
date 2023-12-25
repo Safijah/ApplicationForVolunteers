@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
@@ -170,6 +174,7 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
           )),
           ElevatedButton(
               onPressed: () async {
+                await _paymentProvider.downloadPdf();
               },
               child: Text("Download pdf")),
           SizedBox(
@@ -229,5 +234,8 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
       ),
     );
   }
+
+
+ 
 }
 

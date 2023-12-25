@@ -1,0 +1,134 @@
+﻿@page {
+    size: A4;
+}
+
+html,
+body {
+    height: 297mm;
+    display: block;
+}
+
+:root {
+    --primary-font: 'Open Sans', sans-serif;
+    --secondary-font: 'Domine', sans-serif;
+}
+
+.mt-10 {
+    margin-top: 20px !important;
+}
+
+.mt-20 {
+    margin-top: 20px !important;
+}
+
+.ml-20 {
+    margin-left: 20px !important;
+}
+
+.ml-100 {
+    margin-left: 100px !important;
+}
+
+.mt-30 {
+    margin-top: 30px !important;
+}
+
+.mt-50 {
+    margin-top: 50px !important;
+}
+
+.mt-100 {
+    margin-top: 100px !important;
+}
+
+.contract-paragraph-subheading {
+    font-size: 20px;
+    font-weight: bold;
+    color: #707070;
+}
+
+.contract-paragraph {
+    font-size: 20px;
+    line-height: 27px;
+    font-weight: normal;
+    color: #707070;
+}
+
+.subheading {
+    color: #24353c;
+    font-size: 22px;
+    font-weight: 300;
+    text-align: center;
+}
+
+.page-subheading {
+    font-family: var(--secondary-font);
+    font-size: 27px;
+    font-weight: normal;
+    line-height: 33px;
+    letter-spacing: 0.86px;
+}
+
+.candidate-info-font {
+    font-size: 16px;
+    line-height: 33px;
+    color: #0e3e32;
+    letter-spacing: 0.51px;
+    font-weight: normal;
+}
+
+
+.child {
+    padding: 10px;
+    display: inline-block;
+    width: 50%;
+    box-sizing: border-box;
+}
+
+hr {
+    background-color: gray;
+    height: 1px;
+    margin-top: 30px;
+}
+
+input {
+    padding: 8px;
+    border: 1px solid gray;
+    border-radius: 2px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+textarea {
+    padding: 8px;
+    border: 1px solid gray;
+    border-radius: 2px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.full-width {
+    width: 100%;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th,
+td {
+    border: 1px solid #0e3e32;
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: #5b8374;
+    color: white;
+}
+
+td {
+    color: #24353c;
+}
+
