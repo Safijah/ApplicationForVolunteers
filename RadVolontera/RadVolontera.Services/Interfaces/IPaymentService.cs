@@ -12,6 +12,6 @@ namespace RadVolontera.Services.Interfaces
     public  interface IPaymentService : ICRUDService<Models.Payment.Payment, PaymentSearchObject, PaymentRequest, PaymentRequest,long>
     {
        List<RadVolontera.Models.Payment.PaymentReportResponse> GetPaymentReport([FromQuery] PaymentReportSearchObject request);
-       Task< byte []> GeneratePaymentReportPdf();
+       Task<byte[]> GeneratePaymentReportPdf(int year, string? studentId);
     }
 }

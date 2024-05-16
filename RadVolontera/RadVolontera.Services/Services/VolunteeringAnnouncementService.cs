@@ -83,5 +83,20 @@ namespace RadVolontera.Services.Services
             await _context.SaveChangesAsync();
             return _mapper.Map<RadVolontera.Models.VolunteeringAnnouncement.VolunteeringAnnouncement>(value);
         }
+
+        public async Task<PagedResult<Models.VolunteeringAnnouncement.VolunteeringAnnouncement>> MentorAnnouncements(string studentId)
+        {
+            var result = new PagedResult<Models.VolunteeringAnnouncement.VolunteeringAnnouncement>();
+            var value = await _context.VolunteeringAnnouncements
+                .Include(u => u.Mentor)
+                .Where(v => v.MentorId==studentId).ToListAsync();
+
+            if (value == null)
+                throw new ApiException("Not found", System.Net.HttpStatusCode.BadRequest);
+
+            var tmp = _mapper.Map < List <Models.VolunteeringAnnouncement.VolunteeringAnnouncement>>(value);
+            result.Result = tmp;
+            return result;
+        }
     }
 }

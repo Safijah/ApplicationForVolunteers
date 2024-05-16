@@ -11,7 +11,7 @@ CompanyEventModel _$CompanyEventModelFromJson(Map<String, dynamic> json) =>
       json['id'] as int?,
       json['eventName'] as String?,
       json['location'] as String,
-      json['time'] as int?,
+      json['time'] as String?,
       json['company'] == null
           ? null
           : CompanyModel.fromJson(json['company'] as Map<String, dynamic>),

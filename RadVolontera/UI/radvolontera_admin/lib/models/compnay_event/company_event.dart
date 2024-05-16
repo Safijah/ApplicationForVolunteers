@@ -8,7 +8,7 @@ class CompanyEventModel {
   int? id;
   String? eventName;
   String location;
-  int? time;
+  String? time;
  int? companyId;
  CompanyModel? company;
  DateTime? eventDate;

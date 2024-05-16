@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RadVolontera.Models.Filters;
 using RadVolontera.Models.VolunteeringAnnouncement;
 using RadVolontera.Services.Interfaces;
 
@@ -17,6 +18,13 @@ namespace RadVolontera.Controllers
         public virtual async Task<RadVolontera.Models.VolunteeringAnnouncement.VolunteeringAnnouncement> ChangeStatus([FromBody] ChangeStatusRequest request)
         {
             var result = await (_service as IVolunteeringAnnouncementService).ChangeVolunteeringAnnouncementStatus(request);
+            return result;
+        }
+
+        [HttpGet("student-announcements/{mentorId}")]
+        public virtual async Task<PagedResult<RadVolontera.Models.VolunteeringAnnouncement.VolunteeringAnnouncement>> StudentAnnouncements([FromRoute] string mentorId)
+        {
+            var result = await (_service as IVolunteeringAnnouncementService).MentorAnnouncements(mentorId);
             return result;
         }
     }

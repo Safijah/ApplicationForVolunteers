@@ -124,6 +124,8 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
                   child: Text("Save"),
                 ),
               ),
+              if(widget.payment != null)
+              ...[
            ElevatedButton(
               onPressed: () {
                 // Show delete confirmation dialog here
@@ -184,6 +186,7 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
               ),
               child: Text("Delete"),
             ),
+            ]
             ],
           ),
         ],

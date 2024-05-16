@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using RadVolontera.Models.Account;
 using RadVolontera.Models.Enums;
 using RadVolontera.Models.Filters;
@@ -23,14 +25,16 @@ namespace RadVolontera.Services.Services
         private SignInManager<User> _signInManager;
         private TokenService _tokenService;
         private readonly UrlEncoder _urlEncoder;
+        private readonly IMapper _mapper;
 
-        public AccountService(UserManager<User> userManager, AppDbContext appDbContext, SignInManager<User> signInManager, UrlEncoder urlEncoder, TokenService tokenService)
+        public AccountService(UserManager<User> userManager, AppDbContext appDbContext, SignInManager<User> signInManager, UrlEncoder urlEncoder, TokenService tokenService, IMapper mapper)
         {
             _userManager = userManager;
             _appDbContext = appDbContext;
             _signInManager = signInManager;
             _tokenService = tokenService;
             _urlEncoder = urlEncoder;
+            _mapper = mapper;
         }
 
         public async Task<UserResponse> Register(RegisterRequest request)
@@ -138,8 +142,8 @@ namespace RadVolontera.Services.Services
                 request.Roles.Add(role.ToString());
             }
 
-            if(user.Roles.Any())
-               user.Roles.Remove(user.Roles.FirstOrDefault());
+            if (user.Roles.Any())
+                user.Roles.Remove(user.Roles.FirstOrDefault());
 
             if (request.Roles?.Count > 0)
                 foreach (var userRole in request.Roles)
@@ -152,24 +156,25 @@ namespace RadVolontera.Services.Services
         public async Task<PagedResult<UserResponse>> GetAll(UserSearchObject filter)
         {
             var users = await _appDbContext.Users
-                .Include(u=>u.Roles).ToListAsync();
+                .Include(u => u.Roles).ToListAsync();
 
             if (!string.IsNullOrWhiteSpace(filter?.FullName))
-                users = users.Where(u=>u.FirstName.Contains(filter.FullName) || u.LastName.Contains(filter.FullName)).ToList();
+                users = users.Where(u => u.FirstName.Contains(filter.FullName) || u.LastName.Contains(filter.FullName)).ToList();
 
             if (filter?.UserTypes != null && filter.UserTypes != UserTypes.All)
-                users = users.Where(u => u.Roles.Any(r=>r.Name == filter?.UserTypes.Value.ToString())).ToList();
+                users = users.Where(u => u.Roles.Any(r => r.Name == filter?.UserTypes.Value.ToString())).ToList();
 
-            var result= users.Select(u => new UserResponse() {
-            FirstName = u.FirstName,
-            LastName = u.LastName,
-            BirthDate = u.BirthDate,
-            PhoneNumber = u.PhoneNumber,
-            Email = u.Email,
-            Gender=u.Gender,
-            UserType= this.GetUserTypes(u),
-            Id = u.Id,
-            Role = u.Roles.FirstOrDefault()?.Name
+            var result = users.Select(u => new UserResponse()
+            {
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                BirthDate = u.BirthDate,
+                PhoneNumber = u.PhoneNumber,
+                Email = u.Email,
+                Gender = u.Gender,
+                UserType = this.GetUserTypes(u),
+                Id = u.Id,
+                Role = u.Roles.FirstOrDefault()?.Name
             }).ToList();
 
             return new PagedResult<UserResponse>()
@@ -182,11 +187,12 @@ namespace RadVolontera.Services.Services
         private UserTypes GetUserTypes(User user)
         {
             var role = user.Roles.FirstOrDefault();
-            
+
             if (role.Name == "Admin")
             {
                 return UserTypes.Admin;
-            } else if (role.Name == "Mentor")
+            }
+            else if (role.Name == "Mentor")
             {
                 return UserTypes.Mentor;
             }
@@ -206,6 +212,46 @@ namespace RadVolontera.Services.Services
                 MentorCount = _appDbContext.Users.Where(u => u.Roles.Any(r => r.Name == Roles.Mentor)).Count(),
                 AdminCount = _appDbContext.Users.Where(u => u.Roles.Any(r => r.Name == Roles.Admin)).Count()
             };
+        }
+
+        public async Task<UserResponse> UpdateProfile(string userId, UserUpdateRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                throw new ApiException("User not found", System.Net.HttpStatusCode.NotFound);
+
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Gender = request.Gender;
+            user.BirthDate = request.BirthDate;
+            user.PhoneNumber = request.PhoneNumber;
+
+            await _appDbContext.SaveChangesAsync();
+            return new UserResponse() { };
+        }
+
+        public async Task<UserResponse> UserProfile(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                throw new ApiException("User not found", System.Net.HttpStatusCode.NotFound);
+
+            return _mapper.Map<RadVolontera.Models.Account.UserResponse>(user);
+        }
+
+        public async Task ChangePassword(string userId, ChangePasswordRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                throw new ApiException("User not found", System.Net.HttpStatusCode.NotFound);
+            
+            var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+
+            if (!result.Succeeded)
+                throw new ApiException(result.Errors?.FirstOrDefault()?.Description, System.Net.HttpStatusCode.BadRequest);
         }
     }
 }

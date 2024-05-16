@@ -12,5 +12,6 @@ namespace RadVolontera.Services.Interfaces
     public  interface IVolunteeringAnnouncementService : ICRUDService<Models.VolunteeringAnnouncement.VolunteeringAnnouncement, VolunteeringAnnouncementSearchObject, VolunteeringAnnouncementRequest, VolunteeringAnnouncementRequest, long>
     {
         Task<VolunteeringAnnouncement> ChangeVolunteeringAnnouncementStatus(ChangeStatusRequest request);
+        Task< PagedResult<VolunteeringAnnouncement>> MentorAnnouncements(string  mentorId);
     }
 }

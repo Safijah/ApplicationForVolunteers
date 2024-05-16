@@ -113,6 +113,8 @@ Widget build(BuildContext context) {
                 child: Text("Save"),
               ),
             ),
+             if (widget.notification != null)
+             ...[
             ElevatedButton(
               onPressed: () {
                 // Show delete confirmation dialog here
@@ -169,10 +171,11 @@ Widget build(BuildContext context) {
                 );
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.red, // Set button color to red
+                primary: Colors.red,// Set button color to red
               ),
               child: Text("Delete"),
             ),
+             ],
           ],
         ),
       ],

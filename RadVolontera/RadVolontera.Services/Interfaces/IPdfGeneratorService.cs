@@ -8,6 +8,6 @@ namespace RadVolontera.Services.Interfaces
 {
     public interface IPdfGeneratorService
     {
-        Task<string> GeneratePaymentReportPdf ();
+        Task<string> GeneratePaymentReportPdf (int year, string ? studentId);
     }
 }

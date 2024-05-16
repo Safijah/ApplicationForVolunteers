@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\logo.jpg" />
     <None Remove="Resources\style.css" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\logo.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\style.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -27,6 +31,7 @@
     </PackageReference>
     <PackageReference Include="OpenHtmlToPdf.netcore" Version="1.13.0" />
     <PackageReference Include="SendGrid" Version="9.28.1" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

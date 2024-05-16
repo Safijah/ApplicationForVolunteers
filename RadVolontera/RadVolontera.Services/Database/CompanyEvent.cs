@@ -15,6 +15,6 @@ namespace RadVolontera.Services.Database
         public string EventName { get; set; }
         public DateTime EventDate { get; set; }
         public string Location { get; set; }
-        public  int Time { get; set; }
+        public  string Time { get; set; }
     }
 }

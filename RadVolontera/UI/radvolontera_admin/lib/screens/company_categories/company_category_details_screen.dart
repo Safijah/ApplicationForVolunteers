@@ -100,6 +100,8 @@ class _CompanyCategoryDetailsScreenState extends State<CompanyCategoryDetailsScr
 
                     
               ),
+              if(widget.companyCategory != null)
+              ...[
                ElevatedButton(
               onPressed: () {
                 // Show delete confirmation dialog here
@@ -160,6 +162,7 @@ class _CompanyCategoryDetailsScreenState extends State<CompanyCategoryDetailsScr
               ),
               child: Text("Delete"),
             ),
+          ]
             ],
           )
         ],

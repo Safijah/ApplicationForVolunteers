@@ -13,7 +13,6 @@ import 'package:radvolontera_admin/providers/status_provider.dart';
 import 'package:radvolontera_admin/providers/useful_link_provider.dart';
 import 'package:radvolontera_admin/providers/volunteering_announcement_provider.dart';
 import 'package:radvolontera_admin/screens/dashboard/dashboard.dart';
-import 'package:radvolontera_admin/screens/notifications/notification_list_screen.dart';
 import 'package:radvolontera_admin/utils/util.dart';
 
 void main() {
@@ -106,7 +105,11 @@ class MyMaterialApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'RS II Material app',
-      theme: ThemeData(primarySwatch: Colors.indigo),
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(
+      seedColor: Colors.indigo,
+      // ···
+    ),
+    ),
       home: LoginPage(),
     );
   }

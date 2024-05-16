@@ -79,17 +79,17 @@ namespace RadVolontera.Services.Services
             return result.ToList();
         }
 
-        public async  Task<byte[]> GeneratePaymentReportPdf(){
-            var html =await _pdfGeneratorService.GeneratePaymentReportPdf();
+        public async  Task<byte[]> GeneratePaymentReportPdf(int year, string? studentId){
+            string html =await _pdfGeneratorService.GeneratePaymentReportPdf(year,studentId);
             var pdf = Pdf
-               .From(html)
-               .WithMargins(PaperMargins.All(Length.Centimeters(2)))
-               .WithTitle("Kontrakt")
-               .OfSize(OpenHtmlToPdf.PaperSize.A4)
-               .Portrait()
-               .Content();
+                .From(html)
+                .WithMargins(PaperMargins.All(Length.Centimeters(2)))
+                .WithTitle("Måltidsplan")
+                .OfSize(OpenHtmlToPdf.PaperSize.A4)
+                .Portrait()
+                .Content();
+            return pdf;
 
-            return pdf ;
         }
     }
 }

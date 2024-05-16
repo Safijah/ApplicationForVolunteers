@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,7 +16,7 @@ import '../../widgets/master_screen.dart';
 
 class CompanyEventDetailsScreen extends StatefulWidget {
   CompanyEventModel? companyEvent;
-  CompanyEventDetailsScreen({Key? key,  this.companyEvent}) : super(key: key);
+  CompanyEventDetailsScreen({Key? key, this.companyEvent}) : super(key: key);
 
   @override
   State<CompanyEventDetailsScreen> createState() =>
@@ -86,18 +84,19 @@ class _CompanyEventDetailsScreenState extends State<CompanyEventDetailsScreen> {
                             'location': formValue['location'],
                             'time': formValue['time'],
                             'companyId': int.tryParse(formValue['companyId']),
-                            'eventDate': formValue['eventDate'].toIso8601String()
+                            'eventDate':
+                                formValue['eventDate'].toIso8601String()
                           };
                           if (widget.companyEvent == null) {
-                            await _companyEventProvider
-                                .insert(request);
+                            await _companyEventProvider.insert(request);
                           } else {
-                            await _companyEventProvider.update(widget.companyEvent!.id!,
-                               request);
+                            await _companyEventProvider.update(
+                                widget.companyEvent!.id!, request);
                           }
 
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const CompanyEventListScreen()));
+                              builder: (context) =>
+                                  const CompanyEventListScreen()));
                         } on Exception catch (e) {
                           showDialog(
                               context: context,
@@ -116,66 +115,74 @@ class _CompanyEventDetailsScreenState extends State<CompanyEventDetailsScreen> {
                     },
                     child: Text("Save")),
               ),
-              ElevatedButton(
-              onPressed: () {
-                // Show delete confirmation dialog here
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Confirm Delete"),
-                      content: Text("Are you sure you want to delete this company event?"),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(); // Close the dialog
-                          },
-                          child: Text("Cancel"),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            // Add delete logic here
-                            try {
-                              if (widget.companyEvent != null) {
-                                await _companyEventProvider.delete(widget.companyEvent!.id!);
-                               Navigator.of(context).pop(); // Close the dialog
-                                Navigator.of(context).pop();
-                   await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CompanyEventListScreen(),
-                      ),
-                    );
-                  }
-                            } on Exception catch (e) {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: Text("Error"),
-                                  content: Text(e.toString()),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: Text("OK"),
+              if (widget.companyEvent != null) ...[
+                ElevatedButton(
+                  onPressed: () {
+                    // Show delete confirmation dialog here
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Confirm Delete"),
+                          content: Text(
+                              "Are you sure you want to delete this company event?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Close the dialog
+                              },
+                              child: Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                // Add delete logic here
+                                try {
+                                  if (widget.companyEvent != null) {
+                                    await _companyEventProvider
+                                        .delete(widget.companyEvent!.id!);
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                    Navigator.of(context).pop();
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CompanyEventListScreen(),
+                                      ),
+                                    );
+                                  }
+                                } on Exception catch (e) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      title: Text("Error"),
+                                      content: Text(e.toString()),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: Text("OK"),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              );
-                            }
-                            Navigator.of(context).pop(); // Close the dialog
-                          },
-                          child: Text("Delete"),
-                        ),
-                      ],
+                                  );
+                                }
+                                Navigator.of(context).pop(); // Close the dialog
+                              },
+                              child: Text("Delete"),
+                            ),
+                          ],
+                        );
+                      },
                     );
                   },
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.red, // Set button color to red
-              ),
-              child: Text("Delete"),
-            ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red, // Set button color to red
+                  ),
+                  child: Text("Delete"),
+                ),
+              ]
             ],
           )
         ],
@@ -230,75 +237,70 @@ class _CompanyEventDetailsScreenState extends State<CompanyEventDetailsScreen> {
                         ),
                       ),
                       SizedBox(height: 10),
-                     FormBuilderDropdown<String>(
-                                name: 'companyId',
-                                decoration: InputDecoration(
-                                  labelText: 'Company',
-                                  suffix: IconButton(
-                                    icon: const Icon(Icons.close),
-                                    onPressed: () {
-                                      _formKey.currentState!.fields['companyId']
-                                          ?.reset();
-                                    },
+                      FormBuilderDropdown<String>(
+                        name: 'companyId',
+                        decoration: InputDecoration(
+                          labelText: 'Company',
+                          suffix: IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              _formKey.currentState!.fields['companyId']
+                                  ?.reset();
+                            },
+                          ),
+                          hintText: 'Select company',
+                        ),
+                        items: companyResult?.result
+                                .map(
+                                  (item) => DropdownMenuItem(
+                                    alignment: AlignmentDirectional.center,
+                                    value: item.id.toString(),
+                                    child: Text(item.name ?? ""),
                                   ),
-                                  hintText: 'Select student',
-                                ),
-                                items: companyResult
-                                        ?.result.map(
-                                          (item) => DropdownMenuItem(
-                                            alignment:
-                                                AlignmentDirectional.center,
-                                            value: item.id.toString(),
-                                            child: Text(item.name ?? ""),
-                                          ),
-                                        )
-                                        .toList() ??
-                                    [],
-                                validator: FormBuilderValidators.required(
-                                  errorText: 'Company is required',
-                                ),
-                              ),
+                                )
+                                .toList() ??
+                            [],
+                        validator: FormBuilderValidators.required(
+                          errorText: 'Company is required',
+                        ),
+                      ),
                       SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: InputDecoration(
                           labelText: "Time",
-                          hintText: "12", // Optional placeholder text
+                          hintText: "HH:mm", // Optional placeholder text
                         ),
                         name: "time",
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                              errorText: 'Time is required'),
-                          FormBuilderValidators.numeric(
-                              errorText: 'Enter a valid time in format 00'),
-                          (value) {
-                            if (value != null &&
-                                value.isNotEmpty &&
-                                value.length != 2) {
-                              return 'Enter a valid time';
-                            }
-                            return null; // Return null to indicate valid input
-                          },
-                        ]),
-                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Time is required';
+                          } else if (!RegExp(
+                                  r'^([01]?[0-9]|2[0-3]):[0-5][0-9]$')
+                              .hasMatch(value)) {
+                            return 'Enter a valid time in HH:mm format';
+                          }
+                          return null; // Return null if the input is valid
+                        },
+                        keyboardType: TextInputType.text,
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                         FilteringTextInputFormatter.allow(RegExp(r'[0-9:]')),
                           LengthLimitingTextInputFormatter(
-                              4), // Limit input to 4 characters
+                              5), // Limit input to 4 characters
                         ],
                       ),
-                       SizedBox(height: 10),
-                       FormBuilderDateTimePicker(
-                                name: 'eventDate',
-                                decoration: InputDecoration(
-                                  labelText: 'Event date',
-                                ),
-                                initialEntryMode: DatePickerEntryMode.calendar,
-                                inputType: InputType.date,
-                                format: DateFormat('dd-MM-yyyy'),
-                                validator: FormBuilderValidators.required(
-                                  errorText: 'Event date is required',
-                                ),
-                              ),
+                      SizedBox(height: 10),
+                      FormBuilderDateTimePicker(
+                        name: 'eventDate',
+                        decoration: InputDecoration(
+                          labelText: 'Event date',
+                        ),
+                        initialEntryMode: DatePickerEntryMode.calendar,
+                        inputType: InputType.date,
+                        format: DateFormat('dd-MM-yyyy'),
+                        validator: FormBuilderValidators.required(
+                          errorText: 'Event date is required',
+                        ),
+                      ),
                     ],
                   ),
                 ),

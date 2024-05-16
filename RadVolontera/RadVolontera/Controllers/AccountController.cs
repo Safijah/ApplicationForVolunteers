@@ -16,15 +16,15 @@ namespace RadVolontera.Controllers
     {
         private readonly IAccountService _accountService;
 
-        public AccountController(IAccountService accountService, IServiceProvider provider) 
+        public AccountController(IAccountService accountService, IServiceProvider provider)
         {
             _accountService = accountService;
         }
 
 
         [HttpPost("register")]
-        public async Task<ActionResult<UserResponse>> Register([FromBody]RegisterRequest request)
-        { 
+        public async Task<ActionResult<UserResponse>> Register([FromBody] RegisterRequest request)
+        {
             var userResponse = await _accountService.Register(new RegisterRequest
             {
                 UserName = request.UserName,
@@ -53,15 +53,15 @@ namespace RadVolontera.Controllers
         [Authorize(Roles = Roles.Admin)]
         [HttpPut("{userId}")]
         [Consumes("application/json")]
-        public async Task<ActionResult<UserResponse>> Update([FromRoute] string userId,[FromBody] RegisterRequest request)
+        public async Task<ActionResult<UserResponse>> Update([FromRoute] string userId, [FromBody] RegisterRequest request)
         {
-            return Ok(await _accountService.Update(userId,request));
+            return Ok(await _accountService.Update(userId, request));
         }
 
         [Authorize(Roles = Roles.Admin)]
         [HttpGet]
         [Consumes("application/json")]
-        public async Task<ActionResult<PagedResult<UserResponse>>> GetAll( [FromQuery] UserSearchObject filter)
+        public async Task<ActionResult<PagedResult<UserResponse>>> GetAll([FromQuery] UserSearchObject filter)
         {
             return Ok(await _accountService.GetAll(filter));
         }
@@ -71,7 +71,30 @@ namespace RadVolontera.Controllers
         [Consumes("application/json")]
         public ActionResult<PagedResult<UserResponse>> GetDashboardData()
         {
-            return Ok( _accountService.GetDashboardData());
+            return Ok(_accountService.GetDashboardData());
+        }
+
+
+        [HttpPut("update-profile/{userId}")]
+        [Consumes("application/json")]
+        public async Task<ActionResult<UserResponse>> UpdateProfile([FromRoute] string userId, [FromBody] UserUpdateRequest request)
+        {
+            return Ok(await _accountService.UpdateProfile(userId, request));
+        }
+
+        [HttpGet("user-profile/{userId}")]
+        [Consumes("application/json")]
+        public async Task<ActionResult<UserResponse>> UserProfile([FromRoute] string userId)
+        {
+            return Ok(await _accountService.UserProfile(userId));
+        }
+
+        [HttpPost("change-password/{userId}")]
+        public async Task<ActionResult> ChangePassword([FromRoute] string userId,ChangePasswordRequest request)
+        {
+
+            await _accountService.ChangePassword(userId, request);
+            return Ok();
         }
     }
 }

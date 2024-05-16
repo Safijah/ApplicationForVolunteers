@@ -1,48 +1,75 @@
-﻿using RadVolontera.Services.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using RadVolontera.Services.Database;
 using RadVolontera.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
+using System;
+using System.Drawing;
+using System.IO;
 
-namespace RadVolontera.Services.Services
+public class PdfGeneratorService : IPdfGeneratorService
 {
-    public class PdfGeneratorService : IPdfGeneratorService
+    private readonly AppDbContext _context;
+
+    public PdfGeneratorService(AppDbContext context)
     {
-        public readonly AppDbContext _context;
-        public PdfGeneratorService(AppDbContext context)
-        {
-            _context = context;
-        }
-        public async Task<string> GeneratePaymentReportPdf()
-        {
-            string stylePath = (Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Resources\style.css").Replace("\\", "/");
-            StringBuilder generatedCss = GetStringFromFile(stylePath);
-            var test= await _context.SaveChangesAsync();
-            string html = $@"
-            <!DOCTYPE html>
-            <html>
-            <head>
-            <meta name='viewport' content='width=device-width,initial-scale=1.0'>
-                        <meta charset='UTF-8'>
-                <title>Title</title>
-                <style type='text/css'> {generatedCss} </style>       
-            </head>
-            <body>
-               <div  class=""full-width""><span>Safija hehe</span></div>
-            </body>
-            </html>";
+        _context = context;
+    }
 
-            return html;
-        }
+    public async Task<string> GeneratePaymentReportPdf(int selectedYear, string? studentId)
+    {
+        // Retrieve data based on the filter parameters
+        var paymentData = await _context.Payments
+            .Include(p => p.Student)
+            .Where(p => p.Year == selectedYear && (studentId == null || (p.StudentId == studentId)))
+            .ToListAsync();
 
-        public static StringBuilder GetStringFromFile(string path)
+        var studentData = new User();
+        if (!studentId.IsNullOrEmpty())
         {
-            StringBuilder sb = new StringBuilder(System.IO.File.ReadAllText(path, Encoding.UTF8));
-            return sb;
+            studentData = _context.Users.FirstOrDefault(s => s.Id == studentId);
         }
+        // Generate PDF report dynamically
+        var pdfHtml = await GeneratePdfReport(paymentData, studentData);
+
+        return pdfHtml;
+    }
+
+    private async Task<string> GeneratePdfReport(List<Payment> paymentData, User? student)
+    {
+        string stylePath = (Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Resources\style.css").Replace("\\", "/");
+        StringBuilder generatedCss = GetStringFromFile(stylePath);
+        string logo = GetImageFromFolder(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Resources\logo.jpg");
+        return "";
+
+    }
+
+    private static string GetImageFromFolder(string path)
+    {
+        try
+        {
+            using ( Image image = Image.FromFile(path))
+            {
+                using (MemoryStream m = new MemoryStream())
+                {
+                    image.Save(m, image.RawFormat);
+                    byte[] imageBytes = m.ToArray();
+
+                    string base64String = Convert.ToBase64String(imageBytes);
+                    return base64String;
+                }
+            }
+        }
+        catch (Exception)
+        {
+            return string.Empty;
+        }
+    }
+
+    public static StringBuilder GetStringFromFile(string path)
+    {
+        StringBuilder sb = new StringBuilder(File.ReadAllText(path, Encoding.UTF8));
+        return sb;
     }
 }

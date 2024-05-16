@@ -99,6 +99,8 @@ class _UsefulLinkDetailsScreenState extends State<UsefulLinkDetailsScreen> {
                   child: Text("Save"),
                 ),
               ),
+              if(widget.usefulLink!= null)
+              ...[
               ElevatedButton(
                 onPressed: () {
                   // Show delete confirmation dialog here
@@ -164,6 +166,7 @@ class _UsefulLinkDetailsScreenState extends State<UsefulLinkDetailsScreen> {
                 ),
                 child: Text("Delete"),
               ),
+              ]
             ],
           ),
         ],

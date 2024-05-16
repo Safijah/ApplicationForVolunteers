@@ -101,5 +101,21 @@ namespace RadVolontera.Services.Services
             await _context.SaveChangesAsync();
             return _mapper.Map<RadVolontera.Models.Report.Report>(value);
         }
+
+        public async Task<PagedResult<Models.Report.Report>> MentorReports(string studentId)
+        {
+            var result = new PagedResult<Models.Report.Report>();
+            var value = await _context.Reports
+                .Include(u => u.Mentor)
+                .Where(v => v.MentorId == studentId).ToListAsync();
+
+            if (value == null)
+                throw new ApiException("Not found", System.Net.HttpStatusCode.BadRequest);
+
+
+            var tmp = _mapper.Map<List<Models.Report.Report>>(value);
+            result.Result = tmp;
+            return result;
+        }
     }
 }
