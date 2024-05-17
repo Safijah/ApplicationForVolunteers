@@ -112,17 +112,6 @@ class _UserListScreenState extends State<CompanyEventListScreen> {
     ],
   ),
 ),
-          ElevatedButton(
-              onPressed: () async {
-                var data = await _companyEventProvider.get(filter: {
-                  'companyId': selectedValue 
-                });
-
-                setState(() {
-                  result = data;
-                });
-              },
-              child: Text("Search")),
           SizedBox(
             width: 8,
           ),

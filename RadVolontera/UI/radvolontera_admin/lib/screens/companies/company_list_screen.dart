@@ -155,18 +155,6 @@ class _CompanyListScreenState extends State<CompanyListScreen> {
     ],
   ),
 ),
-          ElevatedButton(
-              onPressed: () async {
-                var data = await _companyProvider.get(filter: {
-                 'cityId': selectedCityValue,
-        'companyCategoryId': selectedCategoryValue
-                });
-
-                setState(() {
-                  result = data;
-                });
-              },
-              child: Text("Search")),
           SizedBox(
             width: 8,
           ),

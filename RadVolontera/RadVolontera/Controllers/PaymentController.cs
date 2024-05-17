@@ -24,9 +24,9 @@ namespace RadVolontera.Controllers
 
 
         [HttpGet("pdf-report")]
-        public virtual async Task<IActionResult> GeneratePdf()
+        public virtual async Task<IActionResult> GeneratePdf([FromQuery] PaymentReportSearchObject request)
         {
-            var result = await (_service as IPaymentService).GeneratePaymentReportPdf();
+            var result = await (_service as IPaymentService).GeneratePaymentReportPdf(request.Year ?? DateTime.Now.Year, request.StudentId);
             var fileContentResult = new FileContentResult(result, "application/pdf")
             {
                 FileDownloadName = "example.pdf"

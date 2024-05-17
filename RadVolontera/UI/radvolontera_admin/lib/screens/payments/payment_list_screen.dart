@@ -159,18 +159,6 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
               );
             }).toList(),
           )),
-          ElevatedButton(
-              onPressed: () async {
-                var data = await _paymentProvider.get(filter: {
-                  'month': selectedValue,
-                  'studentId': selectedValue
-                });
-
-                setState(() {
-                  result = data;
-                });
-              },
-              child: Text("Search")),
           SizedBox(
             width: 8,
           ),

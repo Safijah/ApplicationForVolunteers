@@ -44,8 +44,12 @@ static String? baseUrl="https://localhost:7264/api";
 }
 
 
-Future<void> downloadPdf() async {
+Future<void> downloadPdf({dynamic filter}) async {
   var url = "$baseUrl/Payment/pdf-report";
+  if (filter != null) {
+    var queryString = getQueryString(filter);
+    url = "$url?$queryString";
+  }
   var uri = Uri.parse(url);
   var headers = createHeaders();
 

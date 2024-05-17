@@ -162,18 +162,6 @@ class _ReportListScreenState
               ],
             ),
           ),
-          ElevatedButton(
-              onPressed: () async {
-                var data = await _reportProvider.get(filter: {
-                  'mentorId': selectedMentorValue,
-                  'statusId': selectedStatusValue
-                });
-
-                setState(() {
-                  result = data;
-                });
-              },
-              child: Text("Search")),
           SizedBox(
             width: 8,)
         ],

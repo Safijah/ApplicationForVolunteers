@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -13,15 +11,16 @@ import 'company_category_list_screen.dart';
 
 class CompanyCategoryDetailsScreen extends StatefulWidget {
   CompanyCategoryModel? companyCategory;
-  CompanyCategoryDetailsScreen({Key? key,  this.companyCategory}) : super(key: key);
+  CompanyCategoryDetailsScreen({Key? key, this.companyCategory})
+      : super(key: key);
 
   @override
   State<CompanyCategoryDetailsScreen> createState() =>
       _CompanyCategoryDetailsScreenState();
 }
 
-class _CompanyCategoryDetailsScreenState extends State<CompanyCategoryDetailsScreen> {
-
+class _CompanyCategoryDetailsScreenState
+    extends State<CompanyCategoryDetailsScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
   late CompanyCategoryProvider _companyCategoryProvider;
@@ -32,7 +31,7 @@ class _CompanyCategoryDetailsScreenState extends State<CompanyCategoryDetailsScr
     super.initState();
     _initialValue = {
       'name': widget.companyCategory?.name,
-      'id':widget.companyCategory?.id,
+      'id': widget.companyCategory?.id,
     };
 
     _companyCategoryProvider = context.read<CompanyCategoryProvider>();
@@ -65,16 +64,18 @@ class _CompanyCategoryDetailsScreenState extends State<CompanyCategoryDetailsScr
                 padding: EdgeInsets.all(20),
                 child: ElevatedButton(
                     onPressed: () async {
-                      print(_formKey.currentState?.value);
                       if (_formKey.currentState?.validate() ?? false) {
                         try {
+                           var request = {
+                              'name': _formKey
+                                .currentState?.instantValue.values.first,
+                            };
                           if (widget.companyCategory == null) {
-                            await _companyCategoryProvider
-                                .insert(_formKey.currentState?.value);
+                            await _companyCategoryProvider.insert(request);
                           } else {
                             await _companyCategoryProvider.update(
                                 widget.companyCategory!.id!,
-                                _formKey.currentState?.value);
+                               request);
                           }
 
                           Navigator.of(context).push(MaterialPageRoute(
@@ -97,72 +98,75 @@ class _CompanyCategoryDetailsScreenState extends State<CompanyCategoryDetailsScr
                       }
                     },
                     child: Text("Save")),
-
-                    
               ),
-              if(widget.companyCategory != null)
-              ...[
-               ElevatedButton(
-              onPressed: () {
-                // Show delete confirmation dialog here
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Confirm Delete"),
-                      content: Text("Are you sure you want to delete this company category?"),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(); // Close the dialog
-                          },
-                          child: Text("Cancel"),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            // Add delete logic here
-                            try {
-                              if (widget.companyCategory != null) {
-                                await _companyCategoryProvider.delete(widget.companyCategory!.id!);
-                               Navigator.of(context).pop(); // Close the dialog
-                                Navigator.of(context).pop();
-                   await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CompanyCategoryDetailsScreen(),
-                      ),
-                    );
-                  }
-                            } on Exception catch (e) {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: Text("Error"),
-                                  content: Text(e.toString()),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: Text("OK"),
+              if (widget.companyCategory != null) ...[
+                ElevatedButton(
+                  onPressed: () {
+                    // Show delete confirmation dialog here
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Confirm Delete"),
+                          content: Text(
+                              "Are you sure you want to delete this company category?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Close the dialog
+                              },
+                              child: Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                // Add delete logic here
+                                try {
+                                  if (widget.companyCategory != null) {
+                                    await _companyCategoryProvider
+                                        .delete(widget.companyCategory!.id!);
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                    Navigator.of(context).pop();
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CompanyCategoryDetailsScreen(),
+                                      ),
+                                    );
+                                  }
+                                } on Exception catch (e) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      title: Text("Error"),
+                                      content: Text(e.toString()),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: Text("OK"),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              );
-                            }
-                            Navigator.of(context).pop(); // Close the dialog
-                          },
-                          child: Text("Delete"),
-                        ),
-                      ],
+                                  );
+                                }
+                                Navigator.of(context).pop(); // Close the dialog
+                              },
+                              child: Text("Delete"),
+                            ),
+                          ],
+                        );
+                      },
                     );
                   },
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.red, // Set button color to red
-              ),
-              child: Text("Delete"),
-            ),
-          ]
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red, // Set button color to red
+                  ),
+                  child: Text("Delete"),
+                ),
+              ]
             ],
           )
         ],
@@ -171,8 +175,8 @@ class _CompanyCategoryDetailsScreenState extends State<CompanyCategoryDetailsScr
     );
   }
 
-Padding _buildForm() {
-   return Padding(
+  Padding _buildForm() {
+    return Padding(
       padding: EdgeInsets.only(top: 50.0), // Adjust the top margin as needed
       child: FormBuilder(
         key: _formKey,

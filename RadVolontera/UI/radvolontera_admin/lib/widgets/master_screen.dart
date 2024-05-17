@@ -31,20 +31,6 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     return Scaffold(
       appBar: AppBar(
         title: widget.title_widget ?? Text(widget.title ?? ""),
-         actions: [
-          // Profile icon in the AppBar
-          IconButton(
-              padding: EdgeInsets.only(right: 50.0),
-            icon: Icon(Icons.account_circle),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => UserDetailsScreen(user: null,),
-                ),
-              );
-            },
-          ),
-        ],
       ),
       drawer: Drawer(
         child: Container(

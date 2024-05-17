@@ -16,7 +16,6 @@ import 'package:radvolontera_admin/screens/payments/payment_details_screen.dart'
 import '../../models/search_result.dart';
 import '../../widgets/master_screen.dart';
 
-
 class PaymentReportListScreen extends StatefulWidget {
   const PaymentReportListScreen({super.key});
   List<Color> get availableColors => const <Color>[
@@ -30,6 +29,7 @@ class PaymentReportListScreen extends StatefulWidget {
   static Color barBackgroundColor = Colors.white.withOpacity(0.3);
   final Color barColor = Colors.white;
   final Color touchedBarColor = Colors.green;
+
   @override
   State<PaymentReportListScreen> createState() =>
       _PaymentReportListScreenState();
@@ -50,12 +50,14 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
   SearchResult<AccountModel>? studentsResult;
   String? selectedStudentValue;
   List<DropdownItem> dropdownItems = [
+    DropdownItem(2024, '2024'),
     DropdownItem(2023, '2023'),
     DropdownItem(2022, '2022'),
     DropdownItem(2021, '2021'),
     DropdownItem(2020, '2020'),
     DropdownItem(2019, '2019'),
   ];
+
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
@@ -74,13 +76,34 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
   final Duration animDuration = const Duration(milliseconds: 250);
   int touchedIndex = -1;
   bool isPlaying = false;
+
   _loadData() async {
     var data = await _paymentProvider.getPaymentReport();
     studentsResult = await _accountProvider.get(filter: {'userTypes': 3});
-    selectedValue = "2023";
+    selectedValue = "2024";
     setState(() {
       result = data;
     });
+  }
+
+  void _showLoader(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
+    );
+  }
+
+  void _hideLoader(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop();
   }
 
   @override
@@ -173,24 +196,39 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
             }).toList(),
           )),
           ElevatedButton(
-              onPressed: () async {
-                await _paymentProvider.downloadPdf();
-              },
-              child: Text("Download pdf")),
+            onPressed: () async {
+              _showLoader(context); // Show loader
+
+              var filter = {
+                'year': selectedValue,
+                'studentId': selectedStudentValue
+              };
+
+              // If "All" is selected, set studentId to null in the filter
+              if (selectedStudentValue == null) {
+                filter['studentId'] = null;
+              }
+              await _paymentProvider.downloadPdf(filter: filter);
+
+              _hideLoader(context); // Hide loader
+            },
+            child: Text("Download pdf"),
+          ),
           SizedBox(
             width: 8,
           ),
           ElevatedButton(
-              onPressed: () async {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => PaymentDetailsScreen(
-                      payment: null,
-                    ),
+            onPressed: () async {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => PaymentDetailsScreen(
+                    payment: null,
                   ),
-                );
-              },
-              child: Text("Add new"))
+                ),
+              );
+            },
+            child: Text("Add new payment"),
+          ),
         ],
       ),
     );
@@ -234,8 +272,4 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
       ),
     );
   }
-
-
- 
 }
-

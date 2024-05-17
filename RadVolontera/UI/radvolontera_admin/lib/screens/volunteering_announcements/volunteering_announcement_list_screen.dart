@@ -157,18 +157,6 @@ class _VolunteeringAnnouncementListcreenState
               ],
             ),
           ),
-          ElevatedButton(
-              onPressed: () async {
-                var data = await _volunteeringAnnouncementProvider.get(filter: {
-                  'mentorId': selectedMentorValue,
-                  'statusId': selectedStatusValue
-                });
-
-                setState(() {
-                  result = data;
-                });
-              },
-              child: Text("Search")),
           SizedBox(
             width: 8,
           ),
