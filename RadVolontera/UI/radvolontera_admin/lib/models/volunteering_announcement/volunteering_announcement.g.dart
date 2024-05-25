@@ -24,9 +24,9 @@ VolunteeringAnnouncementModel _$VolunteeringAnnouncementModelFromJson(
       json['mentor'] == null
           ? null
           : AccountModel.fromJson(json['mentor'] as Map<String, dynamic>),
+      json['timeFrom'] as String,
+      json['timeTo'] as String,
     )
-      ..timeFrom = json['timeFrom'] as int?
-      ..timeTo = json['timeTo'] as int?
       ..notes = json['notes'] as String?
       ..date =
           json['date'] == null ? null : DateTime.parse(json['date'] as String);

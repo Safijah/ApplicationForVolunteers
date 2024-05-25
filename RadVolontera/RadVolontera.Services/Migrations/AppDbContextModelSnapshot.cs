@@ -174,6 +174,53 @@ namespace RadVolontera.Services.Migrations
                     b.ToTable("CompanyEvent");
                 });
 
+            modelBuilder.Entity("RadVolontera.Services.Database.Monitoring", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MentorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MentorId");
+
+                    b.ToTable("Monitoring");
+                });
+
             modelBuilder.Entity("RadVolontera.Services.Database.Notification", b =>
                 {
                     b.Property<long>("Id")
@@ -307,6 +354,9 @@ namespace RadVolontera.Services.Migrations
 
                     b.Property<string>("Notes")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("StatusId")
@@ -619,7 +669,9 @@ namespace RadVolontera.Services.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("CreatedById")
                         .HasColumnType("nvarchar(max)");
@@ -648,11 +700,13 @@ namespace RadVolontera.Services.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TimeFrom")
-                        .HasColumnType("int");
+                    b.Property<string>("TimeFrom")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TimeTo")
-                        .HasColumnType("int");
+                    b.Property<string>("TimeTo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -738,6 +792,17 @@ namespace RadVolontera.Services.Migrations
                         .IsRequired();
 
                     b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("RadVolontera.Services.Database.Monitoring", b =>
+                {
+                    b.HasOne("RadVolontera.Services.Database.User", "Mentor")
+                        .WithMany("Monitorings")
+                        .HasForeignKey("MentorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Mentor");
                 });
 
             modelBuilder.Entity("RadVolontera.Services.Database.Notification", b =>
@@ -847,19 +912,19 @@ namespace RadVolontera.Services.Migrations
                     b.HasOne("RadVolontera.Services.Database.Status", "AnnouncementStatus")
                         .WithMany("VolunteeringAnnouncements")
                         .HasForeignKey("AnnouncementStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("RadVolontera.Services.Database.City", "City")
                         .WithMany("VolunteeringAnnouncements")
                         .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("RadVolontera.Services.Database.User", "Mentor")
                         .WithMany("AnnouncementMentors")
                         .HasForeignKey("MentorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AnnouncementStatus");
@@ -958,6 +1023,8 @@ namespace RadVolontera.Services.Migrations
             modelBuilder.Entity("RadVolontera.Services.Database.User", b =>
                 {
                     b.Navigation("AnnouncementMentors");
+
+                    b.Navigation("Monitorings");
 
                     b.Navigation("Notifications");
 

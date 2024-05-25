@@ -9,21 +9,18 @@ import '../models/search_result.dart';
 import '../utils/util.dart';
 
 abstract class BaseProvider<T> with ChangeNotifier {
-   static String? _baseUrl;
+  static String baseUrl = const String.fromEnvironment("baseUrl",defaultValue:"https://10.0.2.2:7264/api/");
   String _endpoint = "";
   HttpClient client = new HttpClient();
   IOClient? http;
   BaseProvider(String endpoint) {
     _endpoint = endpoint;
-    _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "https://10.0.2.2:7264/api/");
-
     client.badCertificateCallback = (cert, host, port) => true;
     http = IOClient(client);
   }
 
   Future<SearchResult<T>> get({dynamic filter}) async {
-    var url = "$_baseUrl$_endpoint";
+    var url = "$baseUrl$_endpoint";
     if (filter != null) {
       var queryString = getQueryString(filter);
       url = "$url?$queryString";
@@ -52,7 +49,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
   Future<T> insert(dynamic request) async {
 
-    var url = "$_baseUrl$_endpoint";
+    var url = "$baseUrl$_endpoint";
     print("request  $request");
     print(url);
     var uri = Uri.parse(url);
@@ -70,7 +67,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   Future<T> update(int id, [dynamic request]) async {
-    var url = "$_baseUrl$_endpoint/$id";
+    var url = "$baseUrl$_endpoint/$id";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
@@ -86,7 +83,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   Future<void> delete(int id) async {
-  var url = "$_baseUrl$_endpoint/$id";
+  var url = "$baseUrl$_endpoint/$id";
   var uri = Uri.parse(url);
   var headers = createHeaders();
 
@@ -119,6 +116,16 @@ abstract class BaseProvider<T> with ChangeNotifier {
      var headers= {
       "Content-Type":"application/json",
       "Authorization": token
+     };
+     return headers;
+  }
+
+  Map<String, String> createAuthorizationHeaders(){
+      String token="Bearer ${Authorization.token}";
+     var headers= {
+      "Content-Type":"application/json",
+       "accept":" application/json",
+       "Authorization": token
      };
      return headers;
   }

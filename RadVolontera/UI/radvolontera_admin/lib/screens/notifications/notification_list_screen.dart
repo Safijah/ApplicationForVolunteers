@@ -109,12 +109,6 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
           columns: [
             DataColumn(
               label: Text(
-                'ID',
-                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
-              ),
-            ),
-            DataColumn(
-              label: Text(
                 'Heading',
                 style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
@@ -144,7 +138,6 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                       }
                     },
                     cells: [
-                      DataCell(Text(e.id?.toString() ?? "")),
                       DataCell(Text(e.heading ?? "")),
                       DataCell(Text(e.section?.name.toString() ?? "")),
                       DataCell(Text(e.content ?? "")),

@@ -17,10 +17,10 @@ namespace RadVolontera.Services.Database
         public City City { get; set; }
         public string MentorId { get; set; }
         public User Mentor { get; set; }
-        public int TimeFrom { get; set; }
-        public int TimeTo { get; set; }
+        public string TimeFrom { get; set; }
+        public string TimeTo { get; set; }
         public DateTime Date { get; set; }
         public string Notes { get; set; }
-        public  Report Report { get; set; }
+        public Report Report { get; set; }
     }
 }

@@ -49,7 +49,7 @@ class _UserListScreenState extends State<UserListScreen> {
   }
 
   _loadData() async {
-    var data = await _accountProvider.get();
+    var data = await _accountProvider.getAll();
     setState(() {
       result = data;
     });
@@ -91,7 +91,7 @@ class _UserListScreenState extends State<UserListScreen> {
                 selectedValue = newValue; // update the selected value
               });
 
-                   var data = await _accountProvider.get(filter: {
+                   var data = await _accountProvider.getAll(filter: {
                   'name': _nameController.text,
                   'userTypes': selectedValue 
                 });
@@ -109,7 +109,7 @@ class _UserListScreenState extends State<UserListScreen> {
           )),
           ElevatedButton(
               onPressed: () async {
-                var data = await _accountProvider.get(filter: {
+                var data = await _accountProvider.getAll(filter: {
                   'name': _nameController.text,
                   'userTypes': selectedValue 
                 });

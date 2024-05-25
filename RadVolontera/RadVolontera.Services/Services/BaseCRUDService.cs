@@ -21,15 +21,17 @@ namespace RadVolontera.Services.Services
 
         }
 
+        public virtual async Task BeforeUpdate(TDb entity, TUpdate update)
+        {
+
+        }
+
         public virtual async Task<T> Insert(TInsert insert)
         {
             var set = _context.Set<TDb>();
-
             TDb entity = _mapper.Map<TDb>(insert);
-
             set.Add(entity);
             await BeforeInsert(entity, insert);
-
             await _context.SaveChangesAsync();
             return _mapper.Map<T>(entity);
         }
@@ -40,7 +42,7 @@ namespace RadVolontera.Services.Services
             var set = _context.Set<TDb>();
 
             var entity = await set.FindAsync(id);
-
+            await BeforeUpdate(entity, update);
             _mapper.Map(update, entity);
 
             await _context.SaveChangesAsync();

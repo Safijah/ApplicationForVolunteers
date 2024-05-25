@@ -19,7 +19,9 @@ class AccountModel {
   int? userType;
   String ? role;
   DateTime ? birthDate;
-AccountModel(this.role,this.fullName,this.id, this.firstName, this.lastName, this.email,this.gender, this.phoneNumber,this.userName,this.password,this.confirmPassword,this.userType,this.birthDate);
+  int? cityId;
+  int? schoolId;
+AccountModel(this.role,this.fullName,this.id, this.firstName, this.lastName, this.email,this.gender, this.phoneNumber,this.userName,this.password,this.confirmPassword,this.userType,this.birthDate,this.schoolId,this.cityId);
       /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
   /// The constructor is named after the source class, in this case, User.

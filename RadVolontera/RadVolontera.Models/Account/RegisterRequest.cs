@@ -31,5 +31,7 @@ namespace RadVolontera.Models.Account
         public string? ConfirmPassword { get; set; }
         public List<string>? Roles { get; set; }
         public UserTypes UserType { get; set; }
+        public long? CityId { get; set; }
+        public long? SchoolId { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using RadVolontera.Models.Enums;
 using RadVolontera.Models.Notification;
 using RadVolontera.Models.Payment;
 using RadVolontera.Models.Report;
+using RadVolontera.Models.School;
 using RadVolontera.Models.Section;
 using RadVolontera.Models.Status;
 using RadVolontera.Models.UsefulLinks;
@@ -31,7 +32,8 @@ namespace RadVolontera.Services.MappingProfile
             CreateMap<Database.Section, Section>();
             CreateMap<Database.Status, Status>();
             CreateMap<Database.City, City>();
-            CreateMap<Database.VolunteeringAnnouncement, VolunteeringAnnouncement>();
+            CreateMap<Database.VolunteeringAnnouncement, VolunteeringAnnouncement>()
+            .ForMember(dest => dest.HasReport, opt => opt.MapFrom(src =>src.Report!=null));
             CreateMap<VolunteeringAnnouncementRequest, Database.VolunteeringAnnouncement>();
             CreateMap<Database.Report, Report>();
             CreateMap<ReportRequest, Database.Report>();
@@ -41,6 +43,7 @@ namespace RadVolontera.Services.MappingProfile
             CreateMap<CompanyCategoryRequest, Database.CompanyCategory>();
             CreateMap<Database.CompanyEvent, CompanyEvent>();
             CreateMap<CompanyEventRequest, Database.CompanyEvent>();
+            CreateMap<Database.School, School>();
         }
     }
 }

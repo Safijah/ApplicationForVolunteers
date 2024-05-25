@@ -8,7 +8,6 @@ import 'base_provider.dart';
 
 class VolunteeringAnnouncementProvider extends BaseProvider<VolunteeringAnnouncementModel>{
  VolunteeringAnnouncementProvider(): super("VolunteeringAnnouncement");
-  static String? baseUrl="https://localhost:7264/api";
     @override
   VolunteeringAnnouncementModel fromJson(data) {
     // TODO: implement fromJson
@@ -16,7 +15,7 @@ class VolunteeringAnnouncementProvider extends BaseProvider<VolunteeringAnnounce
   } 
 
   Future<VolunteeringAnnouncementModel> changeStatus([dynamic request]) async {
-  var urlGlobal = "$baseUrl/VolunteeringAnnouncement/change-status";
+  var urlGlobal = "${BaseProvider.baseUrl}VolunteeringAnnouncement/change-status";
   print("url $urlGlobal");
   var uri = Uri.parse(urlGlobal);
   var headers = createAuthorizationHeaders(); // Using createHeaders() method from the base class
@@ -31,15 +30,4 @@ class VolunteeringAnnouncementProvider extends BaseProvider<VolunteeringAnnounce
     throw new Exception("Unknown error");
   }
 }
-
-
-   Map<String, String> createAuthorizationHeaders(){
-      String token="Bearer ${Authorization.token}";
-     var headers= {
-      "Content-Type":"application/json",
-       "accept":" application/json",
-       "Authorization": token
-     };
-     return headers;
-  }
 }

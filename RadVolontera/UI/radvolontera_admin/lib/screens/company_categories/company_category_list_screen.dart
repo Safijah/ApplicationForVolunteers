@@ -109,12 +109,6 @@ class _CompanyCategoryListScreenState extends State<CompanyCategoryListScreen> {
           columns: [
             DataColumn(
               label: Text(
-                'ID',
-                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
-              ),
-            ),
-            DataColumn(
-              label: Text(
                 'Name',
                 style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
@@ -132,7 +126,6 @@ class _CompanyCategoryListScreenState extends State<CompanyCategoryListScreen> {
                       }
                     },
                     cells: [
-                      DataCell(Text(e.id?.toString() ?? "")),
                       DataCell(Text(e.name ?? "")),
                     ],
                   ))

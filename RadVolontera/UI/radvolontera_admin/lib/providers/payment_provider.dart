@@ -10,8 +10,6 @@ import 'package:open_file/open_file.dart';
 
 class PaymentProvider extends BaseProvider<PaymentModel>{
  PaymentProvider(): super("Payment");
-static String? baseUrl="https://localhost:7264/api";
-
     @override
   PaymentModel fromJson(data) {
     // TODO: implement fromJson
@@ -19,7 +17,7 @@ static String? baseUrl="https://localhost:7264/api";
   } 
 
    Future<List<PaymentReportModel>> getPaymentReport({dynamic filter}) async {
-  var url = "$baseUrl/Payment/payment-report";
+  var url = "${BaseProvider.baseUrl}Payment/payment-report";
   if (filter != null) {
     var queryString = getQueryString(filter);
     url = "$url?$queryString";
@@ -45,7 +43,7 @@ static String? baseUrl="https://localhost:7264/api";
 
 
 Future<void> downloadPdf({dynamic filter}) async {
-  var url = "$baseUrl/Payment/pdf-report";
+  var url = "${BaseProvider.baseUrl}Payment/pdf-report";
   if (filter != null) {
     var queryString = getQueryString(filter);
     url = "$url?$queryString";

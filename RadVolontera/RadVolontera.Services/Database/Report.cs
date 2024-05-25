@@ -21,6 +21,7 @@ namespace RadVolontera.Services.Database
         public string MentorId { get; set; }
         public User Mentor { get; set; }
         public ICollection<User> PresentStudents{ get; set; }
-        public ICollection<User> AbsentStudents{ get; set; }
+        public ICollection<User> AbsentStudents { get; set; }
+        public string? Reason { get; set; }
     }
 }

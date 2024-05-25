@@ -10,7 +10,6 @@ import 'base_provider.dart';
 class VolunteeringAnnouncementProvider
     extends BaseProvider<VolunteeringAnnouncementModel> {
   VolunteeringAnnouncementProvider() : super("VolunteeringAnnouncement");
-  static String? baseUrl = "https://10.0.2.2:7264/api";
 
   IOClient? http; // Use the IOClient for making HTTP requests
 
@@ -22,7 +21,7 @@ class VolunteeringAnnouncementProvider
 
   Future<SearchResult<VolunteeringAnnouncementModel>> getAnnoucments(
       String mentorId) async {
-     var url = "$baseUrl/VolunteeringAnnouncement/student-announcements/$mentorId";
+     var url = "${BaseProvider.baseUrl}VolunteeringAnnouncement/student-announcements/$mentorId";
     var uri = Uri.parse(url);
     var headers = createHeaders();
     var response = await http!.get(uri, headers: headers);

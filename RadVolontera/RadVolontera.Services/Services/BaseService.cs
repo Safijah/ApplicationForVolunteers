@@ -61,7 +61,6 @@ namespace RadVolontera.Services.Services
         public virtual async Task<T> GetById(TId id)
         {
             var entity = await _context.Set<TDb>().FindAsync(id);
-
             return _mapper.Map<T>(entity);
         }
 

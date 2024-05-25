@@ -25,6 +25,7 @@ builder.Services.AddTransient<ICompanyService, CompanyService>();
 builder.Services.AddTransient<ICompanyEventService, CompanyEventService>();
 builder.Services.AddTransient<ICityService, CityService>();
 builder.Services.AddTransient<IPdfGeneratorService, PdfGeneratorService>();
+builder.Services.AddTransient<ISchoolService, SchoolService>();
 builder.Services.AddTransient<ExceptionMiddleware>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddSwaggerGen();

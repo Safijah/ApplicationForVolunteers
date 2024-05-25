@@ -25,5 +25,7 @@ namespace RadVolontera.Models.Account
         public bool IsUser { get; set; }
         public TokenInfo Token { get; internal set; }
         public bool EmailConfirmed { get; set; }
+        public long? CityId { get; set; }
+        public long? SchoolId { get; set; }
     }
 }

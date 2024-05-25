@@ -162,7 +162,8 @@ class _CompanyCategoryDetailsScreenState
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.red, // Set button color to red
+                   foregroundColor: Colors.white,//change background color of button
+                backgroundColor: Colors.red, // Set button color to red
                   ),
                   child: Text("Delete"),
                 ),

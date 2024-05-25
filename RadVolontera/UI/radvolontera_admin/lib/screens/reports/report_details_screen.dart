@@ -119,7 +119,8 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                       
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.red, // Set the background color to red
+                  foregroundColor: Colors.white,//change background color of button
+                backgroundColor: Colors.red, // Set the background color to red
                     ),
                     child: Text("Decline")),
               )

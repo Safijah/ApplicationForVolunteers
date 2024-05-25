@@ -23,7 +23,7 @@ namespace RadVolontera.Services.Services
         }
         public override IQueryable<Database.VolunteeringAnnouncement> AddInclude(IQueryable<Database.VolunteeringAnnouncement> query, VolunteeringAnnouncementSearchObject? search = null)
         {
-            query = query.Include("AnnouncementStatus").Include("City").Include("Mentor");
+            query = query.Include("AnnouncementStatus").Include("City").Include("Mentor").Include("Report");
             return base.AddInclude(query, search);
         }
 
@@ -53,10 +53,24 @@ namespace RadVolontera.Services.Services
             }
         }
 
+        public override async Task BeforeUpdate(Database.VolunteeringAnnouncement entity, Models.VolunteeringAnnouncement.VolunteeringAnnouncementRequest update)
+        {
+            var currentStatus = await _context.Statuses.FirstOrDefaultAsync(s => s.Id == entity.AnnouncementStatusId);
+            var onHoldStatus = await _context.Statuses.FirstOrDefaultAsync(s => s.Name == "On hold");
+            if (currentStatus != null && currentStatus.Name == "Rejected")
+            {
+                update.AnnouncementStatusId = onHoldStatus?.Id ?? entity.AnnouncementStatusId;
+            }
+            else
+            {
+                update.AnnouncementStatusId = entity.AnnouncementStatusId;
+            }
+        }
+
         public async Task<RadVolontera.Models.VolunteeringAnnouncement.VolunteeringAnnouncement> ChangeVolunteeringAnnouncementStatus(ChangeStatusRequest request)
         {
             var value = await _context.VolunteeringAnnouncements
-                .Include(u=> u.Mentor)
+                .Include(u => u.Mentor)
                 .FirstOrDefaultAsync(v => v.Id == request.VolunteeringAnnouncementId);
 
             if (value == null)
@@ -88,13 +102,15 @@ namespace RadVolontera.Services.Services
         {
             var result = new PagedResult<Models.VolunteeringAnnouncement.VolunteeringAnnouncement>();
             var value = await _context.VolunteeringAnnouncements
+                .Include(a => a.AnnouncementStatus)
                 .Include(u => u.Mentor)
-                .Where(v => v.MentorId==studentId).ToListAsync();
+                .Include(r=>r.Report)
+                .Where(v => v.MentorId == studentId).ToListAsync();
 
             if (value == null)
                 throw new ApiException("Not found", System.Net.HttpStatusCode.BadRequest);
 
-            var tmp = _mapper.Map < List <Models.VolunteeringAnnouncement.VolunteeringAnnouncement>>(value);
+            var tmp = _mapper.Map<List<Models.VolunteeringAnnouncement.VolunteeringAnnouncement>>(value);
             result.Result = tmp;
             return result;
         }

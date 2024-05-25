@@ -108,9 +108,7 @@ late AccountModel userProfile;
                 padding: EdgeInsets.all(20),
                 child: ElevatedButton(
                   onPressed: () async {
-                    // Implement change password logic here
-                    // Fetch the current password, new password, and repeat password
-                    // Update the password using your account provider
+                    
                   },
                   child: Text("Change Password"),
                 ),

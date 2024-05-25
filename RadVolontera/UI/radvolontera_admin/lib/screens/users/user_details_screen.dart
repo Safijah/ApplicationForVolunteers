@@ -3,6 +3,10 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:radvolontera_admin/models/account/account.dart';
+import 'package:radvolontera_admin/models/city/city.dart';
+import 'package:radvolontera_admin/models/school/school.dart';
+import 'package:radvolontera_admin/providers/city_provider.dart';
+import 'package:radvolontera_admin/providers/school_provider.dart';
 import 'package:radvolontera_admin/screens/users/user_list_screen.dart';
 import 'package:intl/intl.dart';
 import '../../models/search_result.dart';
@@ -28,9 +32,13 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
   late AccountProvider _accountProvider;
+  late CityProvider _cityProvider;
+  late SchoolProvider _schoolProvider;
+
   bool isLoading = true;
   dynamic currentUser = null;
-
+  SearchResult<CityModel>? citiesResult;
+  SearchResult<SchoolModel>? schoolResult;
   List<DropdownItem> roles = [
     DropdownItem(1, 'Admin'),
     DropdownItem(2, 'Mentor'),
@@ -41,9 +49,9 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
     DropdownItem(2, 'Female')
   ];
   bool isEditMode = false;
+
   @override
   void initState() {
-    // TODO: implement initState
     if (widget.user != null) {
       isEditMode = true;
     }
@@ -57,21 +65,22 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
       'email': widget.user?.email,
       'password': widget.user?.password,
       'confirmPassword': widget.user?.confirmPassword,
-      'birthDate': widget.user?.birthDate
+      'birthDate': widget.user?.birthDate,
+      'cityId': widget.user?.cityId?.toString(),
+      'schoolId': widget.user?.schoolId?.toString()
     };
 
     _accountProvider = context.read<AccountProvider>();
-    initForm();
-  }
+    _schoolProvider = context.read<SchoolProvider>();
+    _cityProvider = context.read<CityProvider>();
 
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
+    initForm();
   }
 
   Future initForm() async {
     currentUser = await _accountProvider.getCurrentUser();
+    schoolResult = await _schoolProvider.get();
+    citiesResult = await _cityProvider.get();
     setState(() {
       isLoading = false;
     });
@@ -80,7 +89,6 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      // ignore: sort_child_properties_last
       child: Column(
         children: [
           isLoading ? Container() : _buildForm(),
@@ -107,12 +115,14 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                 formValue['confirmPassword'] ?? '',
                             'birthDate':
                                 formValue['birthDate'].toIso8601String(),
-                            'userName': formValue['email']
+                            'userName': formValue['email'],
+                            'schoolId': int.tryParse(formValue['schoolId']),
+                            'cityId': int.tryParse(formValue['cityId'])
                           };
                           if (widget.user == null) {
-                            await _accountProvider.insert(request);
+                            await _accountProvider.register(request);
                           } else {
-                            await _accountProvider.update(
+                            await _accountProvider.updateUser(
                                 widget.user!.id!, request);
                           }
 
@@ -146,7 +156,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
 
   Padding _buildForm() {
     return Padding(
-      padding: EdgeInsets.only(top: 50.0), // Adjust the top margin as needed
+      padding: EdgeInsets.only(top: 50.0),
       child: FormBuilder(
         key: _formKey,
         initialValue: _initialValue,
@@ -236,6 +246,72 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                           children: [
                             Expanded(
                               child: FormBuilderDropdown<String>(
+                                name: 'schoolId',
+                                decoration: InputDecoration(
+                                  labelText: 'School',
+                                  suffix: IconButton(
+                                    icon: const Icon(Icons.close),
+                                    onPressed: () {
+                                      _formKey.currentState!.fields['schoolId']
+                                          ?.reset();
+                                    },
+                                  ),
+                                  hintText: 'Select school',
+                                ),
+                                items: schoolResult?.result
+                                        .map(
+                                          (item) => DropdownMenuItem(
+                                            alignment:
+                                                AlignmentDirectional.center,
+                                            value: item.id.toString(),
+                                            child: Text(item.name ?? ""),
+                                          ),
+                                        )
+                                        .toList() ??
+                                    [],
+                                validator: FormBuilderValidators.required(
+                                  errorText: 'School is required',
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: FormBuilderDropdown<String>(
+                                name: 'cityId',
+                                decoration: InputDecoration(
+                                  labelText: 'City',
+                                  suffix: IconButton(
+                                    icon: const Icon(Icons.close),
+                                    onPressed: () {
+                                      _formKey.currentState!.fields['cityId']
+                                          ?.reset();
+                                    },
+                                  ),
+                                  hintText: 'Select city',
+                                ),
+                                items: citiesResult?.result
+                                        .map(
+                                          (item) => DropdownMenuItem(
+                                            alignment:
+                                                AlignmentDirectional.center,
+                                            value: item.id.toString(),
+                                            child: Text(item.name ?? ""),
+                                          ),
+                                        )
+                                        .toList() ??
+                                    [],
+                                validator: FormBuilderValidators.required(
+                                  errorText: 'City is required',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: FormBuilderDropdown<String>(
                                 name: 'userType',
                                 decoration: InputDecoration(
                                   labelText: 'User type',
@@ -254,7 +330,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                             alignment:
                                                 AlignmentDirectional.center,
                                             value: item.value.toString(),
-                                            child: Text(item.displayText ?? ""),
+                                            child: Text(item.displayText),
                                           ),
                                         )
                                         .toList() ??
@@ -285,7 +361,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                             alignment:
                                                 AlignmentDirectional.center,
                                             value: item.value.toString(),
-                                            child: Text(item.displayText ?? ""),
+                                            child: Text(item.displayText),
                                           ),
                                         )
                                         .toList() ??
@@ -321,7 +397,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                     if (!value.contains(RegExp(r'[A-Z]'))) {
                                       return 'Password must contain at least one uppercase letter';
                                     }
-                                    return null; // Return null to indicate the input is valid
+                                    return null;
                                   }
                                 },
                               ),
@@ -334,21 +410,30 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                 name: "confirmPassword",
                                 obscureText: true,
                                 validator: (value) {
-                                  if((_formKey.currentState!.fields['password']?.value != null &&  _formKey.currentState!.fields['password']?.value.isNotEmpty)  || !isEditMode){
-                                   if (value == null || value.isEmpty) {
-                                    return 'Confirm password is required';
+                                  if ((_formKey.currentState!
+                                                  .fields['password']
+                                                  ?.value !=
+                                              null &&
+                                          _formKey.currentState!
+                                              .fields['password']?.value
+                                              .isNotEmpty) ||
+                                      !isEditMode) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Confirm password is required';
+                                    }
+                                    if (value !=
+                                        _formKey.currentState!
+                                            .fields['password']?.value) {
+                                      return 'Passwords do not match';
+                                    }
+                                    return null;
                                   }
-                                  if (value !=
-                                      _formKey.currentState!.fields['password']
-                                          ?.value) {
-                                    return 'Passwords do not match';
-                                  }
-                                  return null; // Return null to indicate the input is valid
-                                }},
+                                },
                               ),
                             ),
                           ],
                         ),
+                        SizedBox(height: 10),
                         Row(
                           children: [
                             Expanded(

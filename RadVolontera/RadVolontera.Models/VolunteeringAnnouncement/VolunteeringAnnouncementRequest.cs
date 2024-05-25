@@ -12,8 +12,8 @@ namespace RadVolontera.Models.VolunteeringAnnouncement
         public long AnnouncementStatusId { get; set; }
         public long CityId { get; set; }
         public string MentorId { get; set; }
-        public int TimeFrom { get; set; }
-        public int TimeTo { get; set; }
+        public string TimeFrom { get; set; }
+        public string TimeTo { get; set; }
         public DateTime Date { get; set; }
         public string Notes { get; set; }
     }

@@ -9,16 +9,14 @@ import '../models/search_result.dart';
 import '../utils/util.dart';
 
 abstract class BaseProvider<T> with ChangeNotifier {
-   static String? _baseUrl;
+ static String baseUrl = const String.fromEnvironment("baseUrl",defaultValue: "https://localhost:7264/api/");
   String _endpoint = "";
   BaseProvider(String endpoint) {
     _endpoint = endpoint;
-    _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "https://localhost:7264/api/");
   }
 
   Future<SearchResult<T>> get({dynamic filter}) async {
-    var url = "$_baseUrl$_endpoint";
+    var url = "$baseUrl$_endpoint";
     if (filter != null) {
       var queryString = getQueryString(filter);
       url = "$url?$queryString";
@@ -47,7 +45,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
   Future<T> insert(dynamic request) async {
 
-    var url = "$_baseUrl$_endpoint";
+    var url = "$baseUrl$_endpoint";
     print("request  $request");
     print(url);
     var uri = Uri.parse(url);
@@ -65,7 +63,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   Future<T> update(int id, [dynamic request]) async {
-    var url = "$_baseUrl$_endpoint/$id";
+    var url = "$baseUrl$_endpoint/$id";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
@@ -81,7 +79,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   Future<void> delete(int id) async {
-  var url = "$_baseUrl$_endpoint/$id";
+  var url = "$baseUrl$_endpoint/$id";
   var uri = Uri.parse(url);
   var headers = createHeaders();
 
@@ -98,7 +96,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   bool isValidResponse(Response response) {
-    print("response ${response.body}");
+    print("response ${response}");
     if (response.statusCode < 299) {
       return true;
     } else if (response.statusCode == 401) {
@@ -148,5 +146,15 @@ abstract class BaseProvider<T> with ChangeNotifier {
       }
     });
     return query;
+  }
+
+     Map<String, String> createAuthorizationHeaders(){
+      String token="Bearer ${Authorization.token}";
+     var headers= {
+      "Content-Type":"application/json",
+       "accept":" application/json",
+       "Authorization": token
+     };
+     return headers;
   }
 }

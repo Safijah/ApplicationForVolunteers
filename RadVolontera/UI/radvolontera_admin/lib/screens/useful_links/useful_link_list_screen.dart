@@ -108,12 +108,6 @@ class _UsefulLinkListScreenState extends State<UsefulLinkListScreen> {
           columns: [
             DataColumn(
               label: Text(
-                'ID',
-                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
-              ),
-            ),
-            DataColumn(
-              label: Text(
                 'Name',
                 style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
               ),
@@ -137,7 +131,6 @@ class _UsefulLinkListScreenState extends State<UsefulLinkListScreen> {
                       }
                     },
                     cells: [
-                      DataCell(Text(e.id?.toString() ?? "")),
                       DataCell(Text(e.name ?? "")),
                       DataCell(Text(e.urlLink ?? "")),
                     ],

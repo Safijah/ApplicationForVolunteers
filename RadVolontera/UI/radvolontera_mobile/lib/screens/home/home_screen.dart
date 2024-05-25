@@ -48,6 +48,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      title_widget: Text("Home"),
       child: Container(
         child: Column(
           children: [

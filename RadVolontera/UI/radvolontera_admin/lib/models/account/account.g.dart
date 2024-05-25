@@ -22,6 +22,8 @@ AccountModel _$AccountModelFromJson(Map<String, dynamic> json) => AccountModel(
       json['birthDate'] == null
           ? null
           : DateTime.parse(json['birthDate'] as String),
+      json['schoolId'] as int?,
+      json['cityId'] as int?,
     );
 
 Map<String, dynamic> _$AccountModelToJson(AccountModel instance) =>
@@ -39,4 +41,6 @@ Map<String, dynamic> _$AccountModelToJson(AccountModel instance) =>
       'userType': instance.userType,
       'role': instance.role,
       'birthDate': instance.birthDate?.toIso8601String(),
+      'cityId': instance.cityId,
+      'schoolId': instance.schoolId,
     };

@@ -1,83 +1,119 @@
 import 'package:flutter/material.dart';
 import 'package:radvolontera_mobile/main.dart';
 import 'package:radvolontera_mobile/screens/home/home_screen.dart';
-import 'package:radvolontera_mobile/screens/volunteering_announcements/volunteering_announcement_list_screen.dart';
 import 'package:radvolontera_mobile/screens/reports/reports_list_screen.dart';
+import 'package:radvolontera_mobile/screens/users/user_list_screen.dart';
+import 'package:radvolontera_mobile/screens/users/user_profile_screen.dart';
 import 'package:radvolontera_mobile/utils/util.dart';
+import '../screens/volunteering_announcements/volunteering_announcement_list_screen.dart';
 
 class MasterScreenWidget extends StatefulWidget {
-  final Widget? child;
-  final String? title;
-  final Widget? titleWidget;
-
-  MasterScreenWidget({Key? key, this.child, this.title, this.titleWidget})
-      : super(key: key);
+  Widget? child;
+  String? title;
+  Widget? title_widget;
+  MasterScreenWidget({this.child, this.title, this.title_widget, super.key});
 
   @override
   State<MasterScreenWidget> createState() => _MasterScreenWidgetState();
 }
 
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
-  int _currentIndex = 0;
-  final List<Widget> _pages = [
-    HomePageScreen(),
-    VolunteeringAnnouncementListScreen(),
-    ReportListScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: widget.titleWidget ?? Text(widget.title ?? ""),
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.account_circle),
-            onPressed: () {
-              navigateTo(HomePageScreen());
-            },
-          ),
-        ],
-      ),
-      drawer: null,
-      body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        selectedItemColor: Colors.blue,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.volunteer_activism_sharp),
-            label: 'Announcements',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.report_gmailerrorred),
-            label: 'Reports',
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+        title: widget.title_widget ?? Text(widget.title ?? ""),
+            actions: [
+      IconButton(
+        icon: Icon(Icons.person),
+        onPressed: () {
+          // Navigate to the user profile screen
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => UserProfileScreen(),
+            ),
+          );
         },
       ),
-    );
-  }
-
-  void navigateTo(Widget page) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => page));
-  }
-
-  void handleLogout() {
-    Authorization.token = null;
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
-      (route) => false,
+    ],
+      ),
+      drawer: Drawer(
+        child: Container(
+          color: Colors.indigo, // Change the color of the drawer here
+          child: ListView(
+            children: [
+              ListTile(
+                leading: Icon(Icons.arrow_back,
+                    color: Colors.white), // Add an icon to the ListTile
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.home,
+                    color: Colors.white), // Add an icon to the ListTile
+                title: Text("Home", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) =>  HomePageScreen()),
+                  );
+                },
+              ),
+               
+              ListTile(
+                leading: Icon(Icons.volunteer_activism_sharp,
+                    color: Colors.white), // Add an icon to the ListTile
+                title:
+                    Text("Volunteering Announcements", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const VolunteeringAnnouncementListScreen()),
+                  );
+                },
+              ),
+               ListTile(
+                leading: Icon(Icons.report_gmailerrorred,
+                    color: Colors.white), // Add an icon to the ListTile
+                title:
+                    Text("Reports", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const ReportListScreen()),
+                  );
+                },
+              ),
+               ListTile(
+                leading: Icon(Icons.supervised_user_circle_sharp,
+                    color: Colors.white), // Add an icon to the ListTile
+                title: Text("Users", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const UserListScreen()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.logout,
+                    color: Colors.white), // Add an icon to the ListTile
+                title: Text("Logout", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Authorization.token = null;
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    (route) => false,
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: widget.child!,
     );
   }
 }

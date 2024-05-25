@@ -10,7 +10,6 @@ import 'base_provider.dart';
 
 class ReportProvider extends BaseProvider<ReportModel>{
  ReportProvider(): super("Report");
- static String? baseUrl="https://localhost:7264/api";
       
     @override
   ReportModel fromJson(data) {
@@ -19,7 +18,7 @@ class ReportProvider extends BaseProvider<ReportModel>{
   } 
   
   Future<ReportModel> changeStatus([dynamic request]) async {
-  var urlGlobal = "$baseUrl/Report/change-status";
+  var urlGlobal = "${BaseProvider.baseUrl}Report/change-status";
   var uri = Uri.parse(urlGlobal);
   var headers = createAuthorizationHeaders(); // Using createHeaders() method from the base class
 
@@ -33,15 +32,4 @@ class ReportProvider extends BaseProvider<ReportModel>{
     throw new Exception("Unknown error");
   }
 }
-
-
-   Map<String, String> createAuthorizationHeaders(){
-      String token="Bearer ${Authorization.token}";
-     var headers= {
-      "Content-Type":"application/json",
-       "accept":" application/json",
-       "Authorization": token
-     };
-     return headers;
-  }
 }

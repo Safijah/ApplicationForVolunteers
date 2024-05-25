@@ -12,6 +12,7 @@ namespace RadVolontera.Models.Report
         public string Goal { get; set; }
         public string VolunteerActivities { get; set; }
         public string Themes { get; set; }
+        public string MentorId { get; set; }
         public long StatusId { get; set; }
         public long VolunteeringAnnouncementId { get; set; }
         public List<string> PresentStudentsIds { get; set; }

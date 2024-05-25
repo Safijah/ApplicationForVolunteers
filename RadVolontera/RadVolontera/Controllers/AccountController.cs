@@ -12,20 +12,19 @@ namespace RadVolontera.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    public class AccountController : ControllerBase
+    public class AccountController : BaseCRUDController<Models.Account.UserResponse, Models.Filters.BaseSearchObject, Models.Account.UserResponse, Models.Account.UserResponse, string>
     {
-        private readonly IAccountService _accountService;
 
-        public AccountController(IAccountService accountService, IServiceProvider provider)
+        public AccountController(ILogger<BaseController<Models.Account.UserResponse, Models.Filters.BaseSearchObject, string>> logger, IAccountService service) : base(logger, service)
         {
-            _accountService = accountService;
+
         }
 
-
+        
         [HttpPost("register")]
         public async Task<ActionResult<UserResponse>> Register([FromBody] RegisterRequest request)
         {
-            var userResponse = await _accountService.Register(new RegisterRequest
+            var userResponse = await (_service as IAccountService).Register(new RegisterRequest
             {
                 UserName = request.UserName,
                 Password = request.Password,
@@ -36,7 +35,8 @@ namespace RadVolontera.Controllers
                 PhoneNumber = request.PhoneNumber,
                 BirthDate = request.BirthDate,
                 UserType = request.UserType,
-
+                CityId = request.CityId,
+                SchoolId = request.SchoolId,
             });
 
             return Ok(userResponse);
@@ -47,23 +47,23 @@ namespace RadVolontera.Controllers
         [Consumes("application/json")]
         public async Task<ActionResult<AuthenticationResponse>> Authenticate([FromBody] AuthenticationRequest request)
         {
-            return Ok(await _accountService.Authenticate(request.Username, request.Password, string.Empty));
+            return Ok(await (_service as IAccountService).Authenticate(request.Username, request.Password, string.Empty));
         }
 
         [Authorize(Roles = Roles.Admin)]
-        [HttpPut("{userId}")]
+        [HttpPut("update-user/{userId}")]
         [Consumes("application/json")]
-        public async Task<ActionResult<UserResponse>> Update([FromRoute] string userId, [FromBody] RegisterRequest request)
+        public async Task<ActionResult<UserResponse>> UpdateUser([FromRoute] string userId, [FromBody] RegisterRequest request)
         {
-            return Ok(await _accountService.Update(userId, request));
+            return Ok(await (_service as IAccountService).Update(userId, request));
         }
 
         [Authorize(Roles = Roles.Admin)]
-        [HttpGet]
+        [HttpGet("get-all")]
         [Consumes("application/json")]
         public async Task<ActionResult<PagedResult<UserResponse>>> GetAll([FromQuery] UserSearchObject filter)
         {
-            return Ok(await _accountService.GetAll(filter));
+            return Ok(await (_service as IAccountService).GetAll(filter));
         }
 
         [Authorize(Roles = Roles.Admin)]
@@ -71,30 +71,40 @@ namespace RadVolontera.Controllers
         [Consumes("application/json")]
         public ActionResult<PagedResult<UserResponse>> GetDashboardData()
         {
-            return Ok(_accountService.GetDashboardData());
+            return Ok((_service as IAccountService).GetDashboardData());
         }
 
-
+        [Authorize]
         [HttpPut("update-profile/{userId}")]
         [Consumes("application/json")]
         public async Task<ActionResult<UserResponse>> UpdateProfile([FromRoute] string userId, [FromBody] UserUpdateRequest request)
         {
-            return Ok(await _accountService.UpdateProfile(userId, request));
+            return Ok(await (_service as IAccountService).UpdateProfile(userId, request));
         }
 
+        [Authorize]
         [HttpGet("user-profile/{userId}")]
         [Consumes("application/json")]
         public async Task<ActionResult<UserResponse>> UserProfile([FromRoute] string userId)
         {
-            return Ok(await _accountService.UserProfile(userId));
+            return Ok(await (_service as IAccountService).UserProfile(userId));
         }
 
+        [Authorize]
         [HttpPost("change-password/{userId}")]
-        public async Task<ActionResult> ChangePassword([FromRoute] string userId,ChangePasswordRequest request)
+        public async Task<ActionResult> ChangePassword([FromRoute] string userId, ChangePasswordRequest request)
         {
 
-            await _accountService.ChangePassword(userId, request);
+            await (_service as IAccountService).ChangePassword(userId, request);
             return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("mentor-students/{mentorId}")]
+        [Consumes("application/json")]
+        public async Task<ActionResult<PagedResult<UserResponse>>> GetStudentsForMentor([FromRoute] string mentorId)
+        {
+            return Ok(await (_service as IAccountService).GetStudentsForMentor(mentorId));
         }
     }
 }

@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace RadVolontera.Services.Services
 {
-    public class AccountService : IAccountService
+    public class AccountService  : BaseCRUDService<Models.Account.UserResponse, Database.User, Models.Filters.BaseSearchObject, Models.Account.UserResponse, Models.Account.UserResponse, string>, IAccountService
     {
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         private readonly UserManager<User> _userManager;
@@ -27,7 +27,7 @@ namespace RadVolontera.Services.Services
         private readonly UrlEncoder _urlEncoder;
         private readonly IMapper _mapper;
 
-        public AccountService(UserManager<User> userManager, AppDbContext appDbContext, SignInManager<User> signInManager, UrlEncoder urlEncoder, TokenService tokenService, IMapper mapper)
+        public AccountService(UserManager<User> userManager, AppDbContext appDbContext, SignInManager<User> signInManager, UrlEncoder urlEncoder, TokenService tokenService, IMapper mapper) : base(appDbContext, mapper)
         {
             _userManager = userManager;
             _appDbContext = appDbContext;
@@ -70,7 +70,9 @@ namespace RadVolontera.Services.Services
                     LastName = request.LastName,
                     Gender = request.Gender,
                     PhoneNumber = request.PhoneNumber,
-                    BirthDate = request.BirthDate
+                    BirthDate = request.BirthDate,
+                    SchoolId= request.SchoolId,
+                    CityId= request.CityId,
                 };
 
                 var result = await _userManager.CreateAsync(user, password);
@@ -133,7 +135,8 @@ namespace RadVolontera.Services.Services
             user.Gender = request.Gender;
             user.BirthDate = request.BirthDate;
             user.PhoneNumber = request.PhoneNumber;
-
+            user.SchoolId = request.SchoolId;
+            user.CityId = request.CityId;
             var role = request.UserType;
 
             if (role != null)
@@ -174,7 +177,9 @@ namespace RadVolontera.Services.Services
                 Gender = u.Gender,
                 UserType = this.GetUserTypes(u),
                 Id = u.Id,
-                Role = u.Roles.FirstOrDefault()?.Name
+                Role = u.Roles.FirstOrDefault()?.Name,
+                CityId = u.CityId,
+                SchoolId = u.SchoolId
             }).ToList();
 
             return new PagedResult<UserResponse>()
@@ -247,11 +252,36 @@ namespace RadVolontera.Services.Services
 
             if (user == null)
                 throw new ApiException("User not found", System.Net.HttpStatusCode.NotFound);
-            
+
             var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
 
             if (!result.Succeeded)
                 throw new ApiException(result.Errors?.FirstOrDefault()?.Description, System.Net.HttpStatusCode.BadRequest);
+        }
+
+        public async Task<PagedResult<UserResponse>> GetStudentsForMentor(string mentorId)
+        {
+            var users = await _appDbContext.Users
+                .Include(u => u.Roles).Where(s=>s.MentorId==mentorId).ToListAsync();
+
+            var result = users.Select(u => new UserResponse()
+            {
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                BirthDate = u.BirthDate,
+                PhoneNumber = u.PhoneNumber,
+                Email = u.Email,
+                Gender = u.Gender,
+                UserType = this.GetUserTypes(u),
+                Id = u.Id,
+                Role = u.Roles.FirstOrDefault()?.Name
+            }).ToList();
+
+            return new PagedResult<UserResponse>()
+            {
+                Result = result,
+                Count = users.Count()
+            };
         }
     }
 }
