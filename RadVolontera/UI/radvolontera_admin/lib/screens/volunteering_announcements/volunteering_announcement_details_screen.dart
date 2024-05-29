@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -65,77 +63,120 @@ class _VolunteeringAnnouncementDetailsScreenState extends State<VolunteeringAnno
       child: Column(
         children: [
           isLoading ? Container() : _buildForm(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: ElevatedButton(
+          if (widget.volunteeringAnnouncementModel?.announcementStatus?.name == "On hold")
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: ElevatedButton(
                     onPressed: () async {
-                        try {
-                           var request ={
-                            'volunteeringAnnouncementId': widget.volunteeringAnnouncementModel?.id,
-                            'status':"Approved"
-                          };
-                           await _volunteeringAnnouncementProvider.changeStatus(request);
-                         Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const VolunteeringAnnouncementListcreen()));
-                        } on Exception catch (e) {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text(e.toString()),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text("OK"))
-                                    ],
-                                  ));
-                        }
+                      try {
+                        var request = {
+                          'volunteeringAnnouncementId': widget.volunteeringAnnouncementModel?.id,
+                          'status': "Approved"
+                        };
+                        await _volunteeringAnnouncementProvider.changeStatus(request);
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const VolunteeringAnnouncementListcreen()));
+                      } on Exception catch (e) {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: Text("Error"),
+                                  content: Text(e.toString()),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text("OK"))
+                                  ],
+                                ));
+                      }
                     },
-                    child: Text("Accept")),
-              ),
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: ElevatedButton(
+                    child: Text("Accept"),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: ElevatedButton(
                     onPressed: () async {
+                      String? reason = await showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          String reason = '';
+                          return AlertDialog(
+                            title: Text('Reason for Declining'),
+                            content: TextFormField(
+                              onChanged: (value) {
+                                reason = value;
+                              },
+                              decoration: InputDecoration(
+                                  hintText: 'Enter reason here...'),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  if (reason.isNotEmpty) {
+                                    Navigator.pop(context, reason);
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('Please enter a reason.')),
+                                    );
+                                  }
+                                },
+                                child: Text('Submit'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+
+                      if (reason != null && reason.isNotEmpty) {
                         try {
-                          var request ={
+                          var request = {
                             'volunteeringAnnouncementId': widget.volunteeringAnnouncementModel?.id,
-                            'status':"Rejected"
+                            'status': "Rejected",
+                            'reason': reason,
                           };
-                        await  _volunteeringAnnouncementProvider.changeStatus(request);
+                          await _volunteeringAnnouncementProvider.changeStatus(request);
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const VolunteeringAnnouncementListcreen()));
+                            builder: (context) => const VolunteeringAnnouncementListcreen(),
+                          ));
                         } on Exception catch (e) {
                           showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text(e.toString()),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text("OK"))
-                                    ],
-                                  ));
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: Text("Error"),
+                              content: Text(e.toString()),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text("OK"),
+                                )
+                              ],
+                            ),
+                          );
                         }
-                      
+                      }
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,//change background color of button
-                backgroundColor: Colors.red,// Set the background color to red
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.red,
                     ),
-                    child: Text("Decline")),
-              )
-            ],
-          )
+                    child: Text("Decline"),
+                  ),
+                )
+              ],
+            ),
+          if (widget.volunteeringAnnouncementModel?.announcementStatus?.name == "Approved")
+            Text("This annoucement is approved"),
+          if (widget.volunteeringAnnouncementModel?.announcementStatus?.name == "Rejected")
+            Text("This annoucement is rejected"),
         ],
       ),
-      title: "Volunteering announcement details",
+      title: "Annoucement details",
     );
   }
 
@@ -172,40 +213,47 @@ class _VolunteeringAnnouncementDetailsScreenState extends State<VolunteeringAnno
                       FormBuilderTextField(
                         decoration: InputDecoration(labelText: "Notes"),
                         name: "notes",
+                        readOnly: true,
                       ),
                       SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: InputDecoration(
                             labelText: "Place"),
                         name: "place",
+                        readOnly: true,
                       ),
                       SizedBox(height: 10),
                         FormBuilderTextField(
                         decoration: InputDecoration(labelText: "City"),
                         name: "city",
+                        readOnly: true,
                       ),
                       SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: InputDecoration(
                             labelText: "Mentor"),
                         name: "mentor",
+                        readOnly: true,
                       ),
                       SizedBox(height: 10),
                           FormBuilderTextField(
                         decoration: InputDecoration(labelText: "Time from"),
                         name: "timeFrom",
+                        readOnly: true,
                       ),
                       SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: InputDecoration(
                             labelText: "Time to"),
                         name: "timeTo",
+                        readOnly: true,
                       ),
                       SizedBox(height: 10),
                         FormBuilderTextField(
                         decoration: InputDecoration(
                             labelText: "Date"),
                         name: "date",
+                        readOnly: true,
                       ),
                     ],
                   ),

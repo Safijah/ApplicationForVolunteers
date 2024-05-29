@@ -29,6 +29,7 @@ ReportModel _$ReportModelFromJson(Map<String, dynamic> json) => ReportModel(
       (json['presentStudents'] as List<dynamic>?)
           ?.map((e) => AccountModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      json['reason'] as String?,
     )..goal = json['goal'] as String?;
 
 Map<String, dynamic> _$ReportModelToJson(ReportModel instance) =>
@@ -45,4 +46,5 @@ Map<String, dynamic> _$ReportModelToJson(ReportModel instance) =>
       'mentor': instance.mentor,
       'absentStudents': instance.absentStudents,
       'presentStudents': instance.presentStudents,
+      'reason': instance.reason,
     };

@@ -104,8 +104,8 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
         color: Colors.white, // Background color for the table
         child: DataTable(
           columnSpacing: 24.0, // Adjust column spacing as needed
-          headingRowColor: MaterialStateColor.resolveWith((states) => Colors.indigo), // Header row color
-          dataRowColor: MaterialStateColor.resolveWith((states) => Colors.white), // Row color
+          headingRowColor: WidgetStateColor.resolveWith((states) => Colors.indigo), // Header row color
+          dataRowColor: WidgetStateColor.resolveWith((states) => Colors.white), // Row color
           columns: [
             DataColumn(
               label: Text(

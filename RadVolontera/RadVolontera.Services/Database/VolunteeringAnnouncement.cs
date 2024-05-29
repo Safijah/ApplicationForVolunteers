@@ -11,6 +11,7 @@ namespace RadVolontera.Services.Database
     {
         public long Id { get; set; }
         public string Place { get; set; }
+        public string ? Reason { get; set; }
         public long AnnouncementStatusId { get; set; }
         public  Status AnnouncementStatus { get; set; }
         public long CityId { get; set; }

@@ -110,6 +110,7 @@ namespace RadVolontera.Services.Services
             }
             else if (status.Name == "Rejected")
             {
+                value.Reason = request.Reason;
                 await _emailService.SendEmailAsync(value.VolunteeringAnnouncement.Mentor.Email, "Izvještaj", $"<h1>Zdravo {value.VolunteeringAnnouncement.Mentor.FirstName}</h1>" +
                $"<p>Poštovani/a, vaš izvještaj je vraćen. Molimo Vas da ga ispravite u što kraćem roku</p></br><p>{request.Notes}</p>");
             }

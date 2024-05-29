@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:radvolontera_mobile/providers/account_provider.dart';
 import 'package:radvolontera_mobile/providers/city_provider.dart';
+import 'package:radvolontera_mobile/providers/monitoring_provider.dart';
 import 'package:radvolontera_mobile/providers/notification_provider.dart';
 import 'package:radvolontera_mobile/providers/report_provider.dart';
 import 'package:radvolontera_mobile/providers/section_provider.dart';
@@ -22,6 +23,8 @@ void main() {
       ChangeNotifierProvider(create: (_) => StatusProvider()),
       ChangeNotifierProvider(create: (_) => ReportProvider()),
       ChangeNotifierProvider(create: (_) => CityProvider()),
+      ChangeNotifierProvider(create: (_) => MonitoringProvider()),
+
     ],
     child: const MyMaterialApp(),
   ));

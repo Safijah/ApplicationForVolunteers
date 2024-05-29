@@ -145,7 +145,7 @@ Widget _buildDataListView() {
         color: Colors.white, // Background color for the table
         child: DataTable(
           columnSpacing: 24.0, // Adjust column spacing as needed
-          headingRowColor: MaterialStateColor.resolveWith((states) => Colors.indigo), // Header row color
+          headingRowColor: WidgetStateColor.resolveWith((states) => Colors.indigo), // Header row color
           columns: [
             DataColumn(
               label: Text(

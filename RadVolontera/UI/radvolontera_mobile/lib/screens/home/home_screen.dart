@@ -27,7 +27,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
     super.initState();
     _notificationProvider = context.read<NotificationProvider>();
     _usefulLinkProvider = context.read<UsefulLinkProvider>();
-    // Call your method here
     _loadData();
   }
 
@@ -92,23 +91,35 @@ class _HomePageScreenState extends State<HomePageScreen> {
     );
   }
 
-Widget _buildUsefulLinks() {
-  return Column(
-    children: (usefulLinks ?? []).map((UsefulLinkModel link) {
-      return Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: ListTile(
-          title: InkWell(
-            onTap: (){
-            },
-            child: Text(link.name ?? ''),
+  Widget _buildUsefulLinks() {
+    return Column(
+      children: (usefulLinks ?? []).map((UsefulLinkModel link) {
+        return Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: ListTile(
+            title: InkWell(
+              onTap: () async {
+                var url = link.urlLink ?? '';
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url));
+                } else {
+                  // Handle the case when the URL can't be launched
+                  print('Could not launch $url');
+                }
+              },
+              child: Text(
+                link.name ?? '',
+                style: TextStyle(
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+            subtitle: Text(link.urlLink ?? ''),
           ),
-          subtitle: Text(link.urlLink ?? ''),
-        ),
-      );
-    }).toList(),
-  );
-}
-
+        );
+      }).toList(),
+    );
+  }
 }

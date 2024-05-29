@@ -4,6 +4,7 @@ using RadVolontera.Models.Company;
 using RadVolontera.Models.CompanyCategory;
 using RadVolontera.Models.CompanyEvent;
 using RadVolontera.Models.Enums;
+using RadVolontera.Models.Monitoring;
 using RadVolontera.Models.Notification;
 using RadVolontera.Models.Payment;
 using RadVolontera.Models.Report;
@@ -44,6 +45,8 @@ namespace RadVolontera.Services.MappingProfile
             CreateMap<Database.CompanyEvent, CompanyEvent>();
             CreateMap<CompanyEventRequest, Database.CompanyEvent>();
             CreateMap<Database.School, School>();
+            CreateMap<Database.Monitoring, Monitoring>();
+            CreateMap<MonitoringRequest, Database.Monitoring>();
         }
     }
 }

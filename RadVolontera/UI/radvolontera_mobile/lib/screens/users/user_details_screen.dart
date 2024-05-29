@@ -35,7 +35,9 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
       'phoneNumber': widget.user?.phoneNumber,
       'gender': widget.user?.gender.toString(),
       'email': widget.user?.email,
-      'birthDate': widget.user?.birthDate
+      'birthDate': widget.user?.birthDate != null
+      ? DateFormat('dd.MM.yyyy').format(widget.user!.birthDate!)
+      : '',
     };
 
     _accountProvider = context.read<AccountProvider>();
@@ -91,9 +93,6 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                     decoration: InputDecoration(labelText: "First name"),
                     name: "firstName",
                     readOnly: true,
-                    validator: FormBuilderValidators.required(
-                      errorText: 'First name is required',
-                    ),
                   ),
                   SizedBox(height: 10),
                   FormBuilderTextField(
@@ -109,37 +108,19 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                     decoration: InputDecoration(labelText: "Email"),
                     name: "email",
                     readOnly: true,
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(
-                        errorText: 'Email is required',
-                      ),
-                      FormBuilderValidators.email(
-                        errorText: 'Please insert valid email format',
-                      ),
-                    ]),
                   ),
                   SizedBox(height: 10),
                   FormBuilderTextField(
                     decoration: InputDecoration(labelText: "Phone number"),
                     name: "phoneNumber",
                     readOnly: true,
-                    validator: FormBuilderValidators.required(
-                      errorText: 'Phone number is required',
-                    ),
+                    
                   ),
                   SizedBox(height: 10),
-                  FormBuilderDateTimePicker(
-                    name: 'birthDate',
-                    decoration: InputDecoration(
-                      labelText: 'Date of Birth',
-                    ),
-                    initialEntryMode: DatePickerEntryMode.calendar,
-                    inputType: InputType.date,
-                    format: DateFormat('dd-MM-yyyy'),
-                    validator: FormBuilderValidators.required(
-                      errorText: 'Date of Birth is required',
-                    ),
-                    enabled: false,
+                 FormBuilderTextField(
+                    decoration: InputDecoration(labelText: "Date of birth"),
+                    name: "birthDate",
+                    readOnly: true,
                   ),
                 ],
               ),

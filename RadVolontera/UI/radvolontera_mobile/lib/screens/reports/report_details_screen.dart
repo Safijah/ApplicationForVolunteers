@@ -13,8 +13,9 @@ import 'package:radvolontera_mobile/screens/reports/reports_list_screen.dart';
 import '../../widgets/master_screen.dart';
 
 class ReportDetailsScreen extends StatefulWidget {
-  ReportModel? reportModel;
-  int? announcementId;
+  final ReportModel? reportModel;
+  final int? announcementId;
+
   ReportDetailsScreen({Key? key, this.reportModel, this.announcementId})
       : super(key: key);
 
@@ -57,9 +58,14 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
           [],
     };
 
-    _presentStudents = (_initialValue['presentStudents'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [];
-    _absentStudents = (_initialValue['absentStudents'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [];
-
+    _presentStudents = (_initialValue['presentStudents'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList() ??
+        [];
+    _absentStudents = (_initialValue['absentStudents'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList() ??
+        [];
 
     initForm();
   }
@@ -96,6 +102,18 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
       autovalidateMode: AutovalidateMode.disabled,
       child: Column(
         children: [
+          if (widget.reportModel?.status?.name == 'Rejected' &&
+              widget.reportModel?.reason != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Text(
+                "Reason for rejection: ${widget.reportModel?.reason}",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           FormBuilderTextField(
             decoration: InputDecoration(labelText: "Notes"),
             name: "notes",
@@ -133,7 +151,8 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
             decoration: InputDecoration(labelText: "Present Students"),
             initialValue: _presentStudents,
             options: students!.result
-                .where((student) => !_absentStudents.contains(student.id.toString()))
+                .where((student) =>
+                    !_absentStudents.contains(student.id.toString()))
                 .map((student) => FormBuilderChipOption<dynamic>(
                       value: student.id.toString(),
                       child: Text("${student.firstName} ${student.lastName}"),
@@ -158,7 +177,8 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
             decoration: InputDecoration(labelText: "Absent Students"),
             initialValue: _absentStudents,
             options: students!.result
-                .where((student) => !_presentStudents.contains(student.id.toString()))
+                .where((student) =>
+                    !_presentStudents.contains(student.id.toString()))
                 .map((student) => FormBuilderChipOption<dynamic>(
                       value: student.id.toString(),
                       child: Text("${student.firstName} ${student.lastName}"),
@@ -205,7 +225,11 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: buttons,
+      children: [
+        Column( // Wrap buttons in a Column
+          children: buttons,
+        ),
+      ],
     );
   }
 
@@ -232,17 +256,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const ReportListScreen()));
             } on Exception catch (e) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                        title: Text("Error"),
-                        content: Text(e.toString()),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("OK"))
-                        ],
-                      ));
+              _showErrorDialog(e.toString());
             }
           }
         },
@@ -254,7 +268,12 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
   Widget _buildInfoText(String message) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Text(message),
+      child: Container(
+        child: Text(
+          message,
+          softWrap: true,
+        ),
+      ),
     );
   }
 
@@ -286,17 +305,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const ReportListScreen()));
             } on Exception catch (e) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                        title: Text("Error"),
-                        content: Text(e.toString()),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("OK"))
-                        ],
-                      ));
+              _showErrorDialog(e.toString());
             }
           }
         },

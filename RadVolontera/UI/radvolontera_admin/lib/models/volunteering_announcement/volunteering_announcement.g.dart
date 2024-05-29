@@ -26,6 +26,7 @@ VolunteeringAnnouncementModel _$VolunteeringAnnouncementModelFromJson(
           : AccountModel.fromJson(json['mentor'] as Map<String, dynamic>),
       json['timeFrom'] as String,
       json['timeTo'] as String,
+      json['reason'] as String?,
     )
       ..notes = json['notes'] as String?
       ..date =
@@ -46,4 +47,5 @@ Map<String, dynamic> _$VolunteeringAnnouncementModelToJson(
       'timeTo': instance.timeTo,
       'notes': instance.notes,
       'date': instance.date?.toIso8601String(),
+      'reason': instance.reason,
     };

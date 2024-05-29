@@ -20,9 +20,10 @@ class ReportModel {
   AccountModel? mentor;
   List<AccountModel>? absentStudents; 
   List<AccountModel>? presentStudents; 
+  String ? reason;
 ReportModel(this.id, this.notes, this.volunteerActivities, 
 this.themes,this.status,this.statusId,this.volunteeringAnnouncement,this.volunteeringAnnouncementId,this.mentor,
-this.absentStudents, this.presentStudents);
+this.absentStudents, this.presentStudents,this.reason);
       /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
   /// The constructor is named after the source class, in this case, User.

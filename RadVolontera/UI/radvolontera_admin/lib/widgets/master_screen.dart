@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:radvolontera_admin/main.dart';
 import 'package:radvolontera_admin/screens/companies/company_list_screen.dart';
+import 'package:radvolontera_admin/screens/monitoring/monitoring_list_screen.dart';
 import 'package:radvolontera_admin/screens/payments/payment_list_screen.dart';
 import 'package:radvolontera_admin/screens/reports/report_list_screen.dart';
 import 'package:radvolontera_admin/screens/users/user_details_screen.dart';
@@ -171,6 +172,18 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => const CompanyEventListScreen()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.video_camera_front,
+                    color: Colors.white), // Add an icon to the ListTile
+                title:
+                    Text("Monitoring", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const MonitoringListScreen()),
                   );
                 },
               ),

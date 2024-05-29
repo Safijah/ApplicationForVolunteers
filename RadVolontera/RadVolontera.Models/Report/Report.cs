@@ -17,6 +17,7 @@ namespace RadVolontera.Models.Report
         public long StatusId { get; set; }
         public Models.Status.Status Status { get; set; }
         public long VolunteeringAnnouncementId { get; set; }
+        public string ? Reason { get; set; }
         public Models.VolunteeringAnnouncement.VolunteeringAnnouncement VolunteeringAnnouncement { get; set; }
         public List<UserResponse> PresentStudents { get; set; }
         public List<UserResponse> AbsentStudents { get; set; }

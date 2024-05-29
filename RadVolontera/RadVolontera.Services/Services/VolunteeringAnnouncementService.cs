@@ -90,6 +90,7 @@ namespace RadVolontera.Services.Services
             }
             else if (status.Name == "Rejected")
             {
+                value.Reason = request.Reason;
                 await _emailService.SendEmailAsync(value.Mentor.Email, "Najava", $"<h1>Zdravo {value.Mentor.FirstName}</h1>" +
                $"<p>Poštovani/a, vaša najava je vraćena. Molimo Vas da je ispravite u što kraćem roku</p></br><p>{request.Notes}</p>");
             }

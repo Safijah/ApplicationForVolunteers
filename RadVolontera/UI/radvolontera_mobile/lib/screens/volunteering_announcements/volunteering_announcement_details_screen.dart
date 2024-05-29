@@ -67,13 +67,23 @@ class _VolunteeringAnnouncementDetailsScreenState
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title: "Volunteering announcement details",
+      title: "Volunteering Announcement Details",
       child: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            isLoading ? CircularProgressIndicator() : _buildForm(),
+            if (isLoading) CircularProgressIndicator() else _buildForm(),
             SizedBox(height: 20),
+            if (widget.volunteeringAnnouncementModel?.announcementStatus?.name == 'Rejected' &&
+                widget.volunteeringAnnouncementModel?.reason != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: Text(
+                  "Reason for rejection: ${widget.volunteeringAnnouncementModel?.reason}",
+                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                ),
+              ),
             _buildButtons(),
           ],
         ),
@@ -228,7 +238,9 @@ class _VolunteeringAnnouncementDetailsScreenState
           }
           break;
         case 'Rejected':
-          buttons.add(_buildCorrectAnnouncementButton());
+          if (widget.volunteeringAnnouncementModel?.reason != null) {
+            buttons.add(_buildCorrectAnnouncementButton());
+          }
           break;
         default:
           buttons.add(_buildSaveButton());
@@ -270,17 +282,7 @@ class _VolunteeringAnnouncementDetailsScreenState
                   builder: (context) =>
                       const VolunteeringAnnouncementListScreen()));
             } on Exception catch (e) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                        title: Text("Error"),
-                        content: Text(e.toString()),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("OK"))
-                        ],
-                      ));
+              _showErrorDialog(e.toString());
             }
           }
         },
@@ -327,19 +329,7 @@ class _VolunteeringAnnouncementDetailsScreenState
                           );
                         }
                       } on Exception catch (e) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: Text("Error"),
-                            content: Text(e.toString()),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text("OK"),
-                              ),
-                            ],
-                          ),
-                        );
+                        _showErrorDialog(e.toString());
                       }
                       Navigator.of(context).pop(); // Close the dialog
                     },
@@ -377,7 +367,13 @@ class _VolunteeringAnnouncementDetailsScreenState
   Widget _buildInfoText(String message) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Text(message),
+      child: Container(
+        width: MediaQuery.of(context).size.width - 100, // Adjust padding
+        child: Text(
+          message,
+          softWrap: true,
+        ),
+      ),
     );
   }
 
@@ -405,17 +401,7 @@ class _VolunteeringAnnouncementDetailsScreenState
                   builder: (context) =>
                       const VolunteeringAnnouncementListScreen()));
             } on Exception catch (e) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                        title: Text("Error"),
-                        content: Text(e.toString()),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("OK"))
-                        ],
-                      ));
+              _showErrorDialog(e.toString());
             }
           }
         },

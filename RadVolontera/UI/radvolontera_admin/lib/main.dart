@@ -5,6 +5,7 @@ import 'package:radvolontera_admin/providers/city_provider.dart';
 import 'package:radvolontera_admin/providers/company_category_provider.dart';
 import 'package:radvolontera_admin/providers/company_event_provider.dart';
 import 'package:radvolontera_admin/providers/company_provider.dart';
+import 'package:radvolontera_admin/providers/monitoring_provider.dart';
 import 'package:radvolontera_admin/providers/notification_provider.dart';
 import 'package:radvolontera_admin/providers/payment_provider.dart';
 import 'package:radvolontera_admin/providers/report_provider.dart';
@@ -32,6 +33,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => CompanyCategoryProvider()),
       ChangeNotifierProvider(create: (_) => CityProvider()),
       ChangeNotifierProvider(create: (_) => SchoolProvider()),
+      ChangeNotifierProvider(create: (_) => MonitoringProvider()),
     ],
     child: const MyMaterialApp(),
   ));

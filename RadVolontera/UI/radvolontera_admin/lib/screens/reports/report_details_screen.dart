@@ -23,7 +23,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
   bool isLoading = true;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialValue = {
       'notes': widget.reportModel?.notes,
@@ -41,7 +40,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 
@@ -58,74 +56,117 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
       child: Column(
         children: [
           isLoading ? Container() : _buildForm(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: ElevatedButton(
+          if (widget.reportModel?.status?.name == "On hold")
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: ElevatedButton(
                     onPressed: () async {
-                        try {
-                           var request ={
-                            'reportId': widget.reportModel?.id,
-                            'status':"Approved"
-                          };
-                         await  _reportProvider.changeStatus(request);
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const ReportListScreen()));
-                        } on Exception catch (e) {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text(e.toString()),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text("OK"))
-                                    ],
-                                  ));
-                        }
+                      try {
+                        var request = {
+                          'reportId': widget.reportModel?.id,
+                          'status': "Approved"
+                        };
+                        await _reportProvider.changeStatus(request);
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const ReportListScreen()));
+                      } on Exception catch (e) {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: Text("Error"),
+                                  content: Text(e.toString()),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text("OK"))
+                                  ],
+                                ));
+                      }
                     },
-                    child: Text("Accept")),
-              ),
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: ElevatedButton(
+                    child: Text("Accept"),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: ElevatedButton(
                     onPressed: () async {
+                      String? reason = await showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          String reason = '';
+                          return AlertDialog(
+                            title: Text('Reason for Declining'),
+                            content: TextFormField(
+                              onChanged: (value) {
+                                reason = value;
+                              },
+                              decoration: InputDecoration(
+                                  hintText: 'Enter reason here...'),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  if (reason.isNotEmpty) {
+                                    Navigator.pop(context, reason);
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('Please enter a reason.')),
+                                    );
+                                  }
+                                },
+                                child: Text('Submit'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+
+                      if (reason != null && reason.isNotEmpty) {
                         try {
-                          var request ={
+                          var request = {
                             'reportId': widget.reportModel?.id,
-                            'status':"Rejected"
+                            'status': "Rejected",
+                            'reason': reason,
                           };
-                          await  _reportProvider.changeStatus(request);
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const ReportListScreen()));
+                          await _reportProvider.changeStatus(request);
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const ReportListScreen(),
+                          ));
                         } on Exception catch (e) {
                           showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text(e.toString()),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text("OK"))
-                                    ],
-                                  ));
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: Text("Error"),
+                              content: Text(e.toString()),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text("OK"),
+                                )
+                              ],
+                            ),
+                          );
                         }
-                      
+                      }
                     },
                     style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,//change background color of button
-                backgroundColor: Colors.red, // Set the background color to red
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.red,
                     ),
-                    child: Text("Decline")),
-              )
-            ],
-          )
+                    child: Text("Decline"),
+                  ),
+                )
+              ],
+            ),
+          if (widget.reportModel?.status?.name == "Approved")
+            Text("This report is approved"),
+          if (widget.reportModel?.status?.name == "Rejected")
+            Text("This report is rejected"),
         ],
       ),
       title: "Report details",
@@ -134,7 +175,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
 
   Padding _buildForm() {
     return Padding(
-      padding: EdgeInsets.only(top: 50.0), // Adjust the top margin as needed
+      padding: EdgeInsets.only(top: 50.0),
       child: FormBuilder(
         key: _formKey,
         initialValue: _initialValue,
@@ -165,27 +206,32 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                       FormBuilderTextField(
                         decoration: InputDecoration(labelText: "Notes"),
                         name: "notes",
+                        readOnly: true,
                       ),
                       SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: InputDecoration(labelText: "Goal"),
                         name: "goal",
+                        readOnly: true,
                       ),
                       SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration:
                             InputDecoration(labelText: "Volunteer activities"),
                         name: "volunteerActivities",
+                        readOnly: true,
                       ),
                       SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: InputDecoration(labelText: "Mentor"),
                         name: "mentor",
+                        readOnly: true,
                       ),
                       SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: InputDecoration(labelText: "Themes"),
                         name: "themes",
+                        readOnly: true,
                       ),
                       SizedBox(height: 10),
                       if (widget.reportModel?.absentStudents != null &&
@@ -195,7 +241,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                           style: TextStyle(fontSize: 15),
                         ),
                       SizedBox(height: 10),
-                      // Display present students if available
                       if (widget.reportModel?.presentStudents != null &&
                           widget.reportModel!.presentStudents!.isNotEmpty)
                         Text(
