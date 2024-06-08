@@ -15,6 +15,8 @@ namespace RadVolontera.Services.Database
         public  string Theme1 { get; set; }
         public  string Theme2 { get; set; }
         public  string Goals1 { get; set; }
-        public  string Goals2 { get; set; }
+        public string Goals2 { get; set; }
+        public long AnualPlanId { get; set; }
+        public AnnualPlan AnualPlan { get; set; }
     }
 }

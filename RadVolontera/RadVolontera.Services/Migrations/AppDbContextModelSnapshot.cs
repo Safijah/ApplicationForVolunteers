@@ -22,6 +22,88 @@ namespace RadVolontera.Services.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("RadVolontera.Services.Database.AnnualPlan", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("AnnualPlanTemplateId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MentorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<long>("StatusId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnnualPlanTemplateId");
+
+                    b.HasIndex("MentorId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("AnnualPlans");
+                });
+
+            modelBuilder.Entity("RadVolontera.Services.Database.AnnualPlanTemplate", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AnnualPlanTemplates");
+                });
+
             modelBuilder.Entity("RadVolontera.Services.Database.City", b =>
                 {
                     b.Property<long>("Id")
@@ -219,6 +301,102 @@ namespace RadVolontera.Services.Migrations
                     b.HasIndex("MentorId");
 
                     b.ToTable("Monitoring");
+                });
+
+            modelBuilder.Entity("RadVolontera.Services.Database.MonthlyPlan", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("AnualPlanId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Goals1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Goals2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Theme1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Theme2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnualPlanId");
+
+                    b.ToTable("MonthlyPlans");
+                });
+
+            modelBuilder.Entity("RadVolontera.Services.Database.MonthlyPlanTemplate", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("AnnualPlanTemplateId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Theme")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnnualPlanTemplateId");
+
+                    b.ToTable("MonthlyPlanTemplates");
                 });
 
             modelBuilder.Entity("RadVolontera.Services.Database.Notification", b =>
@@ -767,6 +945,33 @@ namespace RadVolontera.Services.Migrations
                     b.ToTable("RoleUser");
                 });
 
+            modelBuilder.Entity("RadVolontera.Services.Database.AnnualPlan", b =>
+                {
+                    b.HasOne("RadVolontera.Services.Database.AnnualPlanTemplate", "AnnualPlanTemplate")
+                        .WithMany("AnnualPlans")
+                        .HasForeignKey("AnnualPlanTemplateId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("RadVolontera.Services.Database.User", "Mentor")
+                        .WithMany("AnnualPlans")
+                        .HasForeignKey("MentorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("RadVolontera.Services.Database.Status", "Status")
+                        .WithMany("AnnualPlans")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AnnualPlanTemplate");
+
+                    b.Navigation("Mentor");
+
+                    b.Navigation("Status");
+                });
+
             modelBuilder.Entity("RadVolontera.Services.Database.Company", b =>
                 {
                     b.HasOne("RadVolontera.Services.Database.City", "City")
@@ -806,6 +1011,28 @@ namespace RadVolontera.Services.Migrations
                         .IsRequired();
 
                     b.Navigation("Mentor");
+                });
+
+            modelBuilder.Entity("RadVolontera.Services.Database.MonthlyPlan", b =>
+                {
+                    b.HasOne("RadVolontera.Services.Database.AnnualPlan", "AnualPlan")
+                        .WithMany("MonthlyPlans")
+                        .HasForeignKey("AnualPlanId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AnualPlan");
+                });
+
+            modelBuilder.Entity("RadVolontera.Services.Database.MonthlyPlanTemplate", b =>
+                {
+                    b.HasOne("RadVolontera.Services.Database.AnnualPlanTemplate", "AnnualPlanTemplate")
+                        .WithMany("MonthlyPlanTemplates")
+                        .HasForeignKey("AnnualPlanTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AnnualPlanTemplate");
                 });
 
             modelBuilder.Entity("RadVolontera.Services.Database.Notification", b =>
@@ -982,6 +1209,18 @@ namespace RadVolontera.Services.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RadVolontera.Services.Database.AnnualPlan", b =>
+                {
+                    b.Navigation("MonthlyPlans");
+                });
+
+            modelBuilder.Entity("RadVolontera.Services.Database.AnnualPlanTemplate", b =>
+                {
+                    b.Navigation("AnnualPlans");
+
+                    b.Navigation("MonthlyPlanTemplates");
+                });
+
             modelBuilder.Entity("RadVolontera.Services.Database.City", b =>
                 {
                     b.Navigation("Companies");
@@ -1018,6 +1257,8 @@ namespace RadVolontera.Services.Migrations
 
             modelBuilder.Entity("RadVolontera.Services.Database.Status", b =>
                 {
+                    b.Navigation("AnnualPlans");
+
                     b.Navigation("Reports");
 
                     b.Navigation("VolunteeringAnnouncements");
@@ -1026,6 +1267,8 @@ namespace RadVolontera.Services.Migrations
             modelBuilder.Entity("RadVolontera.Services.Database.User", b =>
                 {
                     b.Navigation("AnnouncementMentors");
+
+                    b.Navigation("AnnualPlans");
 
                     b.Navigation("Monitorings");
 

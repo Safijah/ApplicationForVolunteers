@@ -7,19 +7,19 @@ part of 'report.dart';
 // **************************************************************************
 
 ReportModel _$ReportModelFromJson(Map<String, dynamic> json) => ReportModel(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['notes'] as String?,
       json['volunteerActivities'] as String?,
       json['themes'] as String?,
       json['status'] == null
           ? null
           : StatusModel.fromJson(json['status'] as Map<String, dynamic>),
-      json['statusId'] as int?,
+      (json['statusId'] as num?)?.toInt(),
       json['volunteeringAnnouncement'] == null
           ? null
           : VolunteeringAnnouncementModel.fromJson(
               json['volunteeringAnnouncement'] as Map<String, dynamic>),
-      json['volunteeringAnnouncementId'] as int?,
+      (json['volunteeringAnnouncementId'] as num?)?.toInt(),
       json['mentor'] == null
           ? null
           : AccountModel.fromJson(json['mentor'] as Map<String, dynamic>),

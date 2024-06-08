@@ -13,12 +13,12 @@ AccountModel _$AccountModelFromJson(Map<String, dynamic> json) => AccountModel(
       json['firstName'] as String?,
       json['lastName'] as String?,
       json['email'] as String?,
-      json['gender'] as int?,
+      (json['gender'] as num?)?.toInt(),
       json['phoneNumber'] as String?,
       json['userName'] as String?,
       json['password'] as String?,
       json['confirmPassword'] as String?,
-      json['userType'] as int?,
+      (json['userType'] as num?)?.toInt(),
       json['birthDate'] == null
           ? null
           : DateTime.parse(json['birthDate'] as String),

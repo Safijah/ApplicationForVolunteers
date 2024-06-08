@@ -75,8 +75,10 @@ namespace RadVolontera.Services.Services
                     CityId= request.CityId,
                 };
 
-                var result = await _userManager.CreateAsync(user, password);
+                try
+                {
 
+                var result = await _userManager.CreateAsync(user, password);
                 if (result.Succeeded)
                 {
                     if (request.Roles?.Count > 0)
@@ -91,6 +93,13 @@ namespace RadVolontera.Services.Services
                 var userResult = _appDbContext.Users.FirstOrDefault(u => u.Username == user.Username);
                 var token = _tokenService.GenerateToken(user, null);
                 return new UserResponse() { };
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+
             }
             catch (Exception ex)
             {

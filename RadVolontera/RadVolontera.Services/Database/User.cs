@@ -41,6 +41,7 @@ namespace RadVolontera.Services.Database
         public virtual ICollection<UsefulLinks> UsefulLinks { get; set; } = new List<UsefulLinks>();
         public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
         public virtual ICollection<Monitoring> Monitorings { get; set; } = new List<Monitoring>();
+        public virtual ICollection<AnnualPlan> AnnualPlans { get; set; } = new List<AnnualPlan>();
 
         [NotMapped]
         public string FullName

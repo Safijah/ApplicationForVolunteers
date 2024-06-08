@@ -7,7 +7,7 @@ part of 'status.dart';
 // **************************************************************************
 
 StatusModel _$StatusModelFromJson(Map<String, dynamic> json) => StatusModel(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name'] as String?,
     );
 

@@ -13,6 +13,10 @@ namespace RadVolontera.Services.Database
         public int Year { get; set; }
         public long AnnualPlanTemplateId { get; set; }
         public AnnualPlanTemplate AnnualPlanTemplate { get; set; }
+        public string MentorId { get; set; }
+        public User Mentor { get; set; }
+        public long StatusId { get; set; }
+        public Status Status { get; set; }
         public ICollection<MonthlyPlan> MonthlyPlans { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:radvolontera_admin/main.dart';
+import 'package:radvolontera_admin/screens/annual_plan_templates/annual_plan_template_list_screen.dart';
 import 'package:radvolontera_admin/screens/companies/company_list_screen.dart';
 import 'package:radvolontera_admin/screens/monitoring/monitoring_list_screen.dart';
 import 'package:radvolontera_admin/screens/payments/payment_list_screen.dart';
@@ -112,6 +113,30 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => const PaymentReportListScreen()),
+                  );
+                },
+              ),
+               ListTile(
+                leading: Icon(Icons.library_books,
+                    color: Colors.white), // Add an icon to the ListTile
+                title:
+                    Text("Annual plan templates", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const AnnualPlanTemplateListscreen()),
+                  );
+                },
+              ),
+               ListTile(
+                leading: Icon(Icons.collections_bookmark_sharp,
+                    color: Colors.white), // Add an icon to the ListTile
+                title:
+                    Text("Annual plans", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const CompanyListScreen()),
                   );
                 },
               ),

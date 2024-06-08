@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using RadVolontera.Models.AnnualPlanTemplate;
 using RadVolontera.Models.City;
 using RadVolontera.Models.Company;
 using RadVolontera.Models.CompanyCategory;
 using RadVolontera.Models.CompanyEvent;
 using RadVolontera.Models.Enums;
 using RadVolontera.Models.Monitoring;
+using RadVolontera.Models.MonthlyPlan;
+using RadVolontera.Models.MonthlyPlanTemplate;
 using RadVolontera.Models.Notification;
 using RadVolontera.Models.Payment;
 using RadVolontera.Models.Report;
@@ -47,6 +50,10 @@ namespace RadVolontera.Services.MappingProfile
             CreateMap<Database.School, School>();
             CreateMap<Database.Monitoring, Monitoring>();
             CreateMap<MonitoringRequest, Database.Monitoring>();
+            CreateMap<Database.AnnualPlanTemplate, AnnualPlanTemplate>();
+            CreateMap<AnnualPlanTemplateRequest, Database.AnnualPlanTemplate>();
+            CreateMap<Database.MonthlyPlanTemplate, MonthlyPlanTemplate>();
+            CreateMap<MonthlyPlanTemplateRequest, Database.MonthlyPlanTemplate>();
         }
     }
 }

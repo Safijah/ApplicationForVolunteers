@@ -7,7 +7,7 @@ part of 'section.dart';
 // **************************************************************************
 
 SectionModel _$SectionModelFromJson(Map<String, dynamic> json) => SectionModel(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name'] as String?,
     );
 

@@ -20,7 +20,7 @@ namespace RadVolontera.Controllers
 
         }
 
-        
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<UserResponse>> Register([FromBody] RegisterRequest request)
         {

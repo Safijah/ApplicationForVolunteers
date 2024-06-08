@@ -8,7 +8,7 @@ part of 'useful_link.dart';
 
 UsefulLinkModel _$UsefulLinkModelFromJson(Map<String, dynamic> json) =>
     UsefulLinkModel(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name'] as String?,
       json['urlLink'] as String?,
       json['adminId'] as String?,

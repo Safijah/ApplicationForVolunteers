@@ -13,7 +13,7 @@ namespace RadVolontera.Services.Database
         public long Id { get; set; }
         public string Theme { get; set; }
         public Month Month { get; set; }
-        public int AnnualPlanTemplateId { get; set; }
+        public long AnnualPlanTemplateId { get; set; }
         public AnnualPlanTemplate AnnualPlanTemplate { get; set; }
     }
 }

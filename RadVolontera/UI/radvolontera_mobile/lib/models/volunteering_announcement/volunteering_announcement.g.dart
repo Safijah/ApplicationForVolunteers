@@ -9,14 +9,14 @@ part of 'volunteering_announcement.dart';
 VolunteeringAnnouncementModel _$VolunteeringAnnouncementModelFromJson(
         Map<String, dynamic> json) =>
     VolunteeringAnnouncementModel(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['place'] as String?,
-      json['announcementStatusId'] as int?,
+      (json['announcementStatusId'] as num?)?.toInt(),
       json['announcementStatus'] == null
           ? null
           : StatusModel.fromJson(
               json['announcementStatus'] as Map<String, dynamic>),
-      json['cityId'] as int?,
+      (json['cityId'] as num?)?.toInt(),
       json['city'] == null
           ? null
           : CityModel.fromJson(json['city'] as Map<String, dynamic>),

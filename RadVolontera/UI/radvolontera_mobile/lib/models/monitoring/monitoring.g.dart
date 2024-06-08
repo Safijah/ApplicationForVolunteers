@@ -8,7 +8,7 @@ part of 'monitoring.dart';
 
 MonitoringModel _$MonitoringModelFromJson(Map<String, dynamic> json) =>
     MonitoringModel(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['notes'] as String,
       json['url'] as String,
       json['mentorId'] as String,

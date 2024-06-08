@@ -23,6 +23,10 @@ namespace RadVolontera.Services.Database
         public virtual DbSet<UsefulLinks> UsefulLinks { get; set; }
         public virtual DbSet<Status> Statuses { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
+        public virtual DbSet<AnnualPlan> AnnualPlans { get; set; }
+        public virtual DbSet<AnnualPlanTemplate> AnnualPlanTemplates { get; set; }
+        public virtual DbSet<MonthlyPlan> MonthlyPlans { get; set; }
+        public virtual DbSet<MonthlyPlanTemplate> MonthlyPlanTemplates { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 
@@ -43,6 +47,10 @@ namespace RadVolontera.Services.Database
             builder.ApplyConfiguration(new CompanyEventConfiguration());
             builder.ApplyConfiguration(new VolunteeringAnnouncementConfiguration());
             builder.ApplyConfiguration(new MonitoringConfiguration());
+            builder.ApplyConfiguration(new AnnualPlanConfiguration());
+            builder.ApplyConfiguration(new AnnualPlanTemplateConfiguration());
+            builder.ApplyConfiguration(new MonthlyPlanConfiguration());
+            builder.ApplyConfiguration(new MonthlyPlanTemplateConfiguration());
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

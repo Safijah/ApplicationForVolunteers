@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:radvolontera_admin/providers/account_provider.dart';
+import 'package:radvolontera_admin/providers/annual_plan_template_provider.dart';
 import 'package:radvolontera_admin/providers/city_provider.dart';
 import 'package:radvolontera_admin/providers/company_category_provider.dart';
 import 'package:radvolontera_admin/providers/company_event_provider.dart';
@@ -34,6 +35,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => CityProvider()),
       ChangeNotifierProvider(create: (_) => SchoolProvider()),
       ChangeNotifierProvider(create: (_) => MonitoringProvider()),
+      ChangeNotifierProvider(create: (_) => AnnualPlanTemplateProvider()),
     ],
     child: const MyMaterialApp(),
   ));
