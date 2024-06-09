@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:radvolontera_mobile/main.dart';
+import 'package:radvolontera_mobile/screens/annual_plan/annual_plan_list_screen.dart';
 import 'package:radvolontera_mobile/screens/home/home_screen.dart';
 import 'package:radvolontera_mobile/screens/monitoring/monitoring_screen.dart';
 import 'package:radvolontera_mobile/screens/reports/reports_list_screen.dart';
@@ -105,6 +106,17 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => const MonitoringListScreen()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.collections_bookmark_sharp,
+                    color: Colors.white), // Add an icon to the ListTile
+                title: Text("Annual plans", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const AnnualPlanListScreen()),
                   );
                 },
               ),

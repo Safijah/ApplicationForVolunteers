@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'package:radvolontera_mobile/models/search_result.dart';
 import '../models/volunteering_announcement/volunteering_announcement.dart';
-import '../utils/util.dart';
 import 'base_provider.dart';
 
 class VolunteeringAnnouncementProvider

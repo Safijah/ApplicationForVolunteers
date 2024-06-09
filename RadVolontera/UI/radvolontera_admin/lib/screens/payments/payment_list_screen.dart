@@ -65,7 +65,7 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
 
   _loadData() async {
     var data = await _paymentProvider.get();
-    studentsResult =  await _accountProvider.get(filter: {
+    studentsResult =  await _accountProvider.getAll(filter: {
                   'userTypes': 3 
                 });
     setState(() {

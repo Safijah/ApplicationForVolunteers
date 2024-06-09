@@ -16,7 +16,7 @@ namespace RadVolontera.Services.Configuration
             builder.Property(u => u.Id).ValueGeneratedOnAdd();
             builder.HasQueryFilter(u => u.DeletedAt == null);
             builder.Property(w => w.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
-            builder.HasOne(n => n.AnualPlan).WithMany(n => n.MonthlyPlans).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(n => n.AnualPlan).WithMany(n => n.MonthlyPlans).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

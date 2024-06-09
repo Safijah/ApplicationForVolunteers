@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using RadVolontera.Models.AnnualPlan;
 using RadVolontera.Models.AnnualPlanTemplate;
 using RadVolontera.Models.City;
 using RadVolontera.Models.Company;
@@ -54,6 +55,10 @@ namespace RadVolontera.Services.MappingProfile
             CreateMap<AnnualPlanTemplateRequest, Database.AnnualPlanTemplate>();
             CreateMap<Database.MonthlyPlanTemplate, MonthlyPlanTemplate>();
             CreateMap<MonthlyPlanTemplateRequest, Database.MonthlyPlanTemplate>();
+            CreateMap<Database.AnnualPlan, AnnualPlan>();
+            CreateMap<AnnualPlanRequest, Database.AnnualPlan>();
+            CreateMap<Database.MonthlyPlan, MonthlyPlan>();
+            CreateMap<MonthlyPlanRequest, Database.MonthlyPlan>();
         }
     }
 }

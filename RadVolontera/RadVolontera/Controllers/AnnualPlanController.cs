@@ -12,5 +12,12 @@ namespace RadVolontera.Controllers
         {
 
         }
+
+        [HttpGet("available-years/{mentorId}")]
+        public virtual async Task<List<int>> StudentAnnouncements([FromRoute] string mentorId)
+        {
+            var result = await (_service as IAnnualPlanService).AvailableYears(mentorId);
+            return result;
+        }
     }
 }

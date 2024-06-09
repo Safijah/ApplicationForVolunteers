@@ -49,7 +49,7 @@ class _VolunteeringAnnouncementListcreenState
 
   _loadData() async {
     var data = await _volunteeringAnnouncementProvider.get();
-    mentorsResult = await _accountProvider.get(filter: {'userTypes': 2});
+    mentorsResult = await _accountProvider.getAll(filter: {'userTypes': 2});
     statusResult= await _statusProvider.get();
     setState(() {
       result = data;

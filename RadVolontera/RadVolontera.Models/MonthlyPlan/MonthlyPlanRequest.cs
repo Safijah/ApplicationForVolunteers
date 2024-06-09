@@ -9,7 +9,10 @@ namespace RadVolontera.Models.MonthlyPlan
 {
     public class MonthlyPlanRequest
     {
-        public string Theme { get; set; }
         public Month Month { get; set; }
+        public string Theme1 { get; set; }
+        public string Theme2 { get; set; }
+        public string Goals1 { get; set; }
+        public string Goals2 { get; set; }
     }
 }

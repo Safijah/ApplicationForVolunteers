@@ -79,7 +79,7 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
 
   _loadData() async {
     var data = await _paymentProvider.getPaymentReport();
-    studentsResult = await _accountProvider.get(filter: {'userTypes': 3});
+    studentsResult = await _accountProvider.getAll(filter: {'userTypes': 3});
     selectedValue = "2024";
     setState(() {
       result = data;

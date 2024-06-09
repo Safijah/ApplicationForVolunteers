@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:radvolontera_admin/main.dart';
+import 'package:radvolontera_admin/screens/annual_plan/annual_plan_list_screen.dart';
 import 'package:radvolontera_admin/screens/annual_plan_templates/annual_plan_template_list_screen.dart';
 import 'package:radvolontera_admin/screens/companies/company_list_screen.dart';
 import 'package:radvolontera_admin/screens/monitoring/monitoring_list_screen.dart';
@@ -136,7 +137,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context) => const CompanyListScreen()),
+                        builder: (context) => const AnnualPlanListScreen()),
                   );
                 },
               ),

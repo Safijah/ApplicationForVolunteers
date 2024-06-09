@@ -65,7 +65,7 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
   }
 
   Future initForm() async {
-    studentsResult = await _accountProvider.get(filter: {
+    studentsResult = await _accountProvider.getAll(filter: {
       'userTypes': 3,
     });
     currentUser = await _accountProvider.getCurrentUser();

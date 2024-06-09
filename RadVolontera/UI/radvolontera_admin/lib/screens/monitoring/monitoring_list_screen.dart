@@ -42,7 +42,7 @@ class _MonitoringListScreenState extends State<MonitoringListScreen> {
 
   _loadData() async {
     var data = await _monitoringProvider.get();
-    mentorResult = await _accountProvider.get(filter: {
+    mentorResult = await _accountProvider.getAll(filter: {
       'userTypes': 2
     });
     setState(() {

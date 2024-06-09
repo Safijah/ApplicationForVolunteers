@@ -11,5 +11,6 @@ namespace RadVolontera.Services.Interfaces
 {
     public interface IAnnualPlanService : ICRUDService<Models.AnnualPlan.AnnualPlan, AnnualPlanSearchObject, AnnualPlanRequest, AnnualPlanRequest, long>
     {
+        public Task<List<int>> AvailableYears(string mentorId);
     }
 }
