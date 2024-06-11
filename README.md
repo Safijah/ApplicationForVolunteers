@@ -27,5 +27,6 @@ username: safija_mentor@hotmail.com
 
 flutter pub get
 flutter emulators --launch Pixel 2 API 30
+
 flutter run --dart-define=baseUrl=http://10.0.2.2:5269/api/
 
