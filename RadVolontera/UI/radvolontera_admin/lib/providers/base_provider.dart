@@ -9,7 +9,7 @@ import '../models/search_result.dart';
 import '../utils/util.dart';
 
 abstract class BaseProvider<T> with ChangeNotifier {
- static String baseUrl = const String.fromEnvironment("baseUrl",defaultValue: "http://localhost:5269/api/");
+ static String baseUrl = const String.fromEnvironment("baseUrl",defaultValue: "https://localhost:5269/api/");
   String _endpoint = "";
   BaseProvider(String endpoint) {
     _endpoint = endpoint;

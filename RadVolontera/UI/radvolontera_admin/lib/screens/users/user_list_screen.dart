@@ -92,7 +92,7 @@ class _UserListScreenState extends State<UserListScreen> {
               });
 
                    var data = await _accountProvider.getAll(filter: {
-                  'name': _nameController.text,
+                  'fullName': _nameController.text,
                   'userTypes': selectedValue 
                 });
 
@@ -110,7 +110,7 @@ class _UserListScreenState extends State<UserListScreen> {
           ElevatedButton(
               onPressed: () async {
                 var data = await _accountProvider.getAll(filter: {
-                  'name': _nameController.text,
+                  'fullName': _nameController.text,
                   'userTypes': selectedValue 
                 });
 
