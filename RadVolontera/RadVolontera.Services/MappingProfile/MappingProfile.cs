@@ -47,6 +47,7 @@ namespace RadVolontera.Services.MappingProfile
             CreateMap<Database.CompanyCategory, CompanyCategory>();
             CreateMap<CompanyCategoryRequest, Database.CompanyCategory>();
             CreateMap<Database.CompanyEvent, CompanyEvent>();
+            CreateMap<CompanyEvent, Database.CompanyEvent>();
             CreateMap<CompanyEventRequest, Database.CompanyEvent>();
             CreateMap<Database.School, School>();
             CreateMap<Database.Monitoring, Monitoring>();

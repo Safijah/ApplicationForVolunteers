@@ -1,0 +1,49 @@
+﻿version: '3.8'
+
+services:
+  rabbitMQ:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq_container'
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "8050:15672"
+      - "5672:5672"
+    networks: 
+      - radvolonteranet2022
+
+  radvolontera-sql:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "QWElkj132!"
+      MSSQL_PID: Developer
+    ports:
+      - "1401:1433"
+    networks:
+      - radvolonteranet2022
+
+  radvolontera-api:
+    restart: unless-stopped
+    build:
+      context: .
+    environment:
+      ConnectionStrings:DefaultConnection: "Server=radvolontera-sql,1433;Database=180024;User=sa;Password=QWElkj132!;ConnectRetryCount=0;TrustServerCertificate=True"
+      ASPNETCORE_ENVIRONMENT: Development
+      RABBITMQ_HOST: rabbitMQ
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_VIRTUALHOST: /
+    ports:
+      - "5269:5269"
+    networks:
+      - radvolonteranet2022
+    depends_on:
+      - radvolontera-sql
+      - rabbitMQ
+
+networks:
+  radvolonteranet2022:
+    driver: bridge

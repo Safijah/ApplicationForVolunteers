@@ -1,4 +1,5 @@
-﻿using RadVolontera.Models.Filters;
+﻿using RadVolontera.Models.CompanyEvent;
+using RadVolontera.Models.Filters;
 using RadVolontera.Models.UsefulLinks;
 using System;
 using System.Collections.Generic;
@@ -10,5 +11,7 @@ namespace RadVolontera.Services.Interfaces
 {
     public interface ICompanyEventService : ICRUDService<Models.CompanyEvent.CompanyEvent, CompanyEventSearchObject, Models.CompanyEvent.CompanyEventRequest, Models.CompanyEvent.CompanyEventRequest, long>
     {
+        public Task RegisterForEvent(RegisterForEventRequest registerForEventRequest);
+        public Task<bool> IsRegistered(RegisterForEventRequest registerForEventRequest);
     }
 }

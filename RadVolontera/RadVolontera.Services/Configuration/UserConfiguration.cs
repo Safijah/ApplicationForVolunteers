@@ -15,6 +15,7 @@ namespace RadVolontera.Services.Configuration
             builder.Property(u => u.PasswordHash).IsRequired();
             builder.HasOne(u => u.School).WithMany(u => u.Students).OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(u => u.City).WithMany(u => u.Users).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(u => u.CompanyEvents).WithMany(u => u.Mentors);
             builder.HasQueryFilter(u => u.DeletedAt == null);
         }
     }

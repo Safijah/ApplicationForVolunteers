@@ -152,7 +152,7 @@ class _ReportListScreenState extends State<ReportListScreen> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: ListTile(
             title: Text(report.goal ?? ""),
-            subtitle: Text(report.goal ?? ""),
+            subtitle: Text(report.themes ?? ""),
             trailing: Text(report.status?.name ?? ""),
              onTap: () {
               Navigator.of(context).push(

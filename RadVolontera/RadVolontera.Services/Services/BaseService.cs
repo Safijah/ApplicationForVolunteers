@@ -29,9 +29,8 @@ namespace RadVolontera.Services.Services
 
 
 
-            query = AddFilter(query, search);
-
             query = AddInclude(query, search);
+            query = AddFilter(query, search);
 
             result.Count = await query.CountAsync();
 

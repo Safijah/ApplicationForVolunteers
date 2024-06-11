@@ -10,6 +10,5 @@ namespace RadVolontera.Models.Filters
     {
         public int? Page { get; set; }
         public int? PageSize { get; set; }
-
     }
 }

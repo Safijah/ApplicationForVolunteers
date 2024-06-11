@@ -4,6 +4,7 @@ using RadVolontera.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +28,9 @@ namespace RadVolontera.Services.Database
         public virtual DbSet<AnnualPlanTemplate> AnnualPlanTemplates { get; set; }
         public virtual DbSet<MonthlyPlan> MonthlyPlans { get; set; }
         public virtual DbSet<MonthlyPlanTemplate> MonthlyPlanTemplates { get; set; }
+        public virtual DbSet<CompanyEvent> CompanyEvent { get; set; }
+        public virtual DbSet<Company> Company { get; set; }
+        public virtual DbSet<CompanyCategory> CompanyCategory { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 
@@ -36,8 +40,9 @@ namespace RadVolontera.Services.Database
         {
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new RolesConfiguration());
-            builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new SchoolConfiguration());
+            builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new CityConfiguration());
             builder.ApplyConfiguration(new ReportConfiguration());
             builder.ApplyConfiguration(new SchoolConfiguration());
             builder.ApplyConfiguration(new NotificationConfiguration());

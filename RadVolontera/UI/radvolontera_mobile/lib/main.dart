@@ -4,6 +4,7 @@ import 'package:radvolontera_mobile/providers/account_provider.dart';
 import 'package:radvolontera_mobile/providers/annual_plan_provider.dart';
 import 'package:radvolontera_mobile/providers/annual_plan_template_provider.dart';
 import 'package:radvolontera_mobile/providers/city_provider.dart';
+import 'package:radvolontera_mobile/providers/company_event_provider.dart';
 import 'package:radvolontera_mobile/providers/monitoring_provider.dart';
 import 'package:radvolontera_mobile/providers/notification_provider.dart';
 import 'package:radvolontera_mobile/providers/report_provider.dart';
@@ -28,8 +29,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => MonitoringProvider()),
       ChangeNotifierProvider(create: (_) => AnnualPlanProvider()),
       ChangeNotifierProvider(create: (_) => AnnualPlanTemplateProvider()),
-
-
+      ChangeNotifierProvider(create: (_) => CompanyEventProvider()),
     ],
     child: const MyMaterialApp(),
   ));

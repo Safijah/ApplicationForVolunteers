@@ -6,6 +6,12 @@ using RadVolontera.Configuration;
 using RadVolontera.Services.Interfaces;
 using RadVolontera.Services.Services;
 using RadVolontera.Middleware;
+using Microsoft.AspNetCore.Connections;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System.Text;
+using System.Text.Json;
+using RadVolontera.Models.UsefulLinks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +35,7 @@ builder.Services.AddTransient<ISchoolService, SchoolService>();
 builder.Services.AddTransient<IMonitoringService, MonitoringService>();
 builder.Services.AddTransient<IAnnualPlanService, AnnualPlanService>();
 builder.Services.AddTransient<IAnnualTemplateService, AnnualPlanTemplateService>();
+builder.Services.AddTransient<IRecommenderService, RecommenderService>();
 builder.Services.AddTransient<ExceptionMiddleware>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddSwaggerGen();
@@ -58,7 +65,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.SeedData();
 using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -68,4 +75,62 @@ using (var scope = app.Services.CreateScope())
 
 app.UseMiddleware<ExceptionMiddleware>();
 
+//string hostname = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "rabbitMQ";
+//string username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "guest";
+//string password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "guest";
+//string virtualHost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
+
+
+
+////////////////////////////////////////////////////////////////////////////////////
+
+
+//var factory = new ConnectionFactory
+//{
+//    HostName = hostname,
+//    UserName = username,
+//    Password = password,
+//    VirtualHost = virtualHost,
+//};
+//using var connection = factory.CreateConnection();
+//using var channel = connection.CreateModel();
+
+//channel.QueueDeclare(queue: "links",
+//                     durable: false,
+//                     exclusive: false,
+//                     autoDelete: true,
+//                     arguments: null);
+
+//Console.WriteLine(" [*] Waiting for messages.");
+
+//var consumer = new EventingBasicConsumer(channel);
+//consumer.Received += async (model, ea) =>
+//{
+//    var body = ea.Body.ToArray();
+//    var message = Encoding.UTF8.GetString(body);
+//    Console.WriteLine(message.ToString());
+//    var link = JsonSerializer.Deserialize<UsefulLinksRequest>(message);
+//    using (var scope = app.Services.CreateScope())
+//    {
+//        var usefulLinksService = scope.ServiceProvider.GetRequiredService<IUsefulLinksService>();
+
+//        if (link != null)
+//        {
+//            try
+//            {
+//                await usefulLinksService.Insert(link);
+//            }
+//            catch (Exception e)
+//            {
+
+//            }
+//        }
+//    }
+//    // Console.WriteLine();
+//    Console.WriteLine(Environment.GetEnvironmentVariable("Some"));
+//    Console.WriteLine("Insert useful link finished");
+//};
+//channel.BasicConsume(queue: "links",
+//                     autoAck: true,
+//                     consumer: consumer);
 app.Run();

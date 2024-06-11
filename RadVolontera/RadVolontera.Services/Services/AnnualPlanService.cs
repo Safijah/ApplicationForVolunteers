@@ -121,28 +121,6 @@ namespace RadVolontera.Services.Services
 
             return availableYears;
         }
-
-        public async Task ChangeReportStatus(ChangeAnnualPlanStatus request)
-        {
-            var value = await _context.AnnualPlans
-                .FirstOrDefaultAsync(v => v.Id == request.AnnualPlanId);
-
-            if (value == null)
-                throw new ApiException("Not found", System.Net.HttpStatusCode.BadRequest);
-
-            var status = await _context.Statuses.FirstOrDefaultAsync(s => s.Name == request.Status);
-
-            if (status == null)
-                throw new ApiException("Status not found", System.Net.HttpStatusCode.BadRequest);
-
-
-            value.Reason = request.Reason;
-
-
-            value.StatusId = status.Id;
-
-            await _context.SaveChangesAsync();
-        }
     }
 }
 
