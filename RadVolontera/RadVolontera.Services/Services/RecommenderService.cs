@@ -60,6 +60,11 @@ namespace RadVolontera.Services.Services
                     mlContext = new MLContext();
                     var data = GetUserEventData(mentorId);
 
+                    if (data == null || !data.Any())
+                    {
+                        return new List<RadVolontera.Models.CompanyEvent.CompanyEvent>();
+                    }
+
                     var trainData = mlContext.Data.LoadFromEnumerable(data);
 
                     var options = new MatrixFactorizationTrainer.Options
@@ -80,21 +85,26 @@ namespace RadVolontera.Services.Services
 
                     return this.RecommendEvents(mentorId, eventId);
                 }
-
             }
-            return _mapper.Map<List<RadVolontera.Models.CompanyEvent.CompanyEvent>>(new List<RadVolontera.Models.CompanyEvent.CompanyEvent>());
+
+            return new List<RadVolontera.Models.CompanyEvent.CompanyEvent>();
         }
 
         public List<RadVolontera.Models.CompanyEvent.CompanyEvent> RecommendEvents(string userId, long eventId)
         {
+            if (mlContext == null || model == null)
+            {
+                return new List<RadVolontera.Models.CompanyEvent.CompanyEvent>();
+            }
+
             var events = _context.CompanyEvent.Where(e => e.Id != eventId).ToList();
             var predictionResults = new List<Tuple<CompanyEvent, float>>();
 
             var registeredEvents = _context.Users
-                .Include(c=>c.CompanyEvents)
+                .Include(c => c.CompanyEvents)
                 .Where(eu => eu.Id == userId)
                 .Select(eu => eu.CompanyEvents)
-                .SelectMany(e=>e.Select(e=>e.Id))
+                .SelectMany(e => e.Select(e => e.Id))
                 .ToList();
 
             foreach (var e in events)
