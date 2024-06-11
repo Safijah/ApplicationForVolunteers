@@ -3,7 +3,9 @@ Razvoj softvera II - seminarski rad
 
 
 Within the folder where the project is located, enter the following commands in the CMD:
+
  docker-compose build
+
 Run:
 
 docker-compose up
