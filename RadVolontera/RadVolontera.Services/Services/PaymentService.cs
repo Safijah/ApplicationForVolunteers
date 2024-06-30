@@ -1,23 +1,16 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OpenHtmlToPdf;
 using RadVolontera.Models.Filters;
 using RadVolontera.Models.Payment;
 using RadVolontera.Services.Database;
 using RadVolontera.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RadVolontera.Services.Services
 {
     public class PaymentService : BaseCRUDService<Models.Payment.Payment, Database.Payment, PaymentSearchObject, PaymentRequest, PaymentRequest, long>, IPaymentService
     {
         public readonly IPdfGeneratorService _pdfGeneratorService;
-        public PaymentService(AppDbContext context, IMapper mapper,IPdfGeneratorService pdfGeneratorService) : base(context, mapper)
+        public PaymentService(AppDbContext context, IMapper mapper, IPdfGeneratorService pdfGeneratorService) : base(context, mapper)
         {
             _pdfGeneratorService = pdfGeneratorService;
         }
@@ -48,7 +41,7 @@ namespace RadVolontera.Services.Services
             return filteredQuery;
         }
 
-        public List<RadVolontera.Models.Payment.PaymentReportResponse> GetPaymentReport( PaymentReportSearchObject request)
+        public List<RadVolontera.Models.Payment.PaymentReportResponse> GetPaymentReport(PaymentReportSearchObject request)
         {
             var result = new List<RadVolontera.Models.Payment.PaymentReportResponse>();
             for (int i = 1; i <= 12; i++)
@@ -57,7 +50,8 @@ namespace RadVolontera.Services.Services
 
                 if (request != null)
                 {
-                    if (!string.IsNullOrWhiteSpace(request?.StudentId)) {
+                    if (!string.IsNullOrWhiteSpace(request?.StudentId))
+                    {
                         payments = payments.Where(p => p.StudentId == request.StudentId);
                     }
 
@@ -79,17 +73,26 @@ namespace RadVolontera.Services.Services
             return result.ToList();
         }
 
-        public async  Task<byte[]> GeneratePaymentReportPdf(int year, string? studentId){
-            string html =await _pdfGeneratorService.GeneratePaymentReportPdf(year,studentId);
-            var pdf = Pdf
-                .From(html)
-                .WithMargins(PaperMargins.All(Length.Centimeters(2)))
-                .WithTitle("Måltidsplan")
-                .OfSize(OpenHtmlToPdf.PaperSize.A4)
-                .Portrait()
-                .Content();
-            return pdf;
+        public async Task<PaymentPdfData> GeneratePaymentData(int year, string? studentId)
+        {
+            var paymentData = await _context.Payments
+            .Include(p => p.Student)
+            .Where(p => p.Year == year && (studentId == null || (p.StudentId == studentId)))
+            .ToListAsync();
 
+            User studentData = null;
+            if (!string.IsNullOrEmpty(studentId))
+            {
+                studentData = await _context.Users.FirstOrDefaultAsync(s => s.Id == studentId);
+            }
+
+            var result = new PaymentPdfData()
+            {
+                Payments = _mapper.Map<List<RadVolontera.Models.Payment.Payment>>(paymentData),
+                Student = _mapper.Map<RadVolontera.Models.Account.UserResponse>(studentData)
+            };
+
+            return result;
         }
     }
 }

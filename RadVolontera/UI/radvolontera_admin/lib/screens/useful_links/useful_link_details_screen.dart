@@ -173,6 +173,7 @@ class _UsefulLinkDetailsScreenState extends State<UsefulLinkDetailsScreen> {
         ],
       ),
       title: this.widget.usefulLink?.name ?? "Useful link details",
+      showBackButton: true,
     );
   }
 

@@ -11,10 +11,18 @@ import 'package:radvolontera_mobile/utils/util.dart';
 import '../screens/volunteering_announcements/volunteering_announcement_list_screen.dart';
 
 class MasterScreenWidget extends StatefulWidget {
-  Widget? child;
-  String? title;
-  Widget? title_widget;
-  MasterScreenWidget({this.child, this.title, this.title_widget, super.key});
+  final Widget? child;
+  final String? title;
+  final Widget? title_widget;
+  final bool showBackButton;
+
+  MasterScreenWidget({
+    this.child,
+    this.title,
+    this.title_widget,
+    this.showBackButton = false, // Default to false for other pages
+    super.key,
+  });
 
   @override
   State<MasterScreenWidget> createState() => _MasterScreenWidgetState();
@@ -25,20 +33,35 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: widget.showBackButton
+            ? IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            : Builder(
+                builder: (context) => IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
+              ),
         title: widget.title_widget ?? Text(widget.title ?? ""),
-            actions: [
-      IconButton(
-        icon: Icon(Icons.person),
-        onPressed: () {
-          // Navigate to the user profile screen
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => UserProfileScreen(),
-            ),
-          );
-        },
-      ),
-    ],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              // Navigate to the user profile screen
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => UserProfileScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       drawer: Drawer(
         child: Container(
@@ -59,28 +82,27 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context) =>  HomePageScreen()),
+                        builder: (context) => HomePageScreen()),
                   );
                 },
               ),
-               
               ListTile(
                 leading: Icon(Icons.volunteer_activism_sharp,
                     color: Colors.white), // Add an icon to the ListTile
-                title:
-                    Text("Volunteering Announcements", style: TextStyle(color: Colors.white)),
+                title: Text("Volunteering Announcements",
+                    style: TextStyle(color: Colors.white)),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context) => const VolunteeringAnnouncementListScreen()),
+                        builder: (context) =>
+                            const VolunteeringAnnouncementListScreen()),
                   );
                 },
               ),
-               ListTile(
+              ListTile(
                 leading: Icon(Icons.report_gmailerrorred,
                     color: Colors.white), // Add an icon to the ListTile
-                title:
-                    Text("Reports", style: TextStyle(color: Colors.white)),
+                title: Text("Reports", style: TextStyle(color: Colors.white)),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -88,7 +110,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   );
                 },
               ),
-               ListTile(
+              ListTile(
                 leading: Icon(Icons.supervised_user_circle_sharp,
                     color: Colors.white), // Add an icon to the ListTile
                 title: Text("Users", style: TextStyle(color: Colors.white)),
@@ -99,10 +121,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   );
                 },
               ),
-               ListTile(
+              ListTile(
                 leading: Icon(Icons.video_camera_front,
                     color: Colors.white), // Add an icon to the ListTile
-                title: Text("Monitoring", style: TextStyle(color: Colors.white)),
+                title: Text("Monitoring",
+                    style: TextStyle(color: Colors.white)),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -113,7 +136,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               ListTile(
                 leading: Icon(Icons.collections_bookmark_sharp,
                     color: Colors.white), // Add an icon to the ListTile
-                title: Text("Annual plans", style: TextStyle(color: Colors.white)),
+                title: Text("Annual plans",
+                    style: TextStyle(color: Colors.white)),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -124,7 +148,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               ListTile(
                 leading: Icon(Icons.event,
                     color: Colors.white), // Add an icon to the ListTile
-                title: Text("Company events", style: TextStyle(color: Colors.white)),
+                title: Text("Company events",
+                    style: TextStyle(color: Colors.white)),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(

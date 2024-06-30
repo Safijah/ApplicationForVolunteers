@@ -177,6 +177,7 @@ class _VolunteeringAnnouncementDetailsScreenState extends State<VolunteeringAnno
         ],
       ),
       title: "Annoucement details",
+      showBackButton: true,
     );
   }
 

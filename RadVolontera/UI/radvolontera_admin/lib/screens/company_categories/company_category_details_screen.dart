@@ -104,6 +104,7 @@ class _CompanyCategoryDetailsScreenState
         ],
       ),
       title: this.widget.companyCategory?.name ?? "Company category details",
+      showBackButton: true,
     );
   }
 

@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'package:radvolontera_admin/models/payment/payment.dart';
 import 'package:http/http.dart' as http;
+import 'package:radvolontera_admin/models/payment/payment_pdf_data.dart';
 import '../models/payment/payment_report.dart';
 import 'base_provider.dart';
 import 'dart:io';
@@ -42,7 +43,7 @@ class PaymentProvider extends BaseProvider<PaymentModel>{
 }
 
 
-Future<void> downloadPdf({dynamic filter}) async {
+Future<PaymentPdfDataModel> getPdfData({dynamic filter}) async {
   var url = "${BaseProvider.baseUrl}Payment/pdf-report";
   if (filter != null) {
     var queryString = getQueryString(filter);
@@ -53,16 +54,11 @@ Future<void> downloadPdf({dynamic filter}) async {
 
   var response = await http.get(uri, headers: headers);
 
-  if (response.statusCode == 200) {
-    // Get the application directory to save the PDF file
-    final appDir = await getApplicationDocumentsDirectory();
-    final pdfFile = File('${appDir.path}/payment-report.pdf');
-
-    // Write the PDF bytes to the file
-    await pdfFile.writeAsBytes(response.bodyBytes);
-    OpenFile.open(pdfFile.path);
+ if (isValidResponse(response)) {
+    var result = jsonDecode(response.body);
+    return PaymentPdfDataModel.fromJson(result);
   } else {
-    throw Exception("Failed to download PDF");
+    throw new Exception("Unknown error");
   }
 }
 

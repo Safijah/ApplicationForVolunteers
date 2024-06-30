@@ -151,6 +151,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
         ],
       ),
       title: this.widget.user?.fullName ?? "User details",
+      showBackButton: true,
     );
   }
 

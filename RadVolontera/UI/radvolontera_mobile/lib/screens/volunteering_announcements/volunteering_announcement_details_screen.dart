@@ -68,6 +68,7 @@ class _VolunteeringAnnouncementDetailsScreenState
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title: "Volunteering Announcement Details",
+      showBackButton: true,
       child: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(

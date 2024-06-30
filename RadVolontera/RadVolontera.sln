@@ -12,6 +12,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RadVolontera.Services", "Ra
 		{C189CB1D-2DFB-43C0-B3AB-739ED1EF8DE7} = {C189CB1D-2DFB-43C0-B3AB-739ED1EF8DE7}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadVolontera.Subscriber", "RadVolontera.Subscriber\RadVolontera.Subscriber.csproj", "{6E684525-AD5C-46D7-9F0C-B956A5D8345E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{229BB01E-194D-4BE7-B405-5D772CCCF556}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{229BB01E-194D-4BE7-B405-5D772CCCF556}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{229BB01E-194D-4BE7-B405-5D772CCCF556}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E684525-AD5C-46D7-9F0C-B956A5D8345E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E684525-AD5C-46D7-9F0C-B956A5D8345E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E684525-AD5C-46D7-9F0C-B956A5D8345E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E684525-AD5C-46D7-9F0C-B956A5D8345E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -87,9 +87,156 @@ namespace RadVolontera.Configuration
                 {
                     SeedEvents(context);
                 }
+
+                if (!context.AnnualPlanTemplates.Any() && !context.MonthlyPlanTemplates.Any())
+                {
+                    SeedAnnualTemplates(context);
+                }
+
+                if (!context.AnnualPlans.Any())
+                {
+                    SeedAnnualPlan(context);
+                }
+
+                if (!context.Monitoring.Any())
+                {
+                    SeedMonitorings(context);
+                }
+
+                if (!context.Reports.Any())
+                {
+                    SeedReports(context);
+                }
             }
         }
 
+        private static void SeedReports(AppDbContext context)
+        {
+            var sqlCommand = @"
+    SET IDENTITY_INSERT Reports ON;
+    INSERT INTO Reports (Id, Notes, Goal, VolunteerActivities, Themes, StatusId, VolunteeringAnnouncementId, CreatedById, CreatedAt, LastModifiedBy, LastModified, DeletedAt, MentorId, Reason)
+    VALUES 
+    (1, N'This is notes', N'Test goals', N'Activities', N'Themes, theme1', 1, 2, NULL, CAST(N'2024-06-27T17:41:35.8304743' AS DateTime2), NULL, NULL, NULL, N'120842a7-ea9f-41ee-8739-d5858f9dfe89', NULL);
+    SET IDENTITY_INSERT Reports OFF;";
+            context.Database.ExecuteSqlRaw(sqlCommand);
+
+            var sqlCommand1 = @"
+    INSERT INTO ReportUser1 
+    (AbsentForVolunteeringId, AbsentStudentsId)
+    VALUES 
+    (1, N'890721eb-4aac-48d0-bf11-fa8ff563de99'),
+    (1, N'e268c8d0-f039-42f3-a37b-12599f56aad1');
+    INSERT INTO ReportUser
+    (PresentStudentsId, VolunteersPresentId)
+    VALUES 
+    (N'070935f5-9db0-46dd-98d0-7a2830f89277', 1),
+    (N'20adb6d0-e597-452d-a1ea-27ab4e013bfc', 1),
+    (N'657dbebe-f4e7-43c0-99a1-487798b54c48', 1);
+";
+            context.Database.ExecuteSqlRaw(sqlCommand1);
+
+        }
+        private static void SeedMonitorings(AppDbContext context)
+        {
+            var sqlCommand = @"
+    SET IDENTITY_INSERT Monitoring ON;
+
+    INSERT INTO Monitoring (Id, Notes, MentorId, Date, Url, CreatedById, CreatedAt, LastModifiedBy, LastModified, DeletedAt)
+    VALUES
+    (1, N'Community clean-up event details', N'120842a7-ea9f-41ee-8739-d5858f9dfe89', CAST(N'2024-06-30T00:00:00.0000000' AS DateTime2), N'https://example.com/community-cleanup', NULL, CAST(N'2024-06-27T15:04:36.9519428' AS DateTime2), NULL, NULL, NULL),
+    (2, N'Volunteer orientation program', N'120842a7-ea9f-41ee-8739-d5858f9dfe89', CAST(N'2024-07-05T00:00:00.0000000' AS DateTime2), N'https://example.com/volunteer-orientation', NULL, CAST(N'2024-06-27T15:05:16.5033360' AS DateTime2), NULL, NULL, NULL),
+    (3, N'Tree planting campaign', N'120842a7-ea9f-41ee-8739-d5858f9dfe89', CAST(N'2024-07-09T00:00:00.0000000' AS DateTime2), N'https://example.com/tree-planting', NULL, CAST(N'2024-06-27T15:06:18.1180049' AS DateTime2), NULL, NULL, NULL),
+    (4, N'Fundraising event for local shelter', N'120842a7-ea9f-41ee-8739-d5858f9dfe89', CAST(N'2024-07-31T00:00:00.0000000' AS DateTime2), N'https://example.com/fundraising-shelter', NULL, CAST(N'2024-06-27T17:19:34.3793068' AS DateTime2), NULL, NULL, NULL),
+    (5, N'Blood donation drive information', N'120842a7-ea9f-41ee-8739-d5858f9dfe89', CAST(N'2024-08-29T00:00:00.0000000' AS DateTime2), N'https://example.com/blood-donation', NULL, CAST(N'2024-06-27T17:20:00.1808394' AS DateTime2), NULL, NULL, NULL);
+
+    SET IDENTITY_INSERT Monitoring OFF;
+";
+            context.Database.ExecuteSqlRaw(sqlCommand);
+        }
+        private static void SeedAnnualPlan(AppDbContext context)
+        {
+            var sqlCommand = @"
+    SET IDENTITY_INSERT AnnualPlans ON;
+
+    INSERT INTO AnnualPlans (Id, Year, AnnualPlanTemplateId, CreatedById, CreatedAt, LastModifiedBy, LastModified, DeletedAt, MentorId, StatusId, Reason)
+    VALUES
+    (1, 2024, 1, NULL, CAST(N'2024-06-27T17:30:00.0000000' AS DateTime2), NULL, NULL, NULL, N'120842a7-ea9f-41ee-8739-d5858f9dfe89', 1, NULL);
+
+    SET IDENTITY_INSERT AnnualPlans OFF;
+";
+            context.Database.ExecuteSqlRaw(sqlCommand);
+            var sqlCommand2 = @"
+    SET IDENTITY_INSERT MonthlyPlans ON;
+
+    INSERT INTO MonthlyPlans (Id, Month, Theme1, Theme2, Goals1, Goals2, AnualPlanId, CreatedById, CreatedAt, LastModifiedBy, LastModified, DeletedAt)
+    VALUES
+    (1, 1, N'New Beginnings', N'Starting Fresh', N'Set New Year Resolutions', N'Begin with Positive Habits', 1, NULL, CAST(N'2024-06-27T17:45:28.0861737' AS DateTime2), NULL, NULL, NULL),
+    (2, 2, N'Heartfelt Service', N'Community Support', N'Volunteer for Local Charities', N'Organize a Donation Drive', 1, NULL, CAST(N'2024-06-27T17:45:28.0861736' AS DateTime2), NULL, NULL, NULL),
+    (3, 3, N'Environmental Awareness', N'Sustainability', N'Participate in Clean-Up Events', N'Promote Recycling Programs', 1, NULL, CAST(N'2024-06-27T17:45:28.0861734' AS DateTime2), NULL, NULL, NULL),
+    (4, 4, N'Health and Wellness', N'Fitness and Nutrition', N'Join a Fitness Program', N'Educate on Healthy Eating', 1, NULL, CAST(N'2024-06-27T17:45:28.0861733' AS DateTime2), NULL, NULL, NULL),
+    (5, 5, N'Educational Empowerment', N'Learning Initiatives', N'Tutor Underprivileged Students', N'Organize Educational Workshops', 1, NULL, CAST(N'2024-06-27T17:45:28.0861731' AS DateTime2), NULL, NULL, NULL),
+    (6, 6, N'Animal Welfare', N'Animal Rights', N'Support Local Shelters', N'Advocate for Adoption', 1, NULL, CAST(N'2024-06-27T17:45:28.0861730' AS DateTime2), NULL, NULL, NULL),
+    (7, 7, N'Community Building', N'Social Cohesion', N'Host Community Events', N'Promote Neighborhood Activities', 1, NULL, CAST(N'2024-06-27T17:45:28.0861728' AS DateTime2), NULL, NULL, NULL),
+    (8, 8, N'Youth Engagement', N'Youth Programs', N'Run Youth Mentorship Programs', N'Organize Youth Sports Events', 1, NULL, CAST(N'2024-06-27T17:45:28.0861727' AS DateTime2), NULL, NULL, NULL),
+    (9, 9, N'Hunger Action', N'Food Security', N'Coordinate Food Drives', N'Raise Awareness on Hunger Issues', 1, NULL, CAST(N'2024-06-27T17:45:28.0861725' AS DateTime2), NULL, NULL, NULL),
+    (10, 10, N'Senior Support', N'Elder Care', N'Visit Nursing Homes', N'Assist Seniors with Daily Tasks', 1, NULL, CAST(N'2024-06-27T17:45:28.0861724' AS DateTime2), NULL, NULL, NULL),
+    (11, 11, N'Gratitude and Giving', N'Philanthropy', N'Organize Thank-You Events', N'Encourage Charitable Giving', 1, NULL, CAST(N'2024-06-27T17:45:28.0861722' AS DateTime2), NULL, NULL, NULL),
+    (12, 12, N'Holiday Cheer', N'Festive Activities', N'Plan Holiday Parties', N'Distribute Gifts to Needy Families', 1, NULL, CAST(N'2024-06-27T17:45:28.0861647' AS DateTime2), NULL, NULL, NULL);
+
+    SET IDENTITY_INSERT MonthlyPlans OFF;
+";
+            context.Database.ExecuteSqlRaw(sqlCommand2);
+        }
+        private static void SeedAnnualTemplates(AppDbContext context)
+        {
+            var firstSqlCommand = @"
+        SET IDENTITY_INSERT AnnualPlanTemplates ON;
+
+        INSERT INTO AnnualPlanTemplates (Id, Year, CreatedById, CreatedAt, LastModifiedBy, LastModified, DeletedAt)
+        VALUES
+        (1, 2024, NULL, CAST(N'2024-06-27T17:22:33.0507348' AS DateTime2), NULL, NULL, NULL),
+        (2, 2025, NULL, CAST(N'2024-06-27T17:24:31.6492439' AS DateTime2), NULL, NULL, NULL);
+
+        SET IDENTITY_INSERT AnnualPlanTemplates OFF;
+    ";
+
+            context.Database.ExecuteSqlRaw(firstSqlCommand);
+
+            var secondSqlCommand = @"
+        SET IDENTITY_INSERT MonthlyPlanTemplates ON;
+
+        INSERT INTO MonthlyPlanTemplates (Id, Theme, Month, AnnualPlanTemplateId, CreatedById, CreatedAt, LastModifiedBy, LastModified, DeletedAt)
+        VALUES
+        (1, N'New Beginnings', 1, 1, NULL, CAST(N'2024-06-27T17:22:33.0507560' AS DateTime2), NULL, NULL,  NULL),
+        (2, N'Heartfelt Service', 2, 1, NULL, CAST(N'2024-06-27T17:22:33.0507559' AS DateTime2), NULL, NULL,  NULL),
+        (3, N'Environmental Awareness', 3, 1, NULL, CAST(N'2024-06-27T17:22:33.0507557' AS DateTime2), NULL, NULL,  NULL),
+        (4, N'Health and Wellness', 4, 1, NULL, CAST(N'2024-06-27T17:22:33.0507556' AS DateTime2), NULL, NULL,  NULL),
+        (5, N'Educational Empowerment', 5, 1, NULL, CAST(N'2024-06-27T17:22:33.0507554' AS DateTime2), NULL, NULL,  NULL),
+        (6, N'Animal Welfare', 6, 1, NULL, CAST(N'2024-06-27T17:22:33.0507553' AS DateTime2), NULL, NULL,  NULL),
+        (7, N'Community Building', 7, 1, NULL, CAST(N'2024-06-27T17:22:33.0507552' AS DateTime2), NULL, NULL,  NULL),
+        (8, N'Youth Engagement', 8, 1, NULL, CAST(N'2024-06-27T17:22:33.0507550' AS DateTime2), NULL, NULL,  NULL),
+        (9, N'Hunger Action', 9, 1, NULL, CAST(N'2024-06-27T17:22:33.0507542' AS DateTime2), NULL, NULL,  NULL),
+        (10, N'Senior Support', 10, 1, NULL, CAST(N'2024-06-27T17:22:33.0507541' AS DateTime2), NULL, NULL,  NULL),
+        (11, N'Gratitude and Giving', 11, 1, NULL, CAST(N'2024-06-27T17:22:33.0507539' AS DateTime2), NULL, NULL,  NULL),
+        (12, N'Holiday Cheer', 12, 1, NULL, CAST(N'2024-06-27T17:22:33.0507499' AS DateTime2), NULL, NULL,  NULL),
+        (13, N'Winter Warmth', 1, 2, NULL, CAST(N'2024-06-27T17:24:31.6492455' AS DateTime2), NULL, NULL, NULL),
+        (14, N'Love for Literacy', 2, 2, NULL, CAST(N'2024-06-27T17:24:31.6492454' AS DateTime2), NULL, NULL, NULL),
+        (15, N'Arts and Culture', 3, 2, NULL, CAST(N'2024-06-27T17:24:31.6492453' AS DateTime2), NULL, NULL, NULL),
+        (16, N'Earth Month', 4, 2, NULL, CAST(N'2024-06-27T17:24:31.6492452' AS DateTime2), NULL, NULL, NULL),
+        (17, N'Mental Health Awareness', 5, 2, NULL, CAST(N'2024-06-27T17:24:31.6492451' AS DateTime2), NULL, NULL, NULL),
+        (18, N'Summer Safety', 6, 2, NULL, CAST(N'2024-06-27T17:24:31.6492450' AS DateTime2), NULL, NULL, NULL),
+        (19, N'Veterans'' Support', 7, 2, NULL, CAST(N'2024-06-27T17:24:31.6492449' AS DateTime2), NULL, NULL, NULL),
+        (20, N'Back to School', 8, 2, NULL, CAST(N'2024-06-27T17:24:31.6492448' AS DateTime2), NULL, NULL, NULL),
+        (21, N'Disaster Relief', 9, 2, NULL, CAST(N'2024-06-27T17:24:31.6492446' AS DateTime2), NULL, NULL, NULL),
+        (22, N'Inclusive Communities', 10, 2, NULL, CAST(N'2024-06-27T17:24:31.6492445' AS DateTime2), NULL, NULL, NULL),
+        (23, N'Homelessness Awareness', 11, 2, NULL, CAST(N'2024-06-27T17:24:31.6492444' AS DateTime2), NULL, NULL, NULL),
+        (24, N'Global Giving', 12, 2, NULL, CAST(N'2024-06-27T17:24:31.6492443' AS DateTime2), NULL, NULL, NULL);
+
+        SET IDENTITY_INSERT MonthlyPlanTemplates OFF;
+    ";
+
+            context.Database.ExecuteSqlRaw(secondSqlCommand);
+        }
         private static void SeedCitiesCategories(AppDbContext context)
         {
             var sqlCommand = @"
@@ -173,10 +320,10 @@ namespace RadVolontera.Configuration
     SET IDENTITY_INSERT Company ON;
 
     INSERT INTO Company (Id, Name, Address, PhoneNumber, Email, CityId, CompanyCategoryId, CreatedById, CreatedAt, LastModifiedBy, LastModified, DeletedAt) VALUES
-    (1, 'Hastor', 'Sarajevo, bb', '123456', 'hastor@test.no', 1, 1, NULL, '2024-06-10T17:36:39.8608610', NULL, NULL, NULL),
-    (2, 'Networg', 'Bugojno', '123456', 'networg@test.com', 1, 2, NULL, '2024-06-10T17:37:34.2347661', NULL, NULL, NULL),
-    (3, 'Tech Innovations Inc', 'Sarajevo', '123456', 'tech@test.no', 2, 3, NULL, '2024-06-10T17:39:11.9070649', NULL, NULL, NULL),
-    (4, 'HealthCare Partners', 'Bugojno', '123456', 'partners@test.com', 1, 4, NULL, '2024-06-10T17:39:50.4747456', NULL, NULL, NULL);
+    (1, 'Hastor', 'Sarajevo, bb', '+387 62 111 222', 'hastor@test.no', 1, 1, NULL, '2024-06-10T17:36:39.8608610', NULL, NULL, NULL),
+    (2, 'Networg', 'Bugojno', '+387 62 111 222', 'networg@test.com', 1, 2, NULL, '2024-06-10T17:37:34.2347661', NULL, NULL, NULL),
+    (3, 'Tech Innovations Inc', 'Sarajevo', '+387 62 111 222', 'tech@test.no', 2, 3, NULL, '2024-06-10T17:39:11.9070649', NULL, NULL, NULL),
+    (4, 'HealthCare Partners', 'Bugojno', '+387 62 111 222', 'partners@test.com', 1, 4, NULL, '2024-06-10T17:39:50.4747456', NULL, NULL, NULL);
 
     SET IDENTITY_INSERT Company OFF;";
 
@@ -274,8 +421,8 @@ namespace RadVolontera.Configuration
                 MentorId = "120842a7-ea9f-41ee-8739-d5858f9dfe89",
                 SchoolId = 6
             };
-             result = userManager.CreateAsync(user1).Result;
-             roleResult = userManager.AddToRoleAsync(user1, Roles.Student).Result;
+            result = userManager.CreateAsync(user1).Result;
+            roleResult = userManager.AddToRoleAsync(user1, Roles.Student).Result;
             var user2 = new User
             {
                 Id = "20adb6d0-e597-452d-a1ea-27ab4e013bfc",
@@ -372,8 +519,8 @@ namespace RadVolontera.Configuration
             };
             result = userManager.CreateAsync(user3).Result;
             roleResult = userManager.AddToRoleAsync(user3, Roles.Student).Result;
-           
-          var user5 = new User
+
+            var user5 = new User
             {
                 Id = "e268c8d0-f039-42f3-a37b-12599f56aad1",
                 Username = "safija_user5@hotmail.com",
@@ -392,7 +539,7 @@ namespace RadVolontera.Configuration
                 LastModified = DateTime.Parse("2024-06-11T11:36:28.7871762"),
                 DeletedAt = null,
                 CityId = 7,
-                MentorId = "AQAAAAEAACcQAAAAEI3BSc0gbecYS0n/u7kn4aJCrTeXPGySz/wMzHi3gdN57pibjJ3i406RXptP4H2DBA==",
+                MentorId = "120842a7-ea9f-41ee-8739-d5858f9dfe89",
                 SchoolId = 2
             };
             result = userManager.CreateAsync(user5).Result;
@@ -429,14 +576,30 @@ namespace RadVolontera.Configuration
         private static void SeedEvents(AppDbContext context)
         {
             var sqlCommand = @"
-                SET IDENTITY_INSERT CompanyEvent ON;
+    SET IDENTITY_INSERT CompanyEvent ON;
 
-                INSERT INTO CompanyEvent (Id, CompanyId, EventName, EventDate, Location, Time, CreatedById, CreatedAt, LastModifiedBy, LastModified, DeletedAt)
-                VALUES
-                (1, 3, N'Tech Innovations Summit 2024', CAST(N'2024-11-30T00:00:00.0000000' AS DateTime2), N'San Francisco, CA', N'11:00', NULL, CAST(N'2024-06-10T17:40:34.3556190' AS DateTime2), NULL, NULL, NULL),
-                (2, 4, N'FutureTech Expo', CAST(N'2024-12-20T00:00:00.0000000' AS DateTime2), N'New York, NY', N'12:00', NULL, CAST(N'2024-06-10T17:41:10.6460113' AS DateTime2), NULL, NULL, NULL);
-                SET IDENTITY_INSERT VolunteeringAnnouncements OFF;";
+    INSERT INTO CompanyEvent (Id, CompanyId, EventName, EventDate, Location, Time, CreatedById, CreatedAt, LastModifiedBy, LastModified, DeletedAt)
+    VALUES
+    (1, 1, N'Tech Innovations Summit 2024', CAST(N'2024-11-30T00:00:00.0000000' AS DateTime2), N'San Francisco, CA', N'11:00', NULL, CAST(N'2024-06-10T17:40:34.3556190' AS DateTime2), NULL, NULL, NULL),
+    (2, 2, N'FutureTech Expo', CAST(N'2024-12-20T00:00:00.0000000' AS DateTime2), N'New York, NY', N'12:00', NULL, CAST(N'2024-06-10T17:41:10.6460113' AS DateTime2), NULL, NULL, NULL),
+    (3, 3, N'Sustainability and Green Tech Forum', CAST(N'2024-10-15T00:00:00.0000000' AS DateTime2), N'Seattle, WA', N'09:00', NULL, CAST(N'2024-06-26T17:45:00.0000000' AS DateTime2), NULL, NULL, NULL),
+    (4, 4, N'Healthcare Innovations Conference', CAST(N'2024-08-22T00:00:00.0000000' AS DateTime2), N'Boston, MA', N'10:00', NULL, CAST(N'2024-06-26T17:46:00.0000000' AS DateTime2), NULL, NULL, NULL),
+    (5, 1, N'Artificial Intelligence Summit', CAST(N'2024-09-10T00:00:00.0000000' AS DateTime2), N'Austin, TX', N'13:00', NULL, CAST(N'2024-06-26T17:47:00.0000000' AS DateTime2), NULL, NULL, NULL),
+    (6, 2, N'Blockchain and Cryptocurrency Expo', CAST(N'2024-07-25T00:00:00.0000000' AS DateTime2), N'Las Vegas, NV', N'14:00', NULL, CAST(N'2024-06-26T17:48:00.0000000' AS DateTime2), NULL, NULL, NULL),
+    (7, 3, N'Robotics and Automation Conference', CAST(N'2024-06-18T00:00:00.0000000' AS DateTime2), N'Chicago, IL', N'15:00', NULL, CAST(N'2024-06-26T17:49:00.0000000' AS DateTime2), NULL, NULL, NULL);
+
+    SET IDENTITY_INSERT CompanyEvent OFF;";
             context.Database.ExecuteSqlRaw(sqlCommand);
+            var sqlCommand1 = @"
+    INSERT INTO CompanyEventUser 
+    (CompanyEventsId, MentorsId)
+    VALUES 
+    (4, N'120842a7-ea9f-41ee-8739-d5858f9dfe89'),
+    (6, N'120842a7-ea9f-41ee-8739-d5858f9dfe89'),
+    (5, N'120842a7-ea9f-41ee-8739-d5858f9dfe89'),
+    (1, N'120842a7-ea9f-41ee-8739-d5858f9dfe89');
+";
+            context.Database.ExecuteSqlRaw(sqlCommand1);
         }
 
     }

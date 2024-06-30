@@ -182,6 +182,7 @@ Widget build(BuildContext context) {
       ],
     ),
     title: this.widget.notification?.heading ?? "Notification details",
+    showBackButton: true,
   );
 }
 

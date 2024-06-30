@@ -98,6 +98,7 @@ class _AnnualPlanTemplateDetailsScreenState
         ),
       ),
       title: "Annual Plan Template Details",
+      showBackButton: true,
     );
   }
 

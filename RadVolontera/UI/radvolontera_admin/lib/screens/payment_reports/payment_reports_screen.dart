@@ -3,18 +3,24 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'dart:math';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:radvolontera_admin/models/account/account.dart';
 import 'package:radvolontera_admin/models/payment/payment.dart';
+import 'package:radvolontera_admin/models/payment/payment_pdf_data.dart';
 import 'package:radvolontera_admin/models/payment/payment_report.dart';
 import 'package:radvolontera_admin/providers/account_provider.dart';
 import 'package:radvolontera_admin/providers/payment_provider.dart';
 import 'package:radvolontera_admin/screens/payments/payment_details_screen.dart';
 import '../../models/search_result.dart';
 import '../../widgets/master_screen.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:open_file/open_file.dart'; // Add this for opening files
 
 class PaymentReportListScreen extends StatefulWidget {
   const PaymentReportListScreen({super.key});
@@ -47,7 +53,7 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
   late AccountProvider _accountProvider;
   List<PaymentReportModel>? result;
   String? selectedValue; // variable to store the selected value
-  SearchResult<AccountModel>? studentsResult;
+  List<AccountModel>? studentsResult;
   String? selectedStudentValue;
   List<DropdownItem> dropdownItems = [
     DropdownItem(2024, '2024'),
@@ -59,17 +65,10 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
   ];
 
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-  }
-
-  @override
   void initState() {
     super.initState();
     _paymentProvider = context.read<PaymentProvider>();
     _accountProvider = context.read<AccountProvider>();
-    // Call your method here
     _loadData();
   }
 
@@ -77,12 +76,13 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
   int touchedIndex = -1;
   bool isPlaying = false;
 
-  _loadData() async {
+  Future<void> _loadData() async {
     var data = await _paymentProvider.getPaymentReport();
-    studentsResult = await _accountProvider.getAll(filter: {'userTypes': 3});
-    selectedValue = "2024";
+    var students = await _accountProvider.getAll(filter: {'userTypes': 3});
     setState(() {
       result = data;
+      studentsResult = students.result;
+      selectedValue = "2024";
     });
   }
 
@@ -103,7 +103,61 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
   }
 
   void _hideLoader(BuildContext context) {
-    Navigator.of(context, rootNavigator: true).pop();
+    if (Navigator.of(context, rootNavigator: true).canPop()) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+  }
+
+  Future<void> _handleDropdownChange() async {
+    _showLoader(context);
+    try {
+      var filter = {
+        'year': selectedValue,
+        'studentId': selectedStudentValue
+      };
+
+      if (selectedStudentValue == null) {
+        filter['studentId'] = null;
+      }
+
+      var data = await _paymentProvider.getPaymentReport(filter: filter);
+      setState(() {
+        result = data;
+      });
+    } finally {
+      _hideLoader(context);
+    }
+  }
+
+  Future<void> _downloadPdf() async {
+    _showLoader(context);
+    try {
+      var filter = {
+        'year': selectedValue,
+        'studentId': selectedStudentValue
+      };
+
+      if (selectedStudentValue == null) {
+        filter['studentId'] = null;
+      }
+
+      var paymentData = await _paymentProvider.getPdfData(filter: filter);
+
+
+      final pdfGenerator = PdfReportGenerator();
+      final pdfFile = await pdfGenerator.generatePdfReport(paymentData, int.parse(selectedValue!));
+
+      final outputDir = await getTemporaryDirectory();
+      final outputFile = File('${outputDir.path}/report.pdf');
+      await outputFile.writeAsBytes(pdfFile);
+
+      // Open the PDF file using the `open_file` package
+      await OpenFile.open(outputFile.path);
+
+      print('PDF generated: ${outputFile.path}');
+    } finally {
+      _hideLoader(context);
+    }
   }
 
   @override
@@ -121,9 +175,7 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
-          SizedBox(
-            width: 8,
-          ),
+          SizedBox(width: 8),
           Expanded(
             child: DropdownButton<String>(
               value: selectedStudentValue,
@@ -132,31 +184,14 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
                 setState(() {
                   selectedStudentValue = newValue;
                 });
-
-                var filter = {
-                  'year': selectedValue,
-                  'studentId': selectedStudentValue
-                };
-
-                // If "All" is selected, set studentId to null in the filter
-                if (selectedStudentValue == null) {
-                  filter['studentId'] = null;
-                }
-                // If "All" is selected, set studentId to null in the filter
-
-                var data =
-                    await _paymentProvider.getPaymentReport(filter: filter);
-
-                setState(() {
-                  result = data;
-                });
+                await _handleDropdownChange();
               },
               items: [
                 DropdownMenuItem<String>(
-                  value: null, // Use null value for "All" option
+                  value: null,
                   child: Text('All Students'),
                 ),
-                ...?studentsResult?.result.map((item) {
+                ...?studentsResult?.map((item) {
                   return DropdownMenuItem<String>(
                     value: item.id.toString(),
                     child: Text('${item.firstName} ${item.lastName}'),
@@ -165,58 +200,30 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
               ],
             ),
           ),
-          SizedBox(
-            width: 8,
-          ),
+          SizedBox(width: 8),
           Expanded(
-              child: // list of dropdown items
-                  DropdownButton<String>(
-            value: selectedValue,
-            hint: Text('Select year'), // optional hint text
-            onChanged: (newValue) async {
-              setState(() {
-                selectedValue = newValue; // update the selected value
-              });
-              var filter = {
-                'year': selectedValue,
-                'studentId': selectedStudentValue
-              };
-
-              var data = await _paymentProvider.getPaymentReport(filter: filter);
-
-              setState(() {
-                result = data;
-              });
-            },
-            items: dropdownItems.map((item) {
-              return DropdownMenuItem<String>(
-                value: item.value.toString(),
-                child: Text(item.displayText),
-              );
-            }).toList(),
-          )),
+            child: DropdownButton<String>(
+              value: selectedValue,
+              hint: Text('Select year'),
+              onChanged: (newValue) async {
+                setState(() {
+                  selectedValue = newValue;
+                });
+                await _handleDropdownChange();
+              },
+              items: dropdownItems.map((item) {
+                return DropdownMenuItem<String>(
+                  value: item.value.toString(),
+                  child: Text(item.displayText),
+                );
+              }).toList(),
+            ),
+          ),
           ElevatedButton(
-            onPressed: () async {
-              _showLoader(context); // Show loader
-
-              var filter = {
-                'year': selectedValue,
-                'studentId': selectedStudentValue
-              };
-
-              // If "All" is selected, set studentId to null in the filter
-              if (selectedStudentValue == null) {
-                filter['studentId'] = null;
-              }
-              await _paymentProvider.downloadPdf(filter: filter);
-
-              _hideLoader(context); // Hide loader
-            },
+            onPressed: _downloadPdf,
             child: Text("Download pdf"),
           ),
-          SizedBox(
-            width: 8,
-          ),
+          SizedBox(width: 8),
           ElevatedButton(
             onPressed: () async {
               Navigator.of(context).push(
@@ -245,8 +252,7 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
               barRods: [
                 BarChartRodData(
                   toY: result![i].amount!, // Use your data here
-                  color: Colors
-                      .green, // You can set the color based on your requirements
+                  color: Colors.green, // You can set the color based on your requirements
                 ),
               ],
               showingTooltipIndicators: [0],
@@ -254,7 +260,6 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
           );
         }
       }
-
       return barGroups;
     }
 
@@ -264,12 +269,164 @@ class _PaymentReportListScreenState extends State<PaymentReportListScreen> {
         BarChartData(
           groupsSpace: 20,
           borderData: FlBorderData(show: false),
-          backgroundColor: Colors.transparent, // Remove background color
-          barGroups: generateBarChartGroups(), // Use the generated barGroups
+          backgroundColor: Colors.transparent,
+          barGroups: generateBarChartGroups(),
           titlesData: FlTitlesData(),
-          maxY: 1000, // Adjust this value as needed
+          maxY: 1000,
         ),
       ),
     );
   }
 }
+
+class PdfReportGenerator {
+  Future<Uint8List> generatePdfReport(
+      PaymentPdfDataModel paymentData, int selectedYear) async {
+    final pdf = pw.Document();
+    final logoImage = await _loadImage('assets/images/logo.jpg');
+    final currentDate = DateTime.now();
+    final studentInfo = paymentData.student != null
+        ? "Student: ${paymentData.student!.fullName}"
+        : "All Students";
+    final dateInfo = "Year: $selectedYear";
+    final formattedDate =
+        "${currentDate.day}.${currentDate.month}.${currentDate.year}";
+
+    pdf.addPage(
+      pw.Page(
+        build: (context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.center,
+            children: [
+              pw.Image(logoImage, width: 100, height: 100),
+              pw.SizedBox(height: 20),
+              pw.Text('Payment Reports', style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold), textAlign: pw.TextAlign.center),
+              pw.SizedBox(height: 10),
+              pw.Text(dateInfo, style: pw.TextStyle(fontSize: 18)),
+              pw.Text(studentInfo, style: pw.TextStyle(fontSize: 18)),
+              pw.SizedBox(height: 20),
+              pw.Text('Generated on: $formattedDate', style: pw.TextStyle(fontSize: 12)),
+              pw.SizedBox(height: 20),
+              pw.Expanded(child: _buildTable(paymentData, selectedYear)),
+            ],
+          );
+        },
+      ),
+    );
+
+    return pdf.save();
+  }
+
+  Future<pw.ImageProvider> _loadImage(String path) async {
+    final byteData = await rootBundle.load(path);
+    final image = pw.MemoryImage(byteData.buffer.asUint8List());
+    return image;
+  }
+
+  pw.Widget _buildTable(PaymentPdfDataModel paymentData, int selectedYear) {
+    return pw.Table(
+      border: pw.TableBorder.all(color: PdfColors.blue, width: 1),
+      children: paymentData.student != null
+          ? _buildStudentTable(paymentData.payments)
+          : _buildAllStudentsTable(paymentData.payments),
+    );
+  }
+
+  List<pw.TableRow> _buildStudentTable(List<PaymentModel> payments) {
+    double totalForAllMonths = 0;
+
+    final rows = <pw.TableRow>[
+      pw.TableRow(
+        children: [
+          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('Month', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('Total Amount', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+        ],
+      ),
+    ];
+
+    for (int month = 1; month <= 12; month++) {
+      final monthPayments = payments.where((p) => p.month == month).toList();
+      final totalAmount = monthPayments.isNotEmpty
+          ? monthPayments.map((p) => p.amount).reduce((a, b) => a + b)
+          : 0.0;
+
+      totalForAllMonths += totalAmount;
+      final monthName = DateFormat.MMMM().format(DateTime(0, month));
+
+      rows.add(
+        pw.TableRow(
+          children: [
+            pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text(monthName)),
+            pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('$totalAmount BAM')),
+          ],
+        ),
+      );
+    }
+
+    rows.add(
+      pw.TableRow(
+        children: [
+          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('Total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('$totalForAllMonths BAM', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+        ],
+      ),
+    );
+
+    return rows;
+  }
+
+  List<pw.TableRow> _buildAllStudentsTable(List<PaymentModel> payments) {
+    final rows = <pw.TableRow>[
+      pw.TableRow(
+        children: [
+          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('Student Name', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+          for (int month = 1; month <= 12; month++)
+            pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text(DateFormat.MMMM().format(DateTime(0, month)), style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('Total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+        ],
+      ),
+    ];
+
+    final students = payments.map((p) => p.student?.fullName ?? "").toSet().toList();
+    double globalTotal = 0.0;
+
+    for (final student in students) {
+      final studentPayments = payments.where((p) => p.student?.fullName == student).toList();
+      double studentTotal = 0.0;
+
+      rows.add(
+        pw.TableRow(
+          children: [
+            pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text(student)),
+            for (int month = 1; month <= 12; month++)
+              pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text(
+                '${studentPayments.where((p) => p.month == month).map((p) => p.amount).fold(0, (a, b) => (a + b).toInt())} BAM',
+              )),
+            pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text(
+              '${studentPayments.map((p) => p.amount).fold(0, (a, b) => (a + b).toInt())} BAM',
+              style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+            )),
+          ],
+        ),
+      );
+
+      globalTotal += studentPayments.map((p) => p.amount).fold(0, (a, b) => a + b);
+    }
+
+    rows.add(
+      pw.TableRow(
+        children: [
+          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('Global Total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+          for (int month = 1; month <= 12; month++)
+            pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text(
+              '${payments.where((p) => p.month == month).map((p) => p.amount).fold(0, (a, b) => (a + b).toInt())} BAM',
+            )),
+          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('$globalTotal BAM', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+        ],
+      ),
+    );
+
+    return rows;
+  }
+}
+

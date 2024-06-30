@@ -82,6 +82,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title: "Report details",
+      showBackButton: true,
       child: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(

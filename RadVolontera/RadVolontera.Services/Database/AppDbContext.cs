@@ -31,6 +31,7 @@ namespace RadVolontera.Services.Database
         public virtual DbSet<CompanyEvent> CompanyEvent { get; set; }
         public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<CompanyCategory> CompanyCategory { get; set; }
+        public virtual DbSet<Monitoring> Monitoring { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 

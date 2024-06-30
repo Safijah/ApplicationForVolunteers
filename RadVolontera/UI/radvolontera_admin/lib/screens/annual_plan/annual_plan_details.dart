@@ -128,6 +128,7 @@ class _AnnualPlanDetailsScreenState extends State<AnnualPlanDetailsScreen> {
         ),
       ),
       title: "Annual Plan Details",
+      showBackButton: true,
     );
   }
 
@@ -175,7 +176,7 @@ class _AnnualPlanDetailsScreenState extends State<AnnualPlanDetailsScreen> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
                 child: Text(
-                  'Annual plan for ${widget.annualPlanModel!.year} year',
+                  'Annual plan for ${widget.annualPlanModel!.year} year - ${widget.annualPlanModel!.mentor?.fullName}',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),

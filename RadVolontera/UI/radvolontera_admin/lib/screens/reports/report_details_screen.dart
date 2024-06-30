@@ -170,6 +170,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
         ],
       ),
       title: "Report details",
+      showBackButton: true,
     );
   }
 

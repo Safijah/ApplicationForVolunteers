@@ -132,6 +132,7 @@ late AccountModel userProfile;
         ],
       ),
       title: "User Profile",
+      showBackButton: true,
     );
   }
 

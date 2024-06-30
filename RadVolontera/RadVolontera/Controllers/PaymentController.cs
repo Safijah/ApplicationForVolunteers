@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RadVolontera.Models.Filters;
+using RadVolontera.Models.Payment;
 using RadVolontera.Models.Report;
 using RadVolontera.Services.Interfaces;
 
@@ -24,14 +25,10 @@ namespace RadVolontera.Controllers
 
 
         [HttpGet("pdf-report")]
-        public virtual async Task<IActionResult> GeneratePdf([FromQuery] PaymentReportSearchObject request)
+        public virtual async Task<PaymentPdfData> PaymentPdfData([FromQuery] PaymentReportSearchObject request)
         {
-            var result = await (_service as IPaymentService).GeneratePaymentReportPdf(request.Year ?? DateTime.Now.Year, request.StudentId);
-            var fileContentResult = new FileContentResult(result, "application/pdf")
-            {
-                FileDownloadName = "example.pdf"
-            };
-            return fileContentResult;
+            var result = await (_service as IPaymentService).GeneratePaymentData(request.Year ?? DateTime.Now.Year, request.StudentId);
+            return result;
         }
     }
 }

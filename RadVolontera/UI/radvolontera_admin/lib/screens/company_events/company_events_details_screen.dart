@@ -189,6 +189,7 @@ class _CompanyEventDetailsScreenState extends State<CompanyEventDetailsScreen> {
         ],
       ),
       title: "Company event details",
+      showBackButton: true,
     );
   }
 

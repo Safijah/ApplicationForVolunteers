@@ -15,7 +15,7 @@ class MonitoringListScreen extends StatefulWidget {
 
 class _MonitoringListScreenState extends State<MonitoringListScreen> {
   late MonitoringProvider _monitoringProvider;
-  SearchResult<MonitoringModel>? monitoring;
+  List<MonitoringModel>? monitoring;
   late AccountProvider _accountProvider;
   dynamic currentUser = null;
    bool forToday = false; 
@@ -34,7 +34,7 @@ class _MonitoringListScreenState extends State<MonitoringListScreen> {
       var monitoringData = await _monitoringProvider.get(filter:{'mentorId':currentUser.nameid});
 
       setState(() {
-        monitoring = monitoringData;
+        monitoring = monitoringData.cast<MonitoringModel>();
       });
     } catch (e) {
       print("Error loading data: $e");
@@ -50,7 +50,7 @@ class _MonitoringListScreenState extends State<MonitoringListScreen> {
     var data = await _monitoringProvider.get(filter: filter);
 
     setState(() {
-      monitoring = data;
+      monitoring = data.cast<MonitoringModel>();
     });
   }
 
@@ -62,7 +62,7 @@ class _MonitoringListScreenState extends State<MonitoringListScreen> {
         body: Container(
           child: Column(
             children: [
-              if (monitoring != null && monitoring!.result.isNotEmpty)
+              if (monitoring != null && monitoring!.isNotEmpty)
                 _buildHeading('Monitoring'),
                 _buildSearch(),
               _buildMonitoring(),
@@ -115,7 +115,7 @@ class _MonitoringListScreenState extends State<MonitoringListScreen> {
   }
 
   Widget _buildMonitoring() {
-    if (monitoring == null || monitoring!.result.isEmpty) {
+    if (monitoring == null || monitoring!.isEmpty) {
       return Center(
         child: Text(
           'No monitorings data',
@@ -125,7 +125,7 @@ class _MonitoringListScreenState extends State<MonitoringListScreen> {
     }
 
     return Column(
-      children: monitoring!.result.map((MonitoringModel monitoring) {
+      children: monitoring!.map((MonitoringModel monitoring) {
         return Card(
           elevation: 4,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

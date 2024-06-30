@@ -185,6 +185,7 @@ class _MonitoringDetailsScreenState extends State<MonitoringDetailsScreen> {
         ],
       ),
       title: "Monitoring details",
+      showBackButton: true,
     );
   }
 

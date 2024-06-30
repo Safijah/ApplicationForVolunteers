@@ -146,6 +146,7 @@ class _AnnualPlanDetailsScreenState extends State<AnnualPlanDetailsScreen> {
         ),
       ),
       title: "Annual Plan Details",
+      showBackButton: true,
     );
   }
 

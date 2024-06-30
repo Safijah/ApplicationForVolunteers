@@ -42,6 +42,7 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
   late AccountProvider _accountProvider;
   SearchResult<AccountModel>? studentsResult;
   bool isLoading = true;
+  int currentYear = DateTime.now().year;
   dynamic currentUser = null;
   @override
   void initState() {
@@ -101,7 +102,8 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
                         if (widget.payment == null) {
                           await _paymentProvider.insert(request);
                         } else {
-                          await _paymentProvider.update(widget.payment!.id!, request);
+                          await _paymentProvider.update(
+                              widget.payment!.id!, request);
                         }
 
                         Navigator.of(context).push(MaterialPageRoute(
@@ -124,75 +126,82 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
                   child: Text("Save"),
                 ),
               ),
-              if(widget.payment != null)
-              ...[
-           ElevatedButton(
-              onPressed: () {
-                // Show delete confirmation dialog here
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Confirm Delete"),
-                      content: Text("Are you sure you want to delete this payment?"),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(); // Close the dialog
-                          },
-                          child: Text("Cancel"),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            // Add delete logic here
-                            try {
-                              if (widget.payment != null) {
-                                await _paymentProvider.delete(widget.payment!.id!);
-                               Navigator.of(context).pop(); // Close the dialog
-                                Navigator.of(context).pop();
-                   await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PaymentListScreen(),
-                      ),
-                    );
-                  }
-                            } on Exception catch (e) {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: Text("Error"),
-                                  content: Text(e.toString()),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: Text("OK"),
+              if (widget.payment != null) ...[
+                ElevatedButton(
+                  onPressed: () {
+                    // Show delete confirmation dialog here
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Confirm Delete"),
+                          content: Text(
+                              "Are you sure you want to delete this payment?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Close the dialog
+                              },
+                              child: Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                // Add delete logic here
+                                try {
+                                  if (widget.payment != null) {
+                                    await _paymentProvider
+                                        .delete(widget.payment!.id!);
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                    Navigator.of(context).pop();
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            PaymentListScreen(),
+                                      ),
+                                    );
+                                  }
+                                } on Exception catch (e) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      title: Text("Error"),
+                                      content: Text(e.toString()),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: Text("OK"),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              );
-                            }
-                            Navigator.of(context).pop(); // Close the dialog
-                          },
-                          child: Text("Delete"),
-                        ),
-                      ],
+                                  );
+                                }
+                                Navigator.of(context).pop(); // Close the dialog
+                              },
+                              child: Text("Delete"),
+                            ),
+                          ],
+                        );
+                      },
                     );
                   },
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,//change background color of button
-                backgroundColor: Colors.red,
-              ),
-              child: Text("Delete"),
-            ),
-            ]
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor:
+                        Colors.white, //change background color of button
+                    backgroundColor: Colors.red,
+                  ),
+                  child: Text("Delete"),
+                ),
+              ]
             ],
           ),
         ],
       ),
       title: "Payment details",
+      showBackButton: true,
     );
   }
 
@@ -236,12 +245,14 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
                       SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: InputDecoration(
-                            labelText: "Amount", hintText: "Enter numbers only"),
+                            labelText: "Amount",
+                            hintText: "Enter numbers only"),
                         name: "amount",
                         validator: FormBuilderValidators.required(
                           errorText: 'Amount is required',
                         ),
-                        keyboardType: TextInputType.numberWithOptions(decimal: true),
+                        keyboardType:
+                            TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                         ],
@@ -254,7 +265,8 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
                           suffix: IconButton(
                             icon: const Icon(Icons.close),
                             onPressed: () {
-                              _formKey.currentState!.fields['studentId']?.reset();
+                              _formKey.currentState!.fields['studentId']
+                                  ?.reset();
                             },
                           ),
                           hintText: 'Select student',
@@ -264,7 +276,8 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
                                   (item) => DropdownMenuItem(
                                     alignment: AlignmentDirectional.center,
                                     value: item.id.toString(),
-                                    child: Text('${item.firstName} ${item.lastName}'),
+                                    child: Text(
+                                        '${item.firstName} ${item.lastName}'),
                                   ),
                                 )
                                 .toList() ??
@@ -304,7 +317,7 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
                       FormBuilderTextField(
                         decoration: InputDecoration(
                           labelText: "Year",
-                          hintText: "1234",
+                          hintText: "2024",
                         ),
                         name: "year",
                         validator: FormBuilderValidators.compose([
@@ -313,17 +326,21 @@ class _PaymentDetailsScreenScreenState extends State<PaymentDetailsScreen> {
                           FormBuilderValidators.numeric(
                               errorText: 'Enter a valid year'),
                           (value) {
-                            if (value != null &&
-                                value.isNotEmpty &&
-                                value.length != 4) {
-                              return 'Enter year';
+                            if (value != null && value.isNotEmpty) {
+                              int year = int.parse(value);
+                              if (year < 2015 || year > currentYear) {
+                                return 'Enter a valid year between 2015 and $currentYear';
+                              }
+                              if (value.length != 4) {
+                                return 'Enter a 4-digit year';
+                              }
                             }
                             return null;
                           },
                         ]),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(4),
                         ],
                       )

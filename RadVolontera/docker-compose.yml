@@ -44,6 +44,24 @@ services:
       - radvolontera-sql
       - rabbitMQ
 
+  dodatni_api:
+    restart: unless-stopped
+    build:
+      context: ../RadVolonteraDodatni/RadVolonteraDodatni
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=radvolontera-sql,1433;Database=180024;User=sa;Password=QWElkj132!;ConnectRetryCount=0;TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RABBITMQ_HOST=rabbitMQ
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_VIRTUALHOST=/
+    ports:
+      - 7005:7005
+    networks:
+      - radvolonteranet2022
+    depends_on:
+      - rabbitMQ
+
 networks:
   radvolonteranet2022:
     driver: bridge

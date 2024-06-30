@@ -55,6 +55,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title: this.widget.user?.fullName ?? "User details",
+      showBackButton: true,
       child: Column(
         children: [
           isLoading ? Container() : _buildForm(),
