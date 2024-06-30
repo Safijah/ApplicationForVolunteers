@@ -34,7 +34,7 @@ class _MonitoringListScreenState extends State<MonitoringListScreen> {
       var monitoringData = await _monitoringProvider.get(filter:{'mentorId':currentUser.nameid});
 
       setState(() {
-        monitoring = monitoringData.cast<MonitoringModel>();
+        monitoring = monitoringData.result;
       });
     } catch (e) {
       print("Error loading data: $e");
@@ -50,7 +50,7 @@ class _MonitoringListScreenState extends State<MonitoringListScreen> {
     var data = await _monitoringProvider.get(filter: filter);
 
     setState(() {
-      monitoring = data.cast<MonitoringModel>();
+      monitoring = data.result;
     });
   }
 

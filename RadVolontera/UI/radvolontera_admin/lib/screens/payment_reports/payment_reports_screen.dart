@@ -292,24 +292,44 @@ class PdfReportGenerator {
     final formattedDate =
         "${currentDate.day}.${currentDate.month}.${currentDate.year}";
 
+    // Cover page
     pdf.addPage(
       pw.Page(
         build: (context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.center,
-            children: [
-              pw.Image(logoImage, width: 100, height: 100),
-              pw.SizedBox(height: 20),
-              pw.Text('Payment Reports', style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold), textAlign: pw.TextAlign.center),
-              pw.SizedBox(height: 10),
-              pw.Text(dateInfo, style: pw.TextStyle(fontSize: 18)),
-              pw.Text(studentInfo, style: pw.TextStyle(fontSize: 18)),
-              pw.SizedBox(height: 20),
-              pw.Text('Generated on: $formattedDate', style: pw.TextStyle(fontSize: 12)),
-              pw.SizedBox(height: 20),
-              pw.Expanded(child: _buildTable(paymentData, selectedYear)),
-            ],
+          return pw.Center(
+            child: pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.center,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Image(logoImage, width: 100, height: 100),
+                pw.SizedBox(height: 20),
+                pw.Text(
+                  'Payment Reports',
+                  style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+                  textAlign: pw.TextAlign.center,
+                ),
+                pw.SizedBox(height: 10),
+                pw.Text(dateInfo, style: pw.TextStyle(fontSize: 18), textAlign: pw.TextAlign.center),
+                pw.Text(studentInfo, style: pw.TextStyle(fontSize: 18), textAlign: pw.TextAlign.center),
+                pw.SizedBox(height: 20),
+                pw.Text(
+                  'Generated on: $formattedDate',
+                  style: pw.TextStyle(fontSize: 12),
+                  textAlign: pw.TextAlign.center,
+                ),
+              ],
+            ),
           );
+        },
+      ),
+    );
+
+    // Table page
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (context) {
+          return _buildTable(paymentData, selectedYear);
         },
       ),
     );
@@ -325,6 +345,10 @@ class PdfReportGenerator {
 
   pw.Widget _buildTable(PaymentPdfDataModel paymentData, int selectedYear) {
     return pw.Table(
+      columnWidths: {
+        0: pw.FlexColumnWidth(2),
+        for (int i = 1; i <= 12; i++) i: pw.FlexColumnWidth(1),
+      },
       border: pw.TableBorder.all(color: PdfColors.blue, width: 1),
       children: paymentData.student != null
           ? _buildStudentTable(paymentData.payments)
@@ -338,8 +362,8 @@ class PdfReportGenerator {
     final rows = <pw.TableRow>[
       pw.TableRow(
         children: [
-          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('Month', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
-          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('Total Amount', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+          pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text('Month', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+          pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text('Total Amount', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
         ],
       ),
     ];
@@ -356,8 +380,8 @@ class PdfReportGenerator {
       rows.add(
         pw.TableRow(
           children: [
-            pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text(monthName)),
-            pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('$totalAmount BAM')),
+            pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text(monthName)),
+            pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text('$totalAmount BAM')),
           ],
         ),
       );
@@ -366,8 +390,8 @@ class PdfReportGenerator {
     rows.add(
       pw.TableRow(
         children: [
-          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('Total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
-          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('$totalForAllMonths BAM', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+          pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text('Total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+          pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text('$totalForAllMonths BAM', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
         ],
       ),
     );
@@ -379,10 +403,10 @@ class PdfReportGenerator {
     final rows = <pw.TableRow>[
       pw.TableRow(
         children: [
-          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('Student Name', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+          pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text('Student Name', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
           for (int month = 1; month <= 12; month++)
-            pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text(DateFormat.MMMM().format(DateTime(0, month)), style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
-          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('Total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text(DateFormat.MMMM().format(DateTime(0, month)).substring(0, 3), style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+          pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text('Total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
         ],
       ),
     ];
@@ -397,14 +421,16 @@ class PdfReportGenerator {
       rows.add(
         pw.TableRow(
           children: [
-            pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text(student)),
+            pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text(student)),
             for (int month = 1; month <= 12; month++)
-              pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text(
+              pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text(
                 '${studentPayments.where((p) => p.month == month).map((p) => p.amount).fold(0, (a, b) => (a + b).toInt())} BAM',
+                textAlign: pw.TextAlign.center,
               )),
-            pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text(
+            pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text(
               '${studentPayments.map((p) => p.amount).fold(0, (a, b) => (a + b).toInt())} BAM',
               style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+              textAlign: pw.TextAlign.center,
             )),
           ],
         ),
@@ -416,12 +442,13 @@ class PdfReportGenerator {
     rows.add(
       pw.TableRow(
         children: [
-          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('Global Total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+          pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text('Global Total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
           for (int month = 1; month <= 12; month++)
-            pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text(
+            pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text(
               '${payments.where((p) => p.month == month).map((p) => p.amount).fold(0, (a, b) => (a + b).toInt())} BAM',
+              textAlign: pw.TextAlign.center,
             )),
-          pw.Padding(padding: pw.EdgeInsets.all(2), child: pw.Text('$globalTotal BAM', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+          pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text('$globalTotal BAM', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
         ],
       ),
     );
@@ -429,4 +456,5 @@ class PdfReportGenerator {
     return rows;
   }
 }
+
 

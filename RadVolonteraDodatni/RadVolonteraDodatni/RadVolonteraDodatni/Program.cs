@@ -5,8 +5,10 @@ using RadVolonteraDodatni.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using RadVolonteraDodatni.Dtos.User;
 
- static TokenValidationParameters GetTokenValidationParameters(IConfiguration configuration)
+static TokenValidationParameters GetTokenValidationParameters(IConfiguration configuration)
 {
     var param = new TokenValidationParameters
     {
@@ -35,6 +37,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.Configure<JWTSettings>(builder.Configuration.GetSection("JWTSettings"));
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
