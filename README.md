@@ -34,3 +34,13 @@ flutter emulators --launch Pixel 2 API 30
 
 flutter run --dart-define=baseUrl=http://10.0.2.2:5269/api/
 
+Data for payment:
+
+Card number: 5555 5555 5555 4444
+
+CVC: Any 3 digits
+
+Date: Any future date
+
+Cardholder name: Optional || any name
+
