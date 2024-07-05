@@ -8,7 +8,6 @@ import 'package:radvolontera_mobile/models/company_event/company_event.dart';
 import 'package:radvolontera_mobile/providers/account_provider.dart';
 import 'package:radvolontera_mobile/providers/company_event_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:path_provider/path_provider.dart';
 import 'package:radvolontera_mobile/screens/company_events/company_events_details_screen.dart';
 import 'package:radvolontera_mobile/screens/company_events/company_events_list_screen.dart';
 class PaymentScreen extends StatefulWidget {
