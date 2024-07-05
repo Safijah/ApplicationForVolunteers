@@ -18,7 +18,6 @@ class AccountProvider extends BaseProvider<AccountModel> {
 
   Future<dynamic> login(dynamic body) async {
     var url = "${BaseProvider.baseUrl}Account/authenticate";
-    print(url);
     var uri = Uri.parse(url);
     var jsonRequest = jsonEncode(body);
     var headers = createHeaders();

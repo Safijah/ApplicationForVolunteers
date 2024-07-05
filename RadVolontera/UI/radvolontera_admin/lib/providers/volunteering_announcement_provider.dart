@@ -16,7 +16,6 @@ class VolunteeringAnnouncementProvider extends BaseProvider<VolunteeringAnnounce
 
   Future<VolunteeringAnnouncementModel> changeStatus([dynamic request]) async {
   var urlGlobal = "${BaseProvider.baseUrl}VolunteeringAnnouncement/change-status";
-  print("url $urlGlobal");
   var uri = Uri.parse(urlGlobal);
   var headers = createAuthorizationHeaders(); // Using createHeaders() method from the base class
 

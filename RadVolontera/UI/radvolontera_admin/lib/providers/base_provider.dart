@@ -9,7 +9,7 @@ import '../models/search_result.dart';
 import '../utils/util.dart';
 
 abstract class BaseProvider<T> with ChangeNotifier {
- static String baseUrl = const String.fromEnvironment("baseUrl",defaultValue: "http://localhost:5269/api/");
+ static String baseUrl = const String.fromEnvironment("baseUrl",defaultValue: "https://localhost:7264/api/");
   String _endpoint = "";
   BaseProvider(String endpoint) {
     _endpoint = endpoint;
@@ -46,8 +46,6 @@ abstract class BaseProvider<T> with ChangeNotifier {
   Future<T> insert(dynamic request) async {
 
     var url = "$baseUrl$_endpoint";
-    print("request  $request");
-    print(url);
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
@@ -96,7 +94,6 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   bool isValidResponse(Response response) {
-    print("response ${response}");
     if (response.statusCode < 299) {
       return true;
     } else if (response.statusCode == 401) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
@@ -230,16 +231,36 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                               ),
                             ),
                             SizedBox(width: 10),
-                            Expanded(
-                              child: FormBuilderTextField(
-                                decoration:
-                                    InputDecoration(labelText: "Phone number"),
-                                name: "phoneNumber",
-                                validator: FormBuilderValidators.required(
-                                  errorText: 'Phone number is required',
-                                ),
-                              ),
-                            ),
+                            SizedBox(width: 10),
+                      Expanded(
+                        child: FormBuilderTextField(
+                          decoration: InputDecoration(
+                            labelText: "Phone number",
+                            hintText: "+387 62 740 788 or +387 60 740 7888",
+                          ),
+                          name: "phoneNumber",
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                                errorText: 'Phone number is required'),
+                            (value) {
+                              if (value == null || value.isEmpty) {
+                                return null;
+                              }
+                              final regex = RegExp(
+                                  r'^\+387\s?(62\s?\d{3}\s?\d{3}|61\s?\d{3}\s?\d{3}|60\s?\d{3}\s?\d{4})$');
+                              if (!regex.hasMatch(value)) {
+                                return 'Enter a valid phone number in the format +387 62 740 788 or +387 60 740 7888';
+                              }
+                              return null;
+                            },
+                          ]),
+                          keyboardType: TextInputType.phone,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[0-9+\s]')),
+                          ],
+                        ),
+                      ),
                           ],
                         ),
                         SizedBox(height: 10),

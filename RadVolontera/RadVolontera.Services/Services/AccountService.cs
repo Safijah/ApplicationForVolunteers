@@ -171,7 +171,7 @@ namespace RadVolontera.Services.Services
                 .Include(u => u.Roles).ToListAsync();
 
             if (!string.IsNullOrWhiteSpace(filter?.FullName))
-                users = users.Where(u => u.FirstName.Contains(filter.FullName) || u.LastName.Contains(filter.FullName)).ToList();
+                users = users.Where(u => u.FullName.ToLower().Contains(filter.FullName.ToLower())).ToList();
 
             if (filter?.UserTypes != null && filter.UserTypes != UserTypes.All)
                 users = users.Where(u => u.Roles.Any(r => r.Name == filter?.UserTypes.Value.ToString())).ToList();
