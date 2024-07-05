@@ -40,6 +40,21 @@ class CompanyEventProvider extends BaseProvider<CompanyEventModel>{
     }
   }
 
+  
+  Future<bool> pay( [dynamic request]) async {
+    var url = "${BaseProvider.baseUrl}CompanyEvent/pay";
+    var uri = Uri.parse(url);
+    var headers = createAuthorizationHeaders();
+    var jsonRequest = jsonEncode(request);
+    var response = await http!.post(uri, headers: headers, body: jsonRequest);
+     if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return data;
+    } else {
+      return false;
+    }
+  }
+
   Future<SearchResult<CompanyEventModel>> recommended([dynamic request]) async {
     var url = "${BaseProvider.baseUrl}CompanyEvent/reccomended";
     var uri = Uri.parse(url);

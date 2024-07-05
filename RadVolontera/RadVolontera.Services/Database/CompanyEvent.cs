@@ -16,6 +16,7 @@ namespace RadVolontera.Services.Database
         public DateTime EventDate { get; set; }
         public string Location { get; set; }
         public string Time { get; set; }
+        public int Price { get; set; }
         public ICollection<User> Mentors { get; set; }
     }
 }

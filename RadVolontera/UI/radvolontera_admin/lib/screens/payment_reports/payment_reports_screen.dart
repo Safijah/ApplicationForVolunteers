@@ -424,7 +424,7 @@ class PdfReportGenerator {
             pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text(student)),
             for (int month = 1; month <= 12; month++)
               pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text(
-                '${studentPayments.where((p) => p.month == month).map((p) => p.amount).fold(0, (a, b) => (a + b).toInt())} BAM',
+                '${studentPayments.where((p) => p.month == month).map((p) => p.amount).fold(0, (a, b) => (a + b).toInt())}',
                 textAlign: pw.TextAlign.center,
               )),
             pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text(
@@ -445,7 +445,7 @@ class PdfReportGenerator {
           pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text('Global Total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
           for (int month = 1; month <= 12; month++)
             pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text(
-              '${payments.where((p) => p.month == month).map((p) => p.amount).fold(0, (a, b) => (a + b).toInt())} BAM',
+              '${payments.where((p) => p.month == month).map((p) => p.amount).fold(0, (a, b) => (a + b).toInt())}',
               textAlign: pw.TextAlign.center,
             )),
           pw.Padding(padding: pw.EdgeInsets.all(4), child: pw.Text('$globalTotal BAM', style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),

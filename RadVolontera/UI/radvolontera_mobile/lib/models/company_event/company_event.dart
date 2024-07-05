@@ -13,7 +13,8 @@ class CompanyEventModel {
  CompanyModel? company;
  DateTime? eventDate;
  bool registered;
-CompanyEventModel(this.id, this.eventName, this.location, this.time, this.company, this.companyId, this.eventDate,this.registered);
+ int price;
+CompanyEventModel(this.id, this.eventName, this.location, this.time, this.company, this.companyId, this.eventDate,this.registered,this.price);
       /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
   /// The constructor is named after the source class, in this case, User.

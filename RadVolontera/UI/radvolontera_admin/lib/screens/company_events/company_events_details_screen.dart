@@ -40,7 +40,8 @@ class _CompanyEventDetailsScreenState extends State<CompanyEventDetailsScreen> {
       'location': widget.companyEvent?.location,
       'time': widget.companyEvent?.time?.toString(),
       'companyId': widget.companyEvent?.companyId.toString(),
-      'eventDate': widget.companyEvent?.eventDate
+      'eventDate': widget.companyEvent?.eventDate,
+      'price': widget.companyEvent?.price.toString()
     };
 
     _companyEventProvider = context.read<CompanyEventProvider>();
@@ -85,7 +86,8 @@ class _CompanyEventDetailsScreenState extends State<CompanyEventDetailsScreen> {
                             'time': formValue['time'],
                             'companyId': int.tryParse(formValue['companyId']),
                             'eventDate':
-                                formValue['eventDate'].toIso8601String()
+                                formValue['eventDate'].toIso8601String(),
+                            'price': formValue['price']
                           };
                           if (widget.companyEvent == null) {
                             await _companyEventProvider.insert(request);
@@ -178,8 +180,9 @@ class _CompanyEventDetailsScreenState extends State<CompanyEventDetailsScreen> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,//change background color of button
-                backgroundColor: Colors.red,// Set button color to red
+                    foregroundColor:
+                        Colors.white, //change background color of button
+                    backgroundColor: Colors.red, // Set button color to red
                   ),
                   child: Text("Delete"),
                 ),
@@ -285,7 +288,7 @@ class _CompanyEventDetailsScreenState extends State<CompanyEventDetailsScreen> {
                         },
                         keyboardType: TextInputType.text,
                         inputFormatters: <TextInputFormatter>[
-                         FilteringTextInputFormatter.allow(RegExp(r'[0-9:]')),
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9:]')),
                           LengthLimitingTextInputFormatter(
                               5), // Limit input to 4 characters
                         ],
@@ -303,6 +306,36 @@ class _CompanyEventDetailsScreenState extends State<CompanyEventDetailsScreen> {
                           errorText: 'Event date is required',
                         ),
                       ),
+                      FormBuilderTextField(
+                        decoration: InputDecoration(
+                          labelText: "Price in BAM",
+                          hintText: "10",
+                        ),
+                        name: "price",
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: 'Price is required'),
+                          FormBuilderValidators.numeric(
+                              errorText: 'Enter a valid price'),
+                          FormBuilderValidators.maxLength(4,
+                              errorText: 'Maximum 4 digits allowed'),
+                          (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Price is required';
+                            }
+                            if (value == '0') {
+                              return 'Price cannot be zero';
+                            }
+                            return null;
+                          },
+                        ]),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(
+                              4), // This will limit the input to 4 digits
+                        ],
+                      )
                     ],
                   ),
                 ),

@@ -578,15 +578,15 @@ namespace RadVolontera.Configuration
             var sqlCommand = @"
     SET IDENTITY_INSERT CompanyEvent ON;
 
-    INSERT INTO CompanyEvent (Id, CompanyId, EventName, EventDate, Location, Time, CreatedById, CreatedAt, LastModifiedBy, LastModified, DeletedAt)
+    INSERT INTO CompanyEvent (Id, CompanyId, EventName, EventDate, Location, Time, CreatedById, CreatedAt, LastModifiedBy, LastModified, DeletedAt, Price)
     VALUES
-    (1, 1, N'Tech Innovations Summit 2024', CAST(N'2024-11-30T00:00:00.0000000' AS DateTime2), N'San Francisco, CA', N'11:00', NULL, CAST(N'2024-06-10T17:40:34.3556190' AS DateTime2), NULL, NULL, NULL),
-    (2, 2, N'FutureTech Expo', CAST(N'2024-12-20T00:00:00.0000000' AS DateTime2), N'New York, NY', N'12:00', NULL, CAST(N'2024-06-10T17:41:10.6460113' AS DateTime2), NULL, NULL, NULL),
-    (3, 3, N'Sustainability and Green Tech Forum', CAST(N'2024-10-15T00:00:00.0000000' AS DateTime2), N'Seattle, WA', N'09:00', NULL, CAST(N'2024-06-26T17:45:00.0000000' AS DateTime2), NULL, NULL, NULL),
-    (4, 4, N'Healthcare Innovations Conference', CAST(N'2024-08-22T00:00:00.0000000' AS DateTime2), N'Boston, MA', N'10:00', NULL, CAST(N'2024-06-26T17:46:00.0000000' AS DateTime2), NULL, NULL, NULL),
-    (5, 1, N'Artificial Intelligence Summit', CAST(N'2024-09-10T00:00:00.0000000' AS DateTime2), N'Austin, TX', N'13:00', NULL, CAST(N'2024-06-26T17:47:00.0000000' AS DateTime2), NULL, NULL, NULL),
-    (6, 2, N'Blockchain and Cryptocurrency Expo', CAST(N'2024-07-25T00:00:00.0000000' AS DateTime2), N'Las Vegas, NV', N'14:00', NULL, CAST(N'2024-06-26T17:48:00.0000000' AS DateTime2), NULL, NULL, NULL),
-    (7, 3, N'Robotics and Automation Conference', CAST(N'2024-06-18T00:00:00.0000000' AS DateTime2), N'Chicago, IL', N'15:00', NULL, CAST(N'2024-06-26T17:49:00.0000000' AS DateTime2), NULL, NULL, NULL);
+    (1, 1, N'Tech Innovations Summit 2024', CAST(N'2024-11-30T00:00:00.0000000' AS DateTime2), N'San Francisco, CA', N'11:00', NULL, CAST(N'2024-06-10T17:40:34.3556190' AS DateTime2), NULL, NULL, NULL,5),
+    (2, 2, N'FutureTech Expo', CAST(N'2024-12-20T00:00:00.0000000' AS DateTime2), N'New York, NY', N'12:00', NULL, CAST(N'2024-06-10T17:41:10.6460113' AS DateTime2), NULL, NULL, NULL,10),
+    (3, 3, N'Sustainability and Green Tech Forum', CAST(N'2024-10-15T00:00:00.0000000' AS DateTime2), N'Seattle, WA', N'09:00', NULL, CAST(N'2024-06-26T17:45:00.0000000' AS DateTime2), NULL, NULL, NULL,15),
+    (4, 4, N'Healthcare Innovations Conference', CAST(N'2024-08-22T00:00:00.0000000' AS DateTime2), N'Boston, MA', N'10:00', NULL, CAST(N'2024-06-26T17:46:00.0000000' AS DateTime2), NULL, NULL, NULL,5),
+    (5, 1, N'Artificial Intelligence Summit', CAST(N'2024-09-10T00:00:00.0000000' AS DateTime2), N'Austin, TX', N'13:00', NULL, CAST(N'2024-06-26T17:47:00.0000000' AS DateTime2), NULL, NULL, NULL,10),
+    (6, 2, N'Blockchain and Cryptocurrency Expo', CAST(N'2024-07-25T00:00:00.0000000' AS DateTime2), N'Las Vegas, NV', N'14:00', NULL, CAST(N'2024-06-26T17:48:00.0000000' AS DateTime2), NULL, NULL, NULL,15),
+    (7, 3, N'Robotics and Automation Conference', CAST(N'2024-06-18T00:00:00.0000000' AS DateTime2), N'Chicago, IL', N'15:00', NULL, CAST(N'2024-06-26T17:49:00.0000000' AS DateTime2), NULL, NULL, NULL,5);
 
     SET IDENTITY_INSERT CompanyEvent OFF;";
             context.Database.ExecuteSqlRaw(sqlCommand);

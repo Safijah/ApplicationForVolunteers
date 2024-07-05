@@ -7,6 +7,7 @@ import 'package:radvolontera_mobile/models/company_event/company_event.dart';
 import 'package:radvolontera_mobile/providers/account_provider.dart';
 import 'package:radvolontera_mobile/providers/company_event_provider.dart';
 import 'package:radvolontera_mobile/screens/company_events/company_events_list_screen.dart';
+import 'package:radvolontera_mobile/screens/payment/payment_screen.dart';
 
 import '../../widgets/master_screen.dart';
 
@@ -38,14 +39,15 @@ class _CompanyEventDetailsScreenState extends State<CompanyEventDetailsScreen> {
       'location': widget.companyEvent?.location,
       'time': widget.companyEvent?.time?.toString(),
       'companyId': widget.companyEvent?.companyId.toString(),
-      'eventDate': widget.companyEvent?.eventDate
+      'eventDate': widget.companyEvent?.eventDate,
+      'price': widget.companyEvent?.price.toString()
     };
     _accountProvider = context.read<AccountProvider>();
     _companyEventProvider = context.read<CompanyEventProvider>();
     initForm();
   }
 
-  Future initForm() async {
+  Future<void> initForm() async {
     // Check if user is registered for this event
     currentUser = await _accountProvider.getCurrentUser();
     isRegistered = await _companyEventProvider.check({
@@ -78,16 +80,29 @@ class _CompanyEventDetailsScreenState extends State<CompanyEventDetailsScreen> {
               widget.companyEvent!.eventDate!.isAfter(DateTime.now())) ...[
             isRegistered
                 ? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("You are registered for this event."),
-                  )
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("You are registered for this event."),
+                      if (eventDate.isAfter(DateTime.now()))
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            "You are on the list for this event. Detailed information and your ticket will be sent to your email the day before the event.",
+                          ),
+                        ),
+                    ],
+                  ),
+                )
                 : Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        _showRegistrationDialog();
+                        _showPaymentScreen();
                       },
-                      child: Text("Register for Event"),
+                      child: Text("Buy Ticket"),
                     ),
                   )
           ],
@@ -106,85 +121,19 @@ class _CompanyEventDetailsScreenState extends State<CompanyEventDetailsScreen> {
         ],
       ),
       title: "Company event details",
-      showBackButton: true,
+      showBackButton: false,
     );
   }
 
-  Future<void> registerForEvent() async {
-    // Call the registration method from the provider
-    try {
-      await _companyEventProvider.registerForEvent({
-        'companyEventId': widget.companyEvent!.id!,
-        'mentorId': currentUser.nameid,
-      });
-
-      setState(() {
-        isRegistered = true;
-      });
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text("Success"),
-          content: Text("You have successfully registered for the event."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("OK"),
-            ),
-          ],
-        ),
-      );
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CompanyEventListScreen(),
-        ),
-      );
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text("Error"),
-          content: Text(e.toString()),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("OK"),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
-  void _showRegistrationDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: Text("Confirm Registration"),
-        content: Text("Are you sure you want to register for this event?"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text("Cancel"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              registerForEvent();
-            },
-            child: Text("Confirm"),
-          ),
-        ],
+  void _showPaymentScreen() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PaymentScreen(companyEvent: widget.companyEvent),
       ),
     );
   }
 
-  Padding _buildForm() {
+  Widget _buildForm() {
     return Padding(
       padding: EdgeInsets.only(top: 50.0),
       child: FormBuilder(
@@ -233,6 +182,14 @@ class _CompanyEventDetailsScreenState extends State<CompanyEventDetailsScreen> {
                         inputType: InputType.date,
                         format: DateFormat('dd-MM-yyyy'),
                         enabled: false,
+                      ),
+                      SizedBox(height: 10),
+                      FormBuilderTextField(
+                        decoration: InputDecoration(
+                          labelText: "Price",
+                        ),
+                        name: "price",
+                        readOnly: true,
                       ),
                     ],
                   ),

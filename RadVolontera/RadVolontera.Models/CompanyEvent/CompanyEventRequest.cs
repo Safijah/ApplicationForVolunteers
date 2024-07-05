@@ -13,5 +13,6 @@ namespace RadVolontera.Models.CompanyEvent
         public DateTime EventDate { get; set; }
         public string Location { get; set; }
         public string Time { get; set; }
+        public int Price { get; set; }
     }
 }

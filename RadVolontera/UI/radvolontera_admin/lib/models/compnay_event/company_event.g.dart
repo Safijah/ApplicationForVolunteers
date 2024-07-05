@@ -19,6 +19,7 @@ CompanyEventModel _$CompanyEventModelFromJson(Map<String, dynamic> json) =>
       json['eventDate'] == null
           ? null
           : DateTime.parse(json['eventDate'] as String),
+      json['price'] as int,
     );
 
 Map<String, dynamic> _$CompanyEventModelToJson(CompanyEventModel instance) =>
@@ -30,4 +31,5 @@ Map<String, dynamic> _$CompanyEventModelToJson(CompanyEventModel instance) =>
       'companyId': instance.companyId,
       'company': instance.company,
       'eventDate': instance.eventDate?.toIso8601String(),
+      'price': instance.price,
     };
