@@ -233,34 +233,19 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                             SizedBox(width: 10),
                             SizedBox(width: 10),
                       Expanded(
-                        child: FormBuilderTextField(
-                          decoration: InputDecoration(
-                            labelText: "Phone number",
-                            hintText: "+387 62 740 788 or +387 60 740 7888",
-                          ),
-                          name: "phoneNumber",
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(
-                                errorText: 'Phone number is required'),
-                            (value) {
-                              if (value == null || value.isEmpty) {
-                                return null;
-                              }
-                              final regex = RegExp(
-                                  r'^\+387\s?(62\s?\d{3}\s?\d{3}|61\s?\d{3}\s?\d{3}|60\s?\d{3}\s?\d{4})$');
-                              if (!regex.hasMatch(value)) {
-                                return 'Enter a valid phone number in the format +387 62 740 788 or +387 60 740 7888';
-                              }
-                              return null;
-                            },
-                          ]),
-                          keyboardType: TextInputType.phone,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'[0-9+\s]')),
-                          ],
-                        ),
-                      ),
+                              child: FormBuilderDateTimePicker(
+                                name: 'birthDate',
+                                decoration: InputDecoration(
+                                  labelText: 'Date of Birth',
+                                ),
+                                initialEntryMode: DatePickerEntryMode.calendar,
+                                inputType: InputType.date,
+                                format: DateFormat('dd-MM-yyyy'),
+                                validator: FormBuilderValidators.required(
+                                  errorText: 'Date of Birth is required',
+                                ),
+                              ),
+                            )
                           ],
                         ),
                         SizedBox(height: 10),
@@ -459,19 +444,34 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                         Row(
                           children: [
                             Expanded(
-                              child: FormBuilderDateTimePicker(
-                                name: 'birthDate',
-                                decoration: InputDecoration(
-                                  labelText: 'Date of Birth',
-                                ),
-                                initialEntryMode: DatePickerEntryMode.calendar,
-                                inputType: InputType.date,
-                                format: DateFormat('dd-MM-yyyy'),
-                                validator: FormBuilderValidators.required(
-                                  errorText: 'Date of Birth is required',
-                                ),
-                              ),
-                            )
+                        child: FormBuilderTextField(
+                          decoration: InputDecoration(
+                            labelText: "Phone number",
+                            hintText: "+387 62 740 788 or +387 60 740 7888",
+                          ),
+                          name: "phoneNumber",
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                                errorText: 'Phone number is required'),
+                            (value) {
+                              if (value == null || value.isEmpty) {
+                                return null;
+                              }
+                              final regex = RegExp(
+                                  r'^\+387\s?(62\s?\d{3}\s?\d{3}|61\s?\d{3}\s?\d{3}|60\s?\d{3}\s?\d{4})$');
+                              if (!regex.hasMatch(value)) {
+                                return 'Enter a valid phone number in the format +387 62 740 788 or +387 60 740 7888';
+                              }
+                              return null;
+                            },
+                          ]),
+                          keyboardType: TextInputType.phone,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[0-9+\s]')),
+                          ],
+                        ),
+                      ),
                           ],
                         )
                       ],
