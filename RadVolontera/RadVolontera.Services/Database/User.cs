@@ -43,6 +43,7 @@ namespace RadVolontera.Services.Database
         public virtual ICollection<Monitoring> Monitorings { get; set; } = new List<Monitoring>();
         public virtual ICollection<AnnualPlan> AnnualPlans { get; set; } = new List<AnnualPlan>();
         public virtual ICollection<CompanyEvent> CompanyEvents { get; set; } = new List<CompanyEvent>();
+        public virtual ICollection<FITPasos> FITPasos { get; set; } = new List<FITPasos>();
 
         [NotMapped]
         public string FullName

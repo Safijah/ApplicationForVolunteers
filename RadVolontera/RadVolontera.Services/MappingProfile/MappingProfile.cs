@@ -6,6 +6,7 @@ using RadVolontera.Models.Company;
 using RadVolontera.Models.CompanyCategory;
 using RadVolontera.Models.CompanyEvent;
 using RadVolontera.Models.Enums;
+using RadVolontera.Models.FITPasos;
 using RadVolontera.Models.Monitoring;
 using RadVolontera.Models.MonthlyPlan;
 using RadVolontera.Models.MonthlyPlanTemplate;
@@ -60,6 +61,8 @@ namespace RadVolontera.Services.MappingProfile
             CreateMap<AnnualPlanRequest, Database.AnnualPlan>();
             CreateMap<Database.MonthlyPlan, MonthlyPlan>();
             CreateMap<MonthlyPlanRequest, Database.MonthlyPlan>();
+            CreateMap<Database.FITPasos, FITPasos>();
+            CreateMap<FITPasosRequest, Database.FITPasos>();
         }
     }
 }

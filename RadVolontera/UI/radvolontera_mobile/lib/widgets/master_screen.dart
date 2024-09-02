@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:radvolontera_mobile/main.dart';
 import 'package:radvolontera_mobile/screens/annual_plan/annual_plan_list_screen.dart';
 import 'package:radvolontera_mobile/screens/company_events/company_events_list_screen.dart';
+import 'package:radvolontera_mobile/screens/fit_pasos/frmPasosi.dart';
 import 'package:radvolontera_mobile/screens/home/home_screen.dart';
 import 'package:radvolontera_mobile/screens/monitoring/monitoring_screen.dart';
 import 'package:radvolontera_mobile/screens/reports/reports_list_screen.dart';
@@ -83,6 +84,17 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => HomePageScreen()),
+                  );
+                },
+              ),
+                ListTile(
+                leading: Icon(Icons.document_scanner_outlined,
+                    color: Colors.white), // Add an icon to the ListTile
+                title: Text("FIT Pasos", style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => FITPasosiListScreen()),
                   );
                 },
               ),

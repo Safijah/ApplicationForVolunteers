@@ -107,7 +107,27 @@ namespace RadVolontera.Configuration
                 {
                     SeedReports(context);
                 }
+
+                if (!context.FITPasos.Any())
+                {
+                    SeedFITPasos(context);
+                }
             }
+        }
+
+        private static void SeedFITPasos(AppDbContext context)
+        {
+            var sqlCommand = @"
+    SET IDENTITY_INSERT FITPasos ON;
+
+    INSERT INTO FITPasos (Id, DatumIzdavanja, IsValid, UserId)
+    VALUES
+    (1, CAST(N'2024-06-30T00:00:00.0000000' AS DateTime2), 'True', N'120842a7-ea9f-41ee-8739-d5858f9dfe89'),
+    (2, CAST(N'2023-06-30T00:00:00.0000000' AS DateTime2), 'True', N'20adb6d0-e597-452d-a1ea-27ab4e013bfc'),
+    (3, CAST(N'2022-06-30T00:00:00.0000000' AS DateTime2), 'False', N'499196fe-d061-4d2b-8773-718c4fe431ea');
+    SET IDENTITY_INSERT FITPasos OFF;
+";
+            context.Database.ExecuteSqlRaw(sqlCommand);
         }
 
         private static void SeedReports(AppDbContext context)
